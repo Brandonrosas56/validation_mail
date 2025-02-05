@@ -7,6 +7,12 @@ use App\Models\CreateAccount;
 
 class CreateAccountController extends Controller
 {
+
+    public function index()
+    {
+        return view('forms.CreateAccount');
+    }
+
     public function store(Request $request)
     {
         $request->validate([

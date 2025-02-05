@@ -26,7 +26,7 @@
         </p>
 
         <p class="mt-4 text-sm">
-            <a href="#" class="inline-flex items-center font-semibold text-indigo-700">
+            <a href="#" class="inline-flex items-center font-semibold text-indigo-700" data-bs-toggle="modal" data-bs-target="#createAccountModal">
                 Ver
 
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="ms-1 w-5 h-5 fill-indigo-500">
@@ -34,6 +34,9 @@
                 </svg>
             </a>
         </p>
+
+
+        @include('components.CreateAccount')
     </div>
 
     <div>
