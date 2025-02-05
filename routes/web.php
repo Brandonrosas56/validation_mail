@@ -29,6 +29,7 @@ Route::post('/create-account', [CreateAccountController::class, 'store'])->name(
 
 Route::post('/activation', [ValidateController::class, 'store'])->name('activation.store');
 
+Route::get('/formulario/crear-cuenta', [CreateAccountController::class, 'index'])->name('formulario.crear-cuenta');
 
 Route::middleware(['auth', 'checkIfBlocked'])->group(function(){
     Route::middleware([
