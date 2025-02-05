@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["actividad"],{4298:function(a,t,n){"use strict";n.r(t);var i=function(){var a=this,t=a.$createElement,n=a._self._c||t;return n("div",{staticClass:"curso-main-container pb-3"},[n("BannerInterno",{attrs:{icono:"fas fa-tasks",titulo:"Actividad didáctica"}}),n("div",{staticClass:"container tarjeta tarjeta--blanca p-4 p-md-5"})],1)},c=[],e={name:"Actividad"},s=e,r=n("2877"),d=Object(r["a"])(s,i,c,!1,null,null,null);t["default"]=d.exports}}]);
+//# sourceMappingURL=actividad.bf94bc5f.js.map
