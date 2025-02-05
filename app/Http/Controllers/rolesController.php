@@ -32,17 +32,14 @@ class rolesController extends Controller
                     if ($role->hasPermissionTo($permission)) {
                         // Assigns a readable name based on the permission name
                         switch ($permission->name) {
-                            case 'admin_users':
-                                $permissionNames[] = "Administrador de usuarios";
+                            case 'administrador':
+                                $permissionNames[] = "Administrador";
                                 break;
-                            case 'admin_files':
-                                $permissionNames[] = "Administrador de archivos";
+                            case 'asistente':
+                                $permissionNames[] = "Contratista asitente";
                                 break;
-                            case 'view_files':
-                                $permissionNames[] = "Vista de archivos";
-                                break;
-                            case 'admin_audit':
-                                $permissionNames[] = "Administrador de auditoria";
+                            case 'contratista':
+                                $permissionNames[] = "COntratista";
                                 break;
                         }
                     }
@@ -63,62 +60,62 @@ class rolesController extends Controller
 
 
     //! register roles and assign permissions
-    public function store(Request $request)
-    {
-        //Validate names y permissions
-        $validate = Validator::make($request->all(), [
-            'name' => ['required', 'string', 'max:255', 'unique:roles'],
-            'permissions' => ['array'],
-            'permissions.*' => ['string', 'exists:permissions,name'],
-        ]);
+    // public function store(Request $request)
+    // {
+    //     //Validate names y permissions
+    //     $validate = Validator::make($request->all(), [
+    //         'name' => ['required', 'string', 'max:255', 'unique:roles'],
+    //         'permissions' => ['array'],
+    //         'permissions.*' => ['string', 'exists:permissions,name'],
+    //     ]);
 
-        if ($validate->fails()) {
-            return redirect()->back()->withErrors($validate)->withInput();
-        }
+    //     if ($validate->fails()) {
+    //         return redirect()->back()->withErrors($validate)->withInput();
+    //     }
 
-        //create role
-        $role = role::create(['name' => $request->name, 'guard_name' => 'web']);
+    //     //create role
+    //     $role = role::create(['name' => $request->name, 'guard_name' => 'web']);
 
-        //Assign permissions
-        if ($request->has('permissions')) {
-            $role->syncPermissions($request->permissions);
-        }
+    //     //Assign permissions
+    //     if ($request->has('permissions')) {
+    //         $role->syncPermissions($request->permissions);
+    //     }
 
-        return redirect()->route('show-rol-view')->with('success', '¡Datos guardados correctamente!');
-    }
+    //     return redirect()->route('show-rol-view')->with('success', '¡Datos guardados correctamente!');
+    // }
 
     // //!Update roles
-    public function restore(Request $request, $id){
-        //validate name and permissions
-        $validate = Validator::make($request->all(), [
-            'name' => ['required', 'string', 'max:255'],
-            'permissions' => ['array'],
-            'permissions.*' => ['string', 'exists:permissions,name'],
-        ]);
+    // public function restore(Request $request, $id){
+    //     //validate name and permissions
+    //     $validate = Validator::make($request->all(), [
+    //         'name' => ['required', 'string', 'max:255'],
+    //         'permissions' => ['array'],
+    //         'permissions.*' => ['string', 'exists:permissions,name'],
+    //     ]);
 
-        if ($validate->fails()) {
-            return redirect()->back()->withErrors($validate)->withInput();
-        } else {
-            //validate name of role
-            $existingRole = role::where('name', $request->input('name'))
-                ->where('id', '!=', $id)
-                ->first();
+    //     if ($validate->fails()) {
+    //         return redirect()->back()->withErrors($validate)->withInput();
+    //     } else {
+    //         //validate name of role
+    //         $existingRole = role::where('name', $request->input('name'))
+    //             ->where('id', '!=', $id)
+    //             ->first();
 
-            if ($existingRole) {
-                return redirect()->back()->withErrors(['name' => 'El nombre ya está en uso por otro rol.'])->withInput();
-            }
-        }
+    //         if ($existingRole) {
+    //             return redirect()->back()->withErrors(['name' => 'El nombre ya está en uso por otro rol.'])->withInput();
+    //         }
+    //     }
 
 
-        $roles = role::findOrFail($id);
+    //     $roles = role::findOrFail($id);
 
-         //Assign permissions
-         if ($request->has('permissions')) {
-            $roles->syncPermissions($request->permissions);
-        }
+    //      //Assign permissions
+    //      if ($request->has('permissions')) {
+    //         $roles->syncPermissions($request->permissions);
+    //     }
 
-        $roles->save();
+    //     $roles->save();
 
-        return redirect()->route('show-rol-view')->with('success', '¡Datos actualizados correctamente!');
-    }
+    //     return redirect()->route('show-rol-view')->with('success', '¡Datos actualizados correctamente!');
+    // }
 }
