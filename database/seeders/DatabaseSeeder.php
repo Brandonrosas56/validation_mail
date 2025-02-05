@@ -14,31 +14,39 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Crear permisos solo si no existen
-        $this->createPermission('admin_users');
-        $this->createPermission('admin_files');
-        $this->createPermission('view_files');
-        $this->createPermission('admin_audit');
+        // Create permissions
+        $permissions = [
+            'super_admin',
+            'administrador',
+            'asistente',
+            'contratista',
+        ];
 
-        // Crear roles solo si no existen
-        $role = Role::firstOrCreate(['name' => 'Admin']);
-
-        // Asignar permisos al rol
-        $role->givePermissionTo(Permission::all());
-
-        // Crear usuario si no existe
-        $user = User::firstOrCreate(
-            ['email' => 'admin3@sena.edu.co'],
-            [
-                'name' => 'admin3',
-                'password' => bcrypt('Admin12345*')
-            ]
-        );
-
-        // Asignar rol al usuario
-        if (!$user->hasRole('Admin')) {
-            $user->assignRole($role);
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate(['name' => $permission]);
         }
+
+        // Create roles
+        $role = Role::create(['name' => 'Super_admin']);
+        $roleAdmin = Role::create(['name' => 'Admin']);
+        $roleAsist = Role::create(['name' => 'Asistente']);
+        $roleContratista = Role::create(['name' => 'Contratista']);
+
+        // Assign permissions to roles
+        $role->syncPermissions(Permission::all());
+        $roleAdmin->givePermissionTo('administrador');
+        $roleContratista->givePermissionTo('contratista');
+
+        // Create user
+        $user = User::create([
+            'name' => 'admin',
+            'email' => 'admin@sena.edu.co',
+            'password' => bcrypt('Admin12345*')
+        ]);
+
+
+        // Assign role to user
+        $user->assignRole($role);
     }
 
     /**

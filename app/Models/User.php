@@ -74,46 +74,46 @@ class User extends Authenticatable
     /**
      * Define eventos de modelo para registrar auditorías en la tabla 'audits' cuando se crean o actualizan usuarios.
      */
-    protected static function booted()
-    {
-        static::created(function (User $user) {
+    // protected static function booted()
+    // {
+    //     static::created(function (User $user) {
             
-            Audit::create([
-                'user_id' => $user->id, 
-                'author' =>  Auth::user()->name ?? 'System',
-                'event' => 'Creado',
-                'previous_state' => 'Se creó le usuario con id '. $user->id ,
-                'new_state' => '',
-                'table'=> 'users',
+    //         Audit::create([
+    //             'user_id' => $user->id, 
+    //             'author' =>  Auth::user()->name ?? 'System',
+    //             'event' => 'Creado',
+    //             'previous_state' => 'Se creó le usuario con id '. $user->id ,
+    //             'new_state' => '',
+    //             'table'=> 'users',
                 
-            ]);
-        });
+    //         ]);
+    //     });
 
-        static::updated(function (User $user) {
+    //     static::updated(function (User $user) {
         
-            $changes = $user->getChanges();
-            $original = $user->getOriginal();
+    //         $changes = $user->getChanges();
+    //         $original = $user->getOriginal();
 
-            foreach ($changes as $attribute => $newValue) {
-                if ($attribute == 'updated_at' || !isset($original[$attribute])) {
-                    continue;
-                }
+    //         foreach ($changes as $attribute => $newValue) {
+    //             if ($attribute == 'updated_at' || !isset($original[$attribute])) {
+    //                 continue;
+    //             }
 
-                $oldValue = $original[$attribute];
+    //             $oldValue = $original[$attribute];
 
-                Audit::create([
-                    'user_id' => $user->id,
-                    'author' => Auth::user()->name ?? 'System',
-                    'event' => 'Actualizado',
-                    'previous_state' => "{$attribute}: {$oldValue}",
-                    'new_state' => "{$attribute}: {$newValue}",
-                    'table' => 'users',
-                    'created_at' => $user->created_at,
-                    'updated_at' => now(),
-                ]);
-            }
-        });
-    }
+    //             Audit::create([
+    //                 'user_id' => $user->id,
+    //                 'author' => Auth::user()->name ?? 'System',
+    //                 'event' => 'Actualizado',
+    //                 'previous_state' => "{$attribute}: {$oldValue}",
+    //                 'new_state' => "{$attribute}: {$newValue}",
+    //                 'table' => 'users',
+    //                 'created_at' => $user->created_at,
+    //                 'updated_at' => now(),
+    //             ]);
+    //         }
+    //     });
+    //}
 
 
    

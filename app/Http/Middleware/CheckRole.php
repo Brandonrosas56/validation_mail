@@ -17,22 +17,17 @@ class CheckRole
     public function handle(Request $request, Closure $next, $permission): Response
     {
         switch ($permission) {
-            case 'admin_users':
+            case 'administrador':
                 if (Auth::check() && Auth::user()->can($permission)) {
                     return $next($request);
                 }
                 break;
-            case 'admin_files':
+            case 'asistente':
                 if (Auth::check() && Auth::user()->can($permission)) {
                     return $next($request);
                 }
                 break;
-            case 'view_files':
-                if (Auth::check() && Auth::user()->can($permission)) {
-                    return $next($request);
-                }
-                break;
-            case 'admin_audit':
+            case 'contratista':
                 if (Auth::check() && Auth::user()->can($permission)) {
                     return $next($request);
                 }
