@@ -10,12 +10,13 @@
     <div class="flex justify-center h-screen w-screen items-center">
         <div class="flex w-fit gap-4 rounded-lg shadow h-fit">
             <div>
-                <img class="w-96 rounded-l-xl" src="./img/login-banner.webp" alt="">
+                <img class="w-96 h-full object-cover rounded-l-xl" src="./img/login-banner.webp" alt="">
             </div>
             <div class="w-96  p-4 my-auto">
-                <div class="bg-primary p-5 w-20 rounded-full mx-auto">
-                    <img class="mx-auto" src="./img/zajuna.svg" alt="zajuna" width="22px" heigth="22px">
+                <div class=" object-cover p-5 w-20 h-20 rounded-full mx-auto flex items-center justify-center">
+                 
                 </div>
+
                 <x-validation-errors class="mb-4" />
 
                 @session('status')

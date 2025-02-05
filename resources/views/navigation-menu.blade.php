@@ -2,12 +2,13 @@
     <!-- Primary Navigation Menu -->
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between h-16">
-        <div class="w-full flex items-center gap-2">
-            <a href="{{ route('dashboard') }}">
-                <img  src="./img/zajuna.svg" alt="zajuna" width="25" style="fill: white;">
-            </a>
-            <h1 class="text-primary font-bold text-xl">Zajuna <p class="text-xs text-color-info">Version Control Manager</p> </h1>
+        <div class="w-full flex items-center gap-2 h-10">
+            <a href="{{ route('dashboard') }}" class="w-6 h-6"></a>
+            <h1 class="text-primary font-bold text-xl">
+                <p class="text-xs text-color-info"></p>
+            </h1>
         </div>
+
         <div class="flex">
             <!-- Logo -->
 

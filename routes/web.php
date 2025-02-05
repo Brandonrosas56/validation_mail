@@ -10,6 +10,8 @@ use App\Http\Controllers\rolesController;
 use App\Http\Controllers\MetadataController;
 use App\Http\Controllers\zipReportController;
 use App\Http\Controllers\moveFileController;
+use App\Http\Controllers\CreateAccountController;
+use App\Http\Controllers\ValidateController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\App;
 use App\Http\Middleware\CheckRole;
@@ -22,6 +24,11 @@ app()->singleton('checkIfBlocked', CheckIfBlocked::class);
 Route::get('/', function () {
     return view('auth.login');
 });
+
+Route::post('/create-account', [CreateAccountController::class, 'store'])->name('create-account.store');
+
+Route::post('/activation', [ValidateController::class, 'store'])->name('activation.store');
+
 
 Route::middleware(['auth', 'checkIfBlocked'])->group(function(){
     Route::middleware([
