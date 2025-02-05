@@ -33,26 +33,6 @@ Route::middleware(['auth', 'checkIfBlocked'])->group(function(){
             return view('dashboard');
         })->name('dashboard');
 
-        Route::controller(listRepo::class)->group(function () {
-            Route::get('/list', 'index')->name('list');
-        });
-
-        Route::controller(VersionControlController::class)->group(function () {
-            Route::get('versioncontrol', 'index')->name('versioncontrol');
-            Route::post('uploadfile', 'store')->name('uploadfile');
-            Route::get('restore/{id?}', 'restore')->name('restorefile');
-        });
-
-        Route::controller(FolderController::class)->group(function () {
-            Route::post('new_directory', 'store')->name('new_directory');
-        });
-
-        Route::controller(moveFileController::class)->group(function() {
-            Route::post('select_file', 'selectFile')->name('select_file');
-            Route::get('list_folder', 'listFolders')->name('list_folder');
-            Route::post('move_file', 'moveFile')->name('move_file');
-        });
-
         Route::middleware(['auth'])->group(function () {
             Route::middleware(CheckRole::class . ':admin_users')->group(function () {
                 Route::controller(registerUsersController::class)->group(function () {
@@ -64,9 +44,6 @@ Route::middleware(['auth', 'checkIfBlocked'])->group(function(){
             });
         });
 
-        Route::post('unzip', [UnzipController::class, 'index'])->name('unzip');
-
-
         Route::middleware(['auth'])->group(function () {
             Route::middleware(CheckRole::class . ':admin_users')->group(function () {
                 Route::controller(rolesController::class)->group(function () {
@@ -76,22 +53,5 @@ Route::middleware(['auth', 'checkIfBlocked'])->group(function(){
                 });
             });
         });
-
-    Route::post('/Metadatos', [MetadataController::class, 'show'])->name('metadata');
-    Route::post('/store/{type}', [MetadataController::class, 'store'])->name('store');
-
-        Route::middleware(['auth'])->group(function () {
-            Route::middleware(CheckRole::class . ':admin_audit')->group((function () {
-                Route::group(['prefix' => 'audit'], function () {
-                    Route::get('/', [AuditController::class, 'show'])->name('audit');
-                    Route::get('/audit/search', [AuditController::class, 'search'])->name('audit.search');
-                });
-            }));
-        });
     });
-
-    Route::controller(zipReportController::class)->group(function (){
-        Route::get('/zipReport', 'index')->name('zipReport');
-    });
-  
 });
