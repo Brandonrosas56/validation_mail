@@ -16,26 +16,6 @@
                 <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                     {{ __('Dashboard') }}
                 </x-nav-link>
-                <x-nav-link href="{{ route('list') }}" :active="request()->routeIs('list')">
-                    {{ __('Ruta') }}
-                </x-nav-link>
-                <x-nav-link href="{{ route('versioncontrol') }}" :active="request()->routeIs('versioncontrol')">
-                    {{ __('Centro Cambios') }}
-                </x-nav-link>
-                <x-nav-link href="{{ route('registerUsers')}}" :active="request()->routeIs('registerUsers')">
-                    {{ __('Usuarios')}}
-                </x-nav-link>
-                <x-nav-link href="{{ route('show-rol-view')}}" :active="request()->routeIs('show-rol-view')">
-                    {{ __('Roles')}}
-                </x-nav-link>
-                <x-nav-link href="{{ route('audit') }}" :active="request()->routeIs('audit')">
-                    {{ __('Auditoría') }}
-                </x-nav-link>
-                <x-nav-link href="{{ route('zipReport') }}" :active="request()->routeIs('zipReport')">
-                    {{ __('Zip') }}
-                </x-nav-link>
-               
-               
             </div>
         </div>
 
@@ -161,25 +141,6 @@
         <div class="pt-2 pb-3 space-y-1 ">
             <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link href="{{ route('list') }}" :active="request()->routeIs('dashboard')">
-                {{ __('Ruta') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link href="{{ route('versioncontrol') }}" :active="request()->routeIs('dashboard')">
-                {{ __('Centro cambios') }}
-            </x-responsive-nav-link>
-
-            <x-responsive-nav-link href="{{ route('registerUsers')}}" :active="request()->routeIs('dashboard')">
-                    {{ __('Usuarios')}}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link href="{{ route('show-rol-view')}}" :active="request()->routeIs('show-rol-view')">
-                    {{ __('Roles')}}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link href="{{ route('audit') }}" :active="request()->routeIs('dashboard')">
-                {{ __('Auditoría') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link href="{{ route('zipReport') }}" :active="request()->routeIs('zipReport')">
-                {{ __('Zip') }}
             </x-responsive-nav-link>
         </div>
 

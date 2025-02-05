@@ -2,13 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Audit;
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,45 +14,40 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create permissions
-        Permission::create(['name' => 'admin_users']);
-        Permission::create(['name' => 'admin_files']);
-        Permission::create(['name' => 'view_files']);
-        Permission::create(['name' => 'admin_audit']);
+        // Crear permisos solo si no existen
+        $this->createPermission('admin_users');
+        $this->createPermission('admin_files');
+        $this->createPermission('view_files');
+        $this->createPermission('admin_audit');
 
-        // Create roles
-        $role = Role::create(['name' => 'Admin']);
+        // Crear roles solo si no existen
+        $role = Role::firstOrCreate(['name' => 'Admin']);
 
-        // Assign permissions to roles
+        // Asignar permisos al rol
         $role->givePermissionTo(Permission::all());
 
-        // Create user
-        $user = User::create([
-            'name' => 'admin3',
-            'email' => 'admin3@sena.edu.co',
-            'password' => bcrypt('Admin12345*')
-        ]);
+        // Crear usuario si no existe
+        $user = User::firstOrCreate(
+            ['email' => 'admin3@sena.edu.co'],
+            [
+                'name' => 'admin3',
+                'password' => bcrypt('Admin12345*')
+            ]
+        );
 
-        // Assign role to user
-        $user->assignRole($role);
+        // Asignar rol al usuario
+        if (!$user->hasRole('Admin')) {
+            $user->assignRole($role);
+        }
     }
 
-
-
-      /**
-     * Create a permission if it does not already exist.
-     *
-     * @param string $name
-     * @param string $guardName
-     * @return void
+    /**
+     * Crear un permiso si no existe.
      */
-    protected function createPermission(string $name, string $guardName)
+    protected function createPermission(string $name, string $guard = 'web')
     {
-        if (Permission::where('name', $name)->where('guard_name', $guardName)->doesntExist()) {
-            Permission::create([
-                'name' => $name,
-                'guard_name' => $guardName,
-            ]);
+        if (Permission::where('name', $name)->where('guard_name', $guard)->doesntExist()) {
+            Permission::create(['name' => $name, 'guard_name' => $guard]);
         }
     }
 }
