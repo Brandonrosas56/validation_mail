@@ -7,6 +7,12 @@ use App\Models\ValidateAccount;
 
 class ValidateController extends Controller
 {
+
+    public function index()
+    {
+        return view('forms.ActivateAccount');
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -15,12 +21,12 @@ class ValidateController extends Controller
             'segundo_nombre' => 'nullable|string|max:255',
             'primer_apellido' => 'required|string|max:255',
             'segundo_apellido' => 'nullable|string|max:255',
-            'correo_personal' => 'required|email|unique:activations,correo_personal',
-            'correo_institucional' => 'required|email|regex:/^[a-zA-Z0-9._%+-]+@sena\.edu\.co$/|unique:activations,correo_institucional',
+            'correo_personal' => 'required|email|unique:validate_account,correo_personal',
+            'correo_institucional' => 'required|email|regex:/^[a-zA-Z0-9._%+-]+@sena\.edu\.co$/|unique:validate_account,correo_institucional',
             'numero_contrato' => 'required|string|max:255',
             'fecha_inicio_contrato' => 'required|date',
             'fecha_terminacion_contrato' => 'required|date|after_or_equal:fecha_inicio_contrato',
-            'usuario' => 'required|string|max:255|unique:activations,usuario',
+            'usuario' => 'required|string|max:255|unique:validate_account,usuario',
         ]);
 
         ValidateAccount::create($request->all());
