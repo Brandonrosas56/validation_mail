@@ -35,7 +35,7 @@ Route::get('/validate-account', [ValidateController::class, 'index'])->name('val
 
 Route::post('/activation', [ValidateController::class, 'store'])->name('activation.store');
 
-Route::get('/formulario/crear-cuenta', [CreateAccountController::class, 'index'])->name('formulario.crear-cuenta');
+Route::get('/registerUsers', [registerUsersController::class, 'index'])->name('registerUsers');
 
 Route::middleware(['auth', 'checkIfBlocked'])->group(function(){
     Route::middleware([
@@ -50,7 +50,7 @@ Route::middleware(['auth', 'checkIfBlocked'])->group(function(){
         Route::middleware(['auth'])->group(function () {
             Route::middleware(CheckRole::class . ':admin_users')->group(function () {
                 Route::controller(registerUsersController::class)->group(function () {
-                    Route::get('registerUsers', 'index')->name('registerUsers');
+                    
                     Route::post('registerStore', 'store')->name('registerStore');
                     Route::put('editUser/{id?}', 'restore')->name('editUser');
                     Route::put('blockUser', 'blockUser')->name('blockUser');
