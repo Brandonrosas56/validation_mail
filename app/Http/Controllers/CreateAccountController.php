@@ -7,6 +7,13 @@ use App\Models\CreateAccount;
 
 class CreateAccountController extends Controller
 {
+    public function show()
+    {
+        $accounts = CreateAccount::all();
+
+        return view('tables.ShowCreateAccount', compact('accounts'));
+    }
+
 
     public function index()
     {
