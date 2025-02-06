@@ -21,7 +21,7 @@
         <!-- Styles -->
         @livewireStyles
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <link rel="stylesheet" href="{{ asset('css/metadata.css') }}">
+        
     </head>
     <body class="font-sans antialiased">
         <x-banner />
