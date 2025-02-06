@@ -12,37 +12,6 @@
             function clearForm() {
                 document.getElementById('formUser').reset();
             }
-
-            //! Load data from selected row to form
-            function editUser(id, name, email, rol, block) {
-                clearForm();
-                var form = document.getElementById('formUser');
-                if (id) {
-                    document.getElementById('id').value = id;
-                    document.getElementById('name').value = name;
-                    document.getElementById('email').value = email;
-                    var rolSelect = document.getElementById('rol');
-                    rolSelect.value = rol;
-
-                    form.action = '/editUser/' + id;
-                    form.querySelector('input[name="_method"]').value = 'PUT';
-                } else {
-                    form.action = 'registerStore';
-                    form.querySelector('input[name="_method"]').value = 'POST';
-                }
-            }
-
-            //!Send checkbox of blocked user
-            function sendCheckboxValue(checkbox) {
-                let hiddenInput = document.createElement('input');
-                hiddenInput.type = 'hydden';
-                hiddenInput.name = checkbox.name;
-                hiddenInput.value = checkbox.value;
-
-                let form = document.getElementById('formBlockedUser');
-                form.appendChild(hiddenInput);
-                form.submit();
-            }
         </script>
     </x-slot>
 
@@ -51,7 +20,7 @@
 
             <!-- Form  roles -->
             <div class="flex  justify-center sm:px-6 rounded-lg  border-2 border-black-500" style=" background: #B5C4CB">
-                <form method="POST" action="" id="formUser">
+                <form method="POST" action="registerStore" id="formUser">
                     @csrf
                     @method('PUT')
                     <x-validation-errors class="mb-4" />
@@ -78,13 +47,16 @@
                         <x-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" autocomplete="new-password" />
                     </div>
                     <div class="mt-4">
-                        <x-select name="rol" id="rol" class="block mt-1 w-full">
-                            <option value="">{{__('Select_role')}}</option>
-                            @foreach($roles as $rol)
-                            <option value="{{ $rol->name }}">{{ $rol->name }}</option>
+                        <x-select name="rgn_id" id="rgn_id" class="block mt-1 w-full">
+                            <option value="">{{__('Select_regional')}}</option>
+                            @foreach($regional as $region)
+                                <option value="{{ $region->rgn_id }}">{{ $region->rgn_nombre }}</option>
                             @endforeach
                         </x-select>
                     </div>
+
+                    <input id="password_confirmation" class="block mt-1 w-full" type="hiden" name="rol" value="Contratista" />
+
                     <div class="flex justify-between w-full mb-4">
                         <x-button class="mt-4 ">
                             {{ __('Register') }}
@@ -105,7 +77,7 @@
                                 <th class="py-2 px-4 text-white w-screen" style="background: #009F00;">{{__('Name')}}</th>
                                 <th class="py-2 px-4 text-white w-screen" style="background: #00324D;">{{__('Email')}}</th>
                                 <th class="py-2 px-4 text-white w-screen" style="background: #009F00;">{{__('Role')}}</th>
-                                <th class="py-2 px-4 text-white w-screen" style="background: #00324D;">{{__('Usuario bloqueados')}}</th>
+                                <th class="py-2 px-4 text-white w-screen" style="background: #00324D;">{{__('Regional')}}</th>
                                 <th class="py-2 px-4 text-white w-screen" style="background: #009F00;">{{__('Edit')}}</th>
                             </tr>
                         </thead>
@@ -116,13 +88,7 @@
                                 <td class="py-2 px-4 border bg-white text-center">{{$user->name}}</td>
                                 <td class="py-2 px-4 border text-center" style="background: #B5C4CB;">{{$user->email}}</td>
                                 <td class="py-2 px-4 border bg-white text-center">{{$user->roles->first()->name}}</td>
-                                <td class="py-2 px-4 border text-center" style="background: #B5C4CB;">
-                                    <form id="formBlockedUser" action="{{ route('blockUser') }}" method="POST">
-                                        @csrf
-                                        @method('PUT')
-                                        <input id="bloked_id" type="checkbox" name="bloked_id" value="{{ $user->id }}" style="border-color: #009F00;" onchange="sendCheckboxValue(this)" @if($user->user_blocked) checked @endif />
-                                    </form>
-                                </td>
+                                <td class="py-2 px-4 border text-center" style="background: #B5C4CB;">{{$user->regional ? $user->regional->rgn_nombre : 'N/A' }}</td>
                                 <td class="py-2 px-4 border bg-white text-center">
                                     <button onclick="editUser('{{$user->id}}', '{{$user->name}}', 
                                 '{{$user->email}}','{{$user->roles->first()->name}}')">
