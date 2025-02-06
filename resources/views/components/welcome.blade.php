@@ -1,12 +1,12 @@
 <div class="p-6 lg:p-8 bg-white border-b border-gray-200">
 
 
-    <h1 class="mt-8 text-2xl font-medium text-gray-900">
-        Aplicación Para Contratación 2025
+    <h1 class="mt-8 text-2xl font-medium text-gray-900 font-semibold">
+        Sistema De Validación De Contratistas 
     </h1>
 
     <p class="mt-6 text-gray-500 leading-relaxed">
-        ---
+        El Sistema de Validación y Gestión de Contratistas es una plataforma que permite a los funcionarios  verificar y gestionar de manera eficiente los datos de contratistas para la creación y activación de su usuario y correo.
     </p>
 </div>
 
@@ -22,7 +22,7 @@
         </div>
 
         <p class="mt-4 text-gray-500 text-sm leading-relaxed">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus aliquid soluta numquam ipsa ex error porro. Quam facilis eaque, id hic, quo amet omnis, nostrum ab dolore laborum odit mollitia!
+            Al hacer clic en el botón “ver mas”, podrás acceder a una tabla interactiva que muestra de manera clara y organizada todos los usuarios que tienen pendiente la creación de su correo electrónico SENA.
         </p>
 
         <p class="mt-4 text-sm">
@@ -46,10 +46,11 @@
         </div>
 
         <p class="mt-4 text-gray-500 text-sm leading-relaxed">
-Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente eum impedit ipsa vitae amet recusandae minima earum maxime suscipit fugit iste, aliquid labore rerum. Quas dicta quo recusandae soluta doloribus!        </p>
-
+            Al hacer clic en el botón “ver mas”, podrás acceder a una tabla interactiva que muestra de manera clara y organizada todos los usuarios que tienen pendiente la validación de su correo electrónico SENA.
+        </p>
+            
         <p class="mt-4 text-sm">
-            <a href="{{ route('validate.account') }}" class="inline-flex items-center font-semibold text-indigo-700">
+            <a href="{{ route('show-validate.accounts') }}" class="inline-flex items-center font-semibold text-indigo-700">
                 Ver
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="ms-1 w-5 h-5 fill-indigo-500">
                     <path fill-rule="evenodd" d="M5 10a.75.75 0 01.75-.75h6.638L10.23 7.29a.75.75 0 111.04-1.08l3.5 3.25a.75.75 0 010 1.08l-3.5 3.25a.75.75 0 11-1.04-1.08l2.158-1.96H5.75A.75.75 0 015 10z" clip-rule="evenodd" />

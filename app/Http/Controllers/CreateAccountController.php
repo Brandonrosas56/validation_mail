@@ -33,7 +33,7 @@ class CreateAccountController extends Controller
             'fecha_inicio_contrato' => 'required|date',
             'fecha_terminacion_contrato' => 'required|date|after_or_equal:fecha_inicio_contrato',
         ]);
-
+        
         CreateAccount::create($request->all());
 
         return redirect()->back()->with('success', 'Solicitud creada correctamente.');
