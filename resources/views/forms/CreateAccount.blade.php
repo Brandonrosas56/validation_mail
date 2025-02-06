@@ -1,56 +1,78 @@
 <!-- Modal -->
-<head>
-<link rel="stylesheet" href="{{ asset('css/CreateAccount.css') }}">
-</head>
-<div class="modal fade" id="createAccountModal" tabindex="-1" aria-labelledby="createAccountModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="createAccountModalLabel">Crear Solicitud</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="{{ route('create-account.store') }}" method="POST">
-                    @csrf
-                    <div class="mb-3">
-                        <label for="regional" class="form-label">Regional</label>
-                        <input type="text" name="regional" id="regional" class="form-control" value="{{ old('regional') }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="primer_nombre" class="form-label">Primer Nombre</label>
-                        <input type="text" name="primer_nombre" id="primer_nombre" class="form-control" value="{{ old('primer_nombre') }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="segundo_nombre" class="form-label">Segundo Nombre</label>
-                        <input type="text" name="segundo_nombre" id="segundo_nombre" class="form-control" value="{{ old('segundo_nombre') }}">
-                    </div>
-                    <div class="mb-3">
-                        <label for="primer_apellido" class="form-label">Primer Apellido</label>
-                        <input type="text" name="primer_apellido" id="primer_apellido" class="form-control" value="{{ old('primer_apellido') }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="segundo_apellido" class="form-label">Segundo Apellido</label>
-                        <input type="text" name="segundo_apellido" id="segundo_apellido" class="form-control" value="{{ old('segundo_apellido') }}">
-                    </div>
-                    <div class="mb-3">
-                        <label for="correo_personal" class="form-label">Correo Personal</label>
-                        <input type="email" name="correo_personal" id="correo_personal" class="form-control" value="{{ old('correo_personal') }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="numero_contrato" class="form-label">Número de Contrato</label>
-                        <input type="text" name="numero_contrato" id="numero_contrato" class="form-control" value="{{ old('numero_contrato') }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="fecha_inicio_contrato" class="form-label">Fecha de Inicio del Contrato</label>
-                        <input type="date" name="fecha_inicio_contrato" id="fecha_inicio_contrato" class="form-control" value="{{ old('fecha_inicio_contrato') }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="fecha_terminacion_contrato" class="form-label">Fecha de Terminación del Contrato</label>
-                        <input type="date" name="fecha_terminacion_contrato" id="fecha_terminacion_contrato" class="form-control" value="{{ old('fecha_terminacion_contrato') }}" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Enviar</button>
-                </form>
-            </div>
+<div class="modal-overlay fixed inset-0 bg-gray-800 bg-opacity-50 hidden" id="userModal">
+    <div class="ModalColor rounded-lg w-full max-w-xs sm:max-w-lg md:max-w-xl lg:max-w-2xl p-6 shadow-lg">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-bold TextColor">Crear Solicitud</h2>
+            <button onclick="toggleModal()" class="text-gray-500 hover:text-gray-700 cursor-pointer">
+                <img src="{{ asset('img/cancel.png') }}" alt="Cerrar" class="h-6 w-6" />
+            </button>
         </div>
+        <form method="POST" action="{{ route('create-account.store') }}" id="formUser">
+            @csrf
+            <x-validation-errors class="mb-4" />
+            <input type="hidden" id="operation" name="operation" value="add">
+            <div class="space-y-4">
+                <div class="mb-2">
+                    <label for="regional" class="block mb-1 TextColor font-bold">Regional</label>
+                    <input type="text" name="regional" id="regional" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('regional') }}" required>
+                </div>
+
+                <div class="mb-2">
+                    <label for="primer_nombre" class="block mb-1 TextColor font-bold">Primer Nombre</label>
+                    <input type="text" name="primer_nombre" id="primer_nombre" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('primer_nombre') }}" required>
+                </div>
+
+                <div class="mb-2">
+                    <label for="segundo_nombre" class="block mb-1 TextColor font-bold">Segundo Nombre</label>
+                    <input type="text" name="segundo_nombre" id="segundo_nombre" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('segundo_nombre') }}">
+                </div>
+
+                <div class="mb-2">
+                    <label for="primer_apellido" class="block mb-1 TextColor font-bold">Primer Apellido</label>
+                    <input type="text" name="primer_apellido" id="primer_apellido" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('primer_apellido') }}" required>
+                </div>
+
+                <div class="mb-2">
+                    <label for="segundo_apellido" class="block mb-1 TextColor font-bold">Segundo Apellido</label>
+                    <input type="text" name="segundo_apellido" id="segundo_apellido" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('segundo_apellido') }}">
+                </div>
+
+                <div class="mb-2">
+                    <label for="correo_personal" class="block mb-1 TextColor font-bold">Correo Personal</label>
+                    <input type="email" name="correo_personal" id="correo_personal" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('correo_personal') }}" required>
+                </div>
+
+                <div class="mb-2">
+                    <label for="numero_contrato" class="block mb-1 TextColor font-bold">Número de Contrato</label>
+                    <input type="text" name="numero_contrato" id="numero_contrato" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('numero_contrato') }}" required>
+                </div>
+
+                <div class="mb-2">
+                    <label for="fecha_inicio_contrato" class="block mb-1 TextColor font-bold">Fecha de Inicio del Contrato</label>
+                    <input type="date" name="fecha_inicio_contrato" id="fecha_inicio_contrato" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('fecha_inicio_contrato') }}" required>
+                </div>
+
+                <div class="mb-2">
+                    <label for="fecha_terminacion_contrato" class="block mb-1 TextColor font-bold">Fecha de Terminación del Contrato</label>
+                    <input type="date" name="fecha_terminacion_contrato" id="fecha_terminacion_contrato" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('fecha_terminacion_contrato') }}" required>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-between w-full mb-4">
+                <button type="submit" class="ButtonColor text-white font-bold py-2 px-4 rounded w-40">
+                    enviar
+                </button>
+            </div>
+        </form>
     </div>
 </div>
+
+<!-- Modal toggle logic -->
+<script>
+    // Función para alternar la visibilidad del modal
+    function toggleModal() {
+        const modal = document.getElementById('userModal');
+        modal.classList.toggle('active');  // Alterna la clase 'active' para mostrar/ocultar el modal
+    }
+</script>
+
+

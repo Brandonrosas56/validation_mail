@@ -8,6 +8,13 @@ use App\Models\ValidateAccount;
 class ValidateController extends Controller
 {
 
+    public function show()
+    {
+        $accounts = ValidateAccount::all();
+
+        return view('tables.ShowValidateAccount', compact('accounts'));
+    }
+
     public function index()
     {
         return view('forms.ActivateAccount');
@@ -28,6 +35,8 @@ class ValidateController extends Controller
             'fecha_terminacion_contrato' => 'required|date|after_or_equal:fecha_inicio_contrato',
             'usuario' => 'required|string|max:255|unique:validate_account,usuario',
         ]);
+
+        dd($request);
 
         ValidateAccount::create($request->all());
 

@@ -25,6 +25,8 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+Route::get('/show-validate-account', [ValidateController::class, 'show'])->name('show-validate.accounts');
+
 Route::get('/show-account', [CreateAccountController::class, 'show'])->name('show.account');
 
 Route::post('/create-account', [CreateAccountController::class, 'store'])->name('create-account.store');
