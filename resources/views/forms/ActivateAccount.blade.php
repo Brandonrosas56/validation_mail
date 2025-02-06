@@ -1,20 +1,5 @@
-@extends('layouts.app')
-
-@section('content')
 <div class="container mt-5">
     <h1>Formulario de Activación</h1>
-
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-    @endif
 
     <form action="{{ route('activation.store') }}" method="POST">
         @csrf
@@ -65,4 +50,4 @@
         <button type="submit" class="btn btn-primary">Enviar</button>
     </form>
 </div>
-@endsection
+

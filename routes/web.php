@@ -27,6 +27,10 @@ Route::get('/', function () {
 
 Route::post('/create-account', [CreateAccountController::class, 'store'])->name('create-account.store');
 
+Route::get('/create-account', [CreateAccountController::class, 'index'])->name('create.account');
+
+Route::get('/validate-account', [ValidateController::class, 'index'])->name('validate.account');
+
 Route::post('/activation', [ValidateController::class, 'store'])->name('activation.store');
 
 Route::get('/formulario/crear-cuenta', [CreateAccountController::class, 'index'])->name('formulario.crear-cuenta');
