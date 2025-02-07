@@ -9,6 +9,7 @@ use App\Models\Regional;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 class registerUsersController extends Controller
 {
@@ -34,6 +35,7 @@ class registerUsersController extends Controller
                 }
             ],
             'password' => ['required', 'min:8', 'confirmed', 'regex:/[A-Z]/', 'regex:/[a-z]/', 'regex:/[0-9]/', 'regex:/[@$!%*?&#]/',],
+            'rgn_id' =>['required', 'exists:regional,rgn_id'],
             'rol' => ['required'],
         ]);
 
@@ -45,10 +47,10 @@ class registerUsersController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'user_blocked' => 0,
+            'rgn_id' => $request->rgn_id,
         ]);
         $user->assignRole($request->rol);
-        return redirect()->route('registerUsers')->with('sucees', '!Datos guardados correctamente¡');
+        return redirect()->route('registerUsers')->with('success', '¡Datos guardados correctamente!');
     }
 
 

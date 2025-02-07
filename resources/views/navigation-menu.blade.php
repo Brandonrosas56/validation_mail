@@ -18,12 +18,6 @@
                     {{ __('Dashboard') }}
                 </x-nav-link>
             </div>
-
-            div class="hidden sm:-my-px gap-3 sm:flex">
-                <x-nav-link href="{{ route('registerUsers') }}" :active="request()->routeIs('registerUsers')">
-                    {{ __('registerUsers') }}
-                </x-nav-link>
-            </div>
         </div>
 
         <div class="w-full hidden sm:flex sm:items-center sm:ms-6 justify-end">
