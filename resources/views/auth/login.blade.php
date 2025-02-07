@@ -38,6 +38,7 @@
                         <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
                     </div>
 
+                    <div class="inline-block">
                     <div class="w-full">
                         <label for="remember_me" class="flex items-center">
                             <x-checkbox id="remember_me" name="remember" />
@@ -48,6 +49,7 @@
                     @if (Route::has('register'))
                             <a href="{{ route('registerUsers') }}" class="ml-4 font-semibold text-gray-600 hover:text-gray-900 focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Register</a>
                         @endif
+                    </div>
                     </div>
 
                     <x-button class="">
