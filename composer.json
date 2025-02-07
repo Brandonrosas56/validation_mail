@@ -14,7 +14,9 @@
         "laraveles/spanish": "^1.5",
         "livewire/livewire": "^3.0",
         "predis/predis": "^2.0",
-        "spatie/laravel-permission": "^6.7"
+        "spatie/laravel-permission": "^6.7",
+        "symfony/http-client": "^7.2",
+        "symfony/mailer": "^7.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
