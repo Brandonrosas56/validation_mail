@@ -1,0 +1,47 @@
+.color {
+    background-color: #00324D;
+}
+
+.edit-img {
+    height: 27px;
+}
+
+.max-height{
+    max-height: 480px;
+}
+
+
+/* Estilos del modal */
+.ModalColor {
+    background-color:#E5E5E5;
+}
+
+.ButtonColor{
+    background-color: #00334F;
+}
+
+.TextColor{
+    color: #00334F;
+}
+
+.custom-border {
+    border: 2px solid #ffffff; 
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.3); 
+    backdrop-filter: blur(5px); 
+    display: none; 
+    justify-content: center;
+    align-items: center;
+    z-index: 999; 
+}
+
+.modal-overlay.active {
+    display: flex; 
+}

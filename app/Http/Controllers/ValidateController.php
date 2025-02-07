@@ -36,8 +36,6 @@ class ValidateController extends Controller
             'usuario' => 'required|string|max:255|unique:validate_account,usuario',
         ]);
 
-        dd($request);
-
         ValidateAccount::create($request->all());
 
         return redirect()->back()->with('success', 'Solicitud de activación creada correctamente.');
