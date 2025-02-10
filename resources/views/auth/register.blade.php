@@ -1,7 +1,29 @@
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <!-- <title>{{ config('app.name', 'Laravel') }}</title> -->
+    <title>Zajuna - Version Control Manager</title>
+    
+    <!-- icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <!-- Styles -->
+    @livewireStyles
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+</head>
+    
 <x-slot name="header">
-    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        {{ __('Register') }}
-    </h2>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             editUser('', '', '', '');
@@ -25,13 +47,15 @@
     </script>
 @endif
 
-<a href="{{ route('login') }}" class="ml-4 font-semibold text-gray-600 hover:text-gray-900 focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Login</a>
+<div class="flex items-center justify-center min-h-screen">
+    <div class="w-96 max-w-md">
 
-<div class="flex justify-center items-center mt-8 bg-white">
-    <div class="flex justify-center sm:flex-row flex-col sm:border-2 rounded-lg w-3/4 ">
+        <div class="flex justify-center mb-2">
+            <img src="{{ asset('img/logo_sena_web.svg')}}" alt="Imagen arriba" class="w-20 h-20">
+        </div>
 
         <!-- Form  roles -->
-        <div class="flex  justify-center sm:px-6 rounded-lg  border-2 border-black-500" style=" background: #B5C4CB">
+        <div >
             <form method="POST" action="registerStore" id="formUser">
                 @csrf
                 <x-validation-errors class="mb-4" />
@@ -41,11 +65,6 @@
                 <div>
                     <x-label for="name" value="{{ __('Name') }}" class="mt-8" />
                     <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-                </div>
-
-                <div>
-                    <x-label for="supplier_document" value="{{ __('Supplier_document') }}" class="mt-8" />
-                    <x-input id="supplier_document" class="block mt-1 w-full" type="text" name="supplier_document" :value="old('supplier_document')" required />
                 </div>
 
                 <div class="mt-4">
@@ -62,6 +81,7 @@
                     <x-label for="password_confirmation" value="{{ __('Confirm Password') }}" />
                     <x-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" autocomplete="new-password" />
                 </div>
+
                 <div class="mt-4">
                     <x-label for="Select_regional" value="{{ __('Select_regional') }}" />
                     <x-select name="rgn_id" id="rgn_id" class="block mt-1 w-full">
@@ -75,7 +95,7 @@
                 <input id="password_confirmation" class="block mt-1 w-full" type="hidden" name="rol" value="Contratista" />
 
                 <div class="flex justify-between w-full mb-4">
-                    <x-button class="mt-4 ">
+                    <x-button class="mt-4">
                         {{ __('Register') }}
                     </x-button>
                     <x-onclick class="mt-4" onclick="clearForm()">
@@ -83,6 +103,13 @@
                     </x-onclick>
                 </div>
             </form>
+
+            <!-- Enlace centrado -->
+            <div class="mt-8 text-center">
+                <a href="{{ route('login') }}" class="text-xl font-semibold text-gray-600 hover:text-gray-900 focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">
+                    Regresar a login
+                </a>
+            </div>
         </div>
     </div>
 </div>
