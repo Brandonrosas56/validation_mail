@@ -12,7 +12,6 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 
-
 class User extends Authenticatable
 {
     use HasApiTokens;
@@ -22,27 +21,19 @@ class User extends Authenticatable
     use TwoFactorAuthenticatable;
     use HasRoles;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
-
         'id',
         'name',
         'supplier_document',
         'email',
         'password',
-        'rgn_id',
+        'user_blocked',
+        'primer_nombre',     // Asegúrate de agregar estos campos si no están.
+        'segundo_nombre',
+        'primer_apellido',
+        'segundo_apellido',
     ];
 
-
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
@@ -50,20 +41,10 @@ class User extends Authenticatable
         'two_factor_secret',
     ];
 
-    /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array<int, string>
-     */
     protected $appends = [
         'profile_photo_url',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -72,33 +53,76 @@ class User extends Authenticatable
         ];
     }
 
-    public function regional()
-    {
-        return $this->belongsTo(Regional::class, 'rgn_id', 'rgn_id');
+    /**
+     * Método para generar las opciones de correo basadas en los datos del usuario.
+     *
+     * @return array
+     */
+    public function generarCorreos($primer_nombre, $segundo_nombre, $primer_apellido, $segundo_apellido) {
+        $dominio = '@sena.edu.co';
+    
+        $primer_nombre = strtolower($primer_nombre);
+        $segundo_nombre = strtolower($segundo_nombre ?? '');
+        $primer_apellido = strtolower($primer_apellido);
+        $segundo_apellido = strtolower($segundo_apellido ?? '');
+    
+        $opcion1 = substr($primer_nombre, 0, 1) . $primer_apellido . $dominio;  
+        $opcion2 = substr($primer_nombre, 0, 1) . $primer_apellido . substr($segundo_apellido, 0, 1) . $dominio;  
+        $opcion3 = substr($primer_nombre, 0, 1) . substr($segundo_nombre, 0, 1) . $primer_apellido . $dominio;  
+        $opcion4 = substr($primer_nombre, 0, 1) . substr($segundo_nombre, 0, 1) . $primer_apellido . substr($segundo_apellido, 0, 1) . $dominio;  
+    
+        return [
+            'opcion1' => $opcion1,
+            'opcion2' => $opcion2,
+            'opcion3' => $opcion3,
+            'opcion4' => $opcion4,
+        ];
     }
+
+    /**
+     * Método para generar los correos masivos con paginación.
+     *
+     * @return \Illuminate\Support\Collection
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+
+     */
+    public function generarCorreosMasivosPaginados()
+{
+    // Usar paginación para obtener los usuarios de 100 en 100
+    $usuariosPaginados = User::paginate(100);
+    
+    // Aplicar la función de generación de correos a los usuarios de la página actual
+    $usuariosPaginados->getCollection()->transform(function($usuario) {
+        return $this->generarCorreos(
+            $usuario->primer_nombre, 
+            $usuario->segundo_nombre, 
+            $usuario->primer_apellido, 
+            $usuario->segundo_apellido
+        );
+    });
+
+    return $usuariosPaginados;
+}
 
     /**
      * Define eventos de modelo para registrar auditorías en la tabla 'audits' cuando se crean o actualizan usuarios.
      */
-    // protected static function booted()
-    // {
-    //     static::created(function (User $user) {
-            
-    //         Audit::create([
-    //             'user_id' => $user->id, 
-    //             'author' =>  Auth::user()->name ?? 'System',
-    //             'event' => 'Creado',
-    //             'previous_state' => 'Se creó le usuario con id '. $user->id ,
-    //             'new_state' => '',
-    //             'table'=> 'users',
-                
-    //         ]);
-    //     });
+    protected static function booted()
+    {
+        static::created(function (User $user) {
+            Audit::create([
+                'user_id' => $user->id, 
+                'author' =>  Auth::user()->name ?? 'System',
+                'event' => 'Creado',
+                'previous_state' => 'Se creó el usuario con id '. $user->id ,
+                'new_state' => '',
+                'table'=> 'users',
+            ]);
+        });
 
-    //     static::updated(function (User $user) {
-        
-    //         $changes = $user->getChanges();
-    //         $original = $user->getOriginal();
+        static::updated(function (User $user) {
+            $changes = $user->getChanges();
+            $original = $user->getOriginal();
 
     //         foreach ($changes as $attribute => $newValue) {
     //             if ($attribute == 'updated_at' || !isset($original[$attribute])) {
@@ -107,21 +131,18 @@ class User extends Authenticatable
 
     //             $oldValue = $original[$attribute];
 
-    //             Audit::create([
-    //                 'user_id' => $user->id,
-    //                 'author' => Auth::user()->name ?? 'System',
-    //                 'event' => 'Actualizado',
-    //                 'previous_state' => "{$attribute}: {$oldValue}",
-    //                 'new_state' => "{$attribute}: {$newValue}",
-    //                 'table' => 'users',
-    //                 'created_at' => $user->created_at,
-    //                 'updated_at' => now(),
-    //             ]);
-    //         }
-    //     });
-    //}
-
-
-   
-
+                Audit::create([
+                    'user_id' => $user->id,
+                    'author' => Auth::user()->name ?? 'System',
+                    'event' => 'Actualizado',
+                    'previous_state' => "{$attribute}: {$oldValue}",
+                    'new_state' => "{$attribute}: {$newValue}",
+                    'table' => 'users',
+                    'created_at' => $user->created_at,
+                    'updated_at' => now(),
+                ]);
+            }
+        });
+    }
 }
+
