@@ -25,6 +25,7 @@
     </script>
 @endif
 
+<a href="{{ route('login') }}" class="ml-4 font-semibold text-gray-600 hover:text-gray-900 focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Login</a>
 
 <div class="flex justify-center items-center mt-8 bg-white">
     <div class="flex justify-center sm:flex-row flex-col sm:border-2 rounded-lg w-3/4 ">
