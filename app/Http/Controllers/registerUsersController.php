@@ -50,7 +50,6 @@ class registerUsersController extends Controller
     }
 
 
-
     //!Update user
     public function restore(Request $request, $id)
     {
