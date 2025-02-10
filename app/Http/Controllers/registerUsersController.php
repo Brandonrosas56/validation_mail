@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Models\User;
+use App\Models\Regional;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 class registerUsersController extends Controller
 {
@@ -15,8 +17,9 @@ class registerUsersController extends Controller
     public function index(Request $request)
     {
         $roles = role::select('name')->get();
-        $users = user::with('roles')->get();
-        return view('auth.register', compact('users', 'roles'));
+        $regional = Regional::all('rgn_id', 'rgn_nombre');
+        $users = user::with('roles', 'regional')->get(); 
+        return view('auth.register', compact('users', 'roles', 'regional'));
     }
 
     //!Create user
@@ -32,6 +35,7 @@ class registerUsersController extends Controller
                 }
             ],
             'password' => ['required', 'min:8', 'confirmed', 'regex:/[A-Z]/', 'regex:/[a-z]/', 'regex:/[0-9]/', 'regex:/[@$!%*?&#]/',],
+            'rgn_id' =>['required', 'exists:regional,rgn_id'],
             'rol' => ['required'],
         ]);
 
@@ -43,10 +47,10 @@ class registerUsersController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'user_blocked' => 0,
+            'rgn_id' => $request->rgn_id,
         ]);
         $user->assignRole($request->rol);
-        return redirect()->route('registerUsers')->with('sucees', '!Datos guardados correctamente¡');
+        return redirect()->route('registerUsers')->with('success', '¡Datos guardados correctamente!');
     }
 
 

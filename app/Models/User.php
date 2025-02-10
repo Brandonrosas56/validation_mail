@@ -33,7 +33,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'user_blocked',
+        'rgn_id',
     ];
 
 
@@ -69,6 +69,11 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function regional()
+    {
+        return $this->belongsTo(Regional::class, 'rgn_id', 'rgn_id');
     }
 
     /**
