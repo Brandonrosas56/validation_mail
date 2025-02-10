@@ -13,8 +13,8 @@
                 <img class="w-96 h-full object-cover rounded-l-xl" src="./img/login-banner.webp" alt="">
             </div>
             <div class="w-96  p-4 my-auto">
-                <div class=" object-cover p-5 w-20 h-20 rounded-full mx-auto flex items-center justify-center">
-
+                <div class="  h-20 rounded-full mx-auto flex items-center justify-center">
+                    <h1 class="text-ld font-bold">Iniciar Sesión</h1>
                 </div>
 
                 <x-validation-errors class="mb-4" />
@@ -38,23 +38,23 @@
                         <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
                     </div>
 
-                    <div class="inline-block">
                     <div class="w-full">
                         <label for="remember_me" class="flex items-center">
                             <x-checkbox id="remember_me" name="remember" />
                             <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
                         </label>
-                    </div>
-
-                    @if (Route::has('register'))
-                            <a href="{{ route('registerUsers') }}" class="ml-4 font-semibold text-gray-600 hover:text-gray-900 focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Register</a>
+                    </div class="space-x-4 flex">
+                    <div class="flex justify-between w-full max-w-sm mx-auto items-center">
+                        @if (Route::has('register'))
+                            <a href="{{ route('registerUsers') }}" class="px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                Register
+                            </a>
                         @endif
-                    </div>
-                    </div>
 
-                    <x-button class="">
-                        {{ __('Log in') }}
-                    </x-button>
+                        <x-button class="w-fit">
+                            {{ __('Log in') }}
+                        </x-button>
+                    </div>
                 </form>
             </div>
         </div>
