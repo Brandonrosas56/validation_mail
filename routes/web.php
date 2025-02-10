@@ -5,6 +5,7 @@ use App\Http\Middleware\CheckRole;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckIfBlocked;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\rolesController;
@@ -28,6 +29,8 @@ Route::get('/', function () {
 });
 
 Route::get('/enviar-correo', [EmailController::class, 'enviarCorreo']);
+Route::get('/test-correo', [UserController::class, 'testGenerarCorreo']);
+
 
 Route::middleware(['auth', 'checkIfBlocked'])->group(function(){
     Route::middleware([

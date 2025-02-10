@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Audit;
 
 class User extends Authenticatable
 {
@@ -103,45 +104,5 @@ class User extends Authenticatable
     return $usuariosPaginados;
 }
 
-    /**
-     * Define eventos de modelo para registrar auditorías en la tabla 'audits' cuando se crean o actualizan usuarios.
-     */
-    protected static function booted()
-    {
-        static::created(function (User $user) {
-            Audit::create([
-                'user_id' => $user->id, 
-                'author' =>  Auth::user()->name ?? 'System',
-                'event' => 'Creado',
-                'previous_state' => 'Se creó el usuario con id '. $user->id ,
-                'new_state' => '',
-                'table'=> 'users',
-            ]);
-        });
-
-        static::updated(function (User $user) {
-            $changes = $user->getChanges();
-            $original = $user->getOriginal();
-
-            foreach ($changes as $attribute => $newValue) {
-                if ($attribute == 'updated_at' || !isset($original[$attribute])) {
-                    continue;
-                }
-
-                $oldValue = $original[$attribute];
-
-                Audit::create([
-                    'user_id' => $user->id,
-                    'author' => Auth::user()->name ?? 'System',
-                    'event' => 'Actualizado',
-                    'previous_state' => "{$attribute}: {$oldValue}",
-                    'new_state' => "{$attribute}: {$newValue}",
-                    'table' => 'users',
-                    'created_at' => $user->created_at,
-                    'updated_at' => now(),
-                ]);
-            }
-        });
-    }
 }
 

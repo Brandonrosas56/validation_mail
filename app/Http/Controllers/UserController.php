@@ -71,4 +71,30 @@ class UserController extends Controller
         // Retornar los resultados paginados en formato JSON
         return response()->json($usuariosPaginados);
     }
+
+    /**
+     * Método para probar la generación de correos para un usuario específico.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function testGenerarCorreo()
+    {
+        // Suponiendo que el usuario con id = 1 existe en la base de datos
+        $usuario = User::find(1);
+
+        if (!$usuario) {
+            return response()->json(['error' => 'Usuario no encontrado'], 404);
+        }
+
+        // Generar correos para ese usuario
+        $correos = $usuario->generarCorreos(
+            $usuario->primer_nombre,
+            $usuario->segundo_nombre,
+            $usuario->primer_apellido,
+            $usuario->segundo_apellido
+        );
+
+        // Retornar las opciones de correo generadas
+        return response()->json($correos);
+    }
 }
