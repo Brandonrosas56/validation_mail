@@ -16,6 +16,8 @@ use App\Http\Controllers\zipReportController;
 use App\Http\Controllers\SolicitanteController;
 use App\Http\Controllers\registerUsersController;
 use App\Http\Controllers\VersionControlController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 
 App::setLocale('es');
 

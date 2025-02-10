@@ -57,29 +57,51 @@ class User extends Authenticatable
      *
      * @return array
      */
-    public function generarOpcionesCorreo()
-    {
-    // Dominio fijo
-    $dominio = '@sena.edu.co';
-
-    $primer_nombre = strtolower($this->primer_nombre);
-    $segundo_nombre = strtolower($this->segundo_nombre ?? '');
-    $primer_apellido = strtolower($this->primer_apellido);
-    $segundo_apellido = strtolower($this->segundo_apellido ?? '');
-
-    $opcion1 = substr($primer_nombre, 0, 1) . $primer_apellido . $dominio;  // ej: jmendieta@sena.edu.co
-    $opcion2 = substr($primer_nombre, 0, 1) . $primer_apellido . substr($segundo_apellido, 0, 1) . $dominio;  // ej: jmendietah@sena.edu.co
-    $opcion3 = substr($primer_nombre, 0, 1) . substr($segundo_nombre, 0, 1) . $primer_apellido . $dominio;  // ej: jfmendieta@sena.edu.co
-    $opcion4 = substr($primer_nombre, 0, 1) . substr($segundo_nombre, 0, 1) . $primer_apellido . substr($segundo_apellido, 0, 1) . $dominio;  // ej: jfmendietah@sena.edu.co
-
-    // Retornar las opciones en un array
-    return [
-        'opcion1' => $opcion1,
-        'opcion2' => $opcion2,
-        'opcion3' => $opcion3,
-        'opcion4' => $opcion4,
-    ];
+    public function generarCorreos($primer_nombre, $segundo_nombre, $primer_apellido, $segundo_apellido) {
+        $dominio = '@sena.edu.co';
+    
+        $primer_nombre = strtolower($primer_nombre);
+        $segundo_nombre = strtolower($segundo_nombre ?? '');
+        $primer_apellido = strtolower($primer_apellido);
+        $segundo_apellido = strtolower($segundo_apellido ?? '');
+    
+        $opcion1 = substr($primer_nombre, 0, 1) . $primer_apellido . $dominio;  
+        $opcion2 = substr($primer_nombre, 0, 1) . $primer_apellido . substr($segundo_apellido, 0, 1) . $dominio;  
+        $opcion3 = substr($primer_nombre, 0, 1) . substr($segundo_nombre, 0, 1) . $primer_apellido . $dominio;  
+        $opcion4 = substr($primer_nombre, 0, 1) . substr($segundo_nombre, 0, 1) . $primer_apellido . substr($segundo_apellido, 0, 1) . $dominio;  
+    
+        return [
+            'opcion1' => $opcion1,
+            'opcion2' => $opcion2,
+            'opcion3' => $opcion3,
+            'opcion4' => $opcion4,
+        ];
     }
+
+    /**
+     * Método para generar los correos masivos con paginación.
+     *
+     * @return \Illuminate\Support\Collection
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+
+     */
+    public function generarCorreosMasivosPaginados()
+{
+    // Usar paginación para obtener los usuarios de 100 en 100
+    $usuariosPaginados = User::paginate(100);
+    
+    // Aplicar la función de generación de correos a los usuarios de la página actual
+    $usuariosPaginados->getCollection()->transform(function($usuario) {
+        return $this->generarCorreos(
+            $usuario->primer_nombre, 
+            $usuario->segundo_nombre, 
+            $usuario->primer_apellido, 
+            $usuario->segundo_apellido
+        );
+    });
+
+    return $usuariosPaginados;
+}
 
     /**
      * Define eventos de modelo para registrar auditorías en la tabla 'audits' cuando se crean o actualizan usuarios.
