@@ -12,7 +12,7 @@ class CreateAccount extends Model
     protected $table = 'create_account';
 
     protected $fillable = [
-        'regional',
+        'rgn_id',
         'primer_nombre',
         'segundo_nombre',
         'primer_apellido',

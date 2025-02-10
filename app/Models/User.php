@@ -31,6 +31,7 @@ class User extends Authenticatable
 
         'id',
         'name',
+        'supplier_document',
         'email',
         'password',
         'rgn_id',

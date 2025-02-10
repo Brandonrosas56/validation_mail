@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('validate_account', function (Blueprint $table) {
             $table->id();
-            $table->string('regional');
+            $table->foreignId('rgn_id')->nullable();
             $table->string('primer_nombre');
             $table->string('segundo_nombre')->nullable();
             $table->string('primer_apellido');
             $table->string('segundo_apellido')->nullable();
+            $table->string('documento_proveedor')->nullable();
             $table->string('correo_personal')->unique();
             $table->string('correo_institucional')->unique();
             $table->string('numero_contrato');

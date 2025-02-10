@@ -5,14 +5,23 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\CreateAccount;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Regional;
+
 
 class CreateAccountController extends Controller
 {
     public function show()
     {
-        $accounts = CreateAccount::all();
+        $user = Auth()->user();
+        if ($user->rol === 'Contratista') {
+            $accounts = CreateAccount::find($user->id);
+        }else{
+            $accounts = CreateAccount::all();
+        }
+        $regional = Regional::all('rgn_id', 'rgn_nombre');
 
-        return view('tables.ShowCreateAccount', compact('accounts'));
+        return view('tables.ShowCreateAccount', compact('accounts', 'regional'));
     }
 
 
@@ -25,7 +34,7 @@ class CreateAccountController extends Controller
     {
         // Validación de los datos del formulario
         $request->validate([
-            'regional' => 'required|string|max:255',
+            'rgn_id' =>'required', 'exists:regional,rgn_id',
             'primer_nombre' => 'required|string|max:255',
             'segundo_nombre' => 'nullable|string|max:255',
             'primer_apellido' => 'required|string|max:255',
@@ -62,7 +71,7 @@ class CreateAccountController extends Controller
     {
 
         $apiUrl = "https://www.datos.gov.co/resource/jbjy-vk9h.json?"
-                . "\$where=documento_proveedor='$documentoProveedor' AND id_contrato>='$numeroContrato'";
+            . "\$where=documento_proveedor='$documentoProveedor' AND id_contrato>='$numeroContrato'";
 
         try {
             $response = Http::get($apiUrl);
@@ -73,5 +82,4 @@ class CreateAccountController extends Controller
             return false; // En caso de error, se asume que la validación falló
         }
     }
-
 }

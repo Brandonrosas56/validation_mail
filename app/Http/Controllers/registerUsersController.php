@@ -9,7 +9,6 @@ use App\Models\Regional;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Log;
 
 class registerUsersController extends Controller
 {
@@ -26,6 +25,7 @@ class registerUsersController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'supplier_document' => ['required', 'string'],
             'email' => ['required','unique:users'],
             'password' => ['required', 'min:8', 'confirmed', 'regex:/[A-Z]/', 'regex:/[a-z]/', 'regex:/[0-9]/', 'regex:/[@$!%*?&#]/',],
             'rgn_id' =>['required', 'exists:regional,rgn_id'],
@@ -38,6 +38,7 @@ class registerUsersController extends Controller
 
         $user = User::create([
             'name' => $request->name,
+            'supplier_document' => $request->supplier_document,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'rgn_id' => $request->rgn_id,

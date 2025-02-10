@@ -40,6 +40,7 @@ class DatabaseSeeder extends Seeder
         // Create user
         $user = User::create([
             'name' => 'admin',
+            'supplier_document' => '00000000',
             'email' => 'admin@sena.edu.co',
             'password' => bcrypt('Admin12345*')
         ]);

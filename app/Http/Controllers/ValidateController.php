@@ -4,15 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ValidateAccount;
+use App\Models\Regional;
 
 class ValidateController extends Controller
 {
 
     public function show()
     {
-        $accounts = ValidateAccount::all();
+        $user = Auth()->user();
+        if ($user->rol === 'Contratista') {
+            $accounts = ValidateAccount::find($user->id);
+        }else{
+            $accounts = ValidateAccount::all();
+        }
+        $regional = Regional::all('rgn_id', 'rgn_nombre');
 
-        return view('tables.ShowValidateAccount', compact('accounts'));
+        return view('tables.ShowValidateAccount', compact('accounts','regional'));
     }
 
     public function index()
@@ -23,11 +30,12 @@ class ValidateController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'regional' => 'required|string|max:255',
+            'rgn_id' =>'required', 'exists:regional,rgn_id',
             'primer_nombre' => 'required|string|max:255',
             'segundo_nombre' => 'nullable|string|max:255',
             'primer_apellido' => 'required|string|max:255',
             'segundo_apellido' => 'nullable|string|max:255',
+            'documento_proveedor' => 'required|String|',
             'correo_personal' => 'required|email|unique:validate_account,correo_personal',
             'correo_institucional' => 'required|email|regex:/^[a-zA-Z0-9._%+-]+@sena\.edu\.co$/|unique:validate_account,correo_institucional',
             'numero_contrato' => 'required|string|max:255',
