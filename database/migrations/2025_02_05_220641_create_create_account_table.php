@@ -18,7 +18,9 @@ return new class extends Migration
             $table->string('segundo_nombre')->nullable();
             $table->string('primer_apellido');
             $table->string('segundo_apellido')->nullable();
+            $table->string('documento_proveedor')->nullable();
             $table->string('correo_personal')->unique();
+            $table->string('correo_institucional')->nullable();
             $table->string('numero_contrato');
             $table->date('fecha_inicio_contrato');
             $table->date('fecha_terminacion_contrato');
