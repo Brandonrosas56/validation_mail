@@ -38,6 +38,11 @@
                 </div>
 
                 <div class="mb-2">
+                    <label for="documento_proveedor" class="block mb-1 TextColor font-bold">Documento Proveedor</label>
+                    <input type="text" name="documento_proveedor" id="documento_proveedor" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('segundo_apellido') }}">
+                </div>
+
+                <div class="mb-2">
                     <label for="correo_personal" class="block mb-1 TextColor font-bold">Correo Personal</label>
                     <input type="email" name="correo_personal" id="correo_personal" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('correo_personal') }}" required>
                 </div>

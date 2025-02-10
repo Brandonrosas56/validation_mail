@@ -54,7 +54,7 @@
 
                 <div class="mb-2">
                     <label for="fecha_inicio_contrato" class="block mb-1 TextColor font-bold">Fecha de Inicio del Contrato</label>
-                    <input type="date" name="fecha_inicio_contrato" id="fecha_inicio_contrato" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('fecha_inicio_contrato') }}" required onchange="updateMinDate()">
+                    <input type="date" name="fecha_inicio_contrato" id="fecha_inicio_contrato" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('fecha_inicio_contrato') }}" required>
                 </div>
 
                 <div class="mb-2">
@@ -81,14 +81,5 @@
     function toggleActivationModal() {
         const modal = document.getElementById('activationModal');
         modal.classList.toggle('active');  // Alterna la clase 'active' para mostrar/ocultar el modal
-    }
-
-    // Función para actualizar la fecha mínima en el campo de fecha de terminación
-    function updateMinDate() {
-        const fechaInicio = document.getElementById("fecha_inicio_contrato").value;
-        const fechaTerminacion = document.getElementById("fecha_terminacion_contrato");
-
-        // Actualiza el valor mínimo de la fecha de terminación a la fecha de inicio seleccionada
-        fechaTerminacion.setAttribute("min", fechaInicio);
     }
 </script>
