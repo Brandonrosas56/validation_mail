@@ -12,11 +12,12 @@ class ValidateAccount extends Model
     protected $table = 'validate_account';
 
     protected $fillable = [
-        'regional',
+        'rgn_id',
         'primer_nombre',
         'segundo_nombre',
         'primer_apellido',
         'segundo_apellido',
+        'documento_proveedor',
         'correo_personal',
         'correo_institucional',
         'numero_contrato',

@@ -14,7 +14,12 @@
             <div class="space-y-4">
                 <div class="mb-2">
                     <label for="regional" class="block mb-1 TextColor font-bold">Regional</label>
-                    <input type="text" name="regional" id="regional" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('regional') }}" required>
+                    <x-select name="rgn_id" id="rgn_id" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none">
+                        <option value="">{{__('Select_regional')}}</option>
+                        @foreach($regional as $region)
+                        <option value="{{ $region->rgn_id }}">{{ $region->rgn_nombre }}</option>
+                        @endforeach
+                    </x-select>
                 </div>
 
                 <div class="mb-2">

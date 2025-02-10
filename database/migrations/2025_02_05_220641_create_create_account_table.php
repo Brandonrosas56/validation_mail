@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('create_account', function (Blueprint $table) {
             $table->id();
-            $table->string('regional');
+            $table->foreignId('rgn_id')->nullable();
             $table->string('primer_nombre');
             $table->string('segundo_nombre')->nullable();
             $table->string('primer_apellido');
