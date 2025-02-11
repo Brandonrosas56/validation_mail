@@ -32,7 +32,6 @@ class CreateAccountController extends Controller
 
     public function store(Request $request)
     {
-        // Validación de los datos del formulario
         $request->validate([
             'rgn_id' =>'required', 'exists:regional,rgn_id',
             'primer_nombre' => 'required|string|max:255',
@@ -46,40 +45,36 @@ class CreateAccountController extends Controller
             'fecha_terminacion_contrato' => 'required|date|after_or_equal:fecha_inicio_contrato',
         ]);
 
-        // Luego proceder con los valores
         $documentoProveedor = $request->input('documento_proveedor');
         $numeroContrato = $request->input('numero_contrato');
-        $estadoContrato = 'En ejecución';
 
-
-        // Validar con la API del SECOP
-        if (!$this->validarContratoSecop($documentoProveedor, $numeroContrato, $estadoContrato)) {
+        if (!$this->validarContratoSecop($documentoProveedor, $numeroContrato)) {
             return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.');
         }
 
-        // Guardar los datos si pasa la validación
         CreateAccount::create($request->all());
 
         return redirect()->back()->with('success', 'Solicitud creada correctamente.');
     }
 
 
-    /**
-     * Método para validar el contrato en el SECOP
-     */
-    private function validarContratoSecop($documentoProveedor, $numeroContrato, $estadoContrato)
+    private function validarContratoSecop($documentoProveedor, $numeroContrato)
     {
-
         $apiUrl = "https://www.datos.gov.co/resource/jbjy-vk9h.json?"
-            . "\$where=documento_proveedor='$documentoProveedor' AND id_contrato>='$numeroContrato'";
+            . "\$where=documento_proveedor='$documentoProveedor' AND id_contrato='$numeroContrato' AND estado_contrato='En ejecución'";
 
         try {
             $response = Http::get($apiUrl);
             $data = $response->json();
-
-            return !empty($data);  // Si la API devuelve datos, el contrato es válido
+    
+            if (isset($data['error']) || isset($data['message'])) {
+                return false; 
+            }
+    
+            return is_array($data) && count($data) > 0;
+    
         } catch (\Exception $e) {
-            return false; // En caso de error, se asume que la validación falló
+            return false; 
         }
     }
 }
