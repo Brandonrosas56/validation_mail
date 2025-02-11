@@ -165,6 +165,7 @@ return [
         'creationDateTo' => 'fecha de creación hasta',
         'updateStartDate' => 'fecha de actualización desde',
         'updateDateTo' => 'fecha de actualización hasta',
+        'rgn_id' => 'Regional',
     ],
 
 ];
