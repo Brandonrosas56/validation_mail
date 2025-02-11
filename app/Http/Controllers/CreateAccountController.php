@@ -14,11 +14,17 @@ class CreateAccountController extends Controller
     public function show()
     {
         $user = Auth()->user();
-        if ($user->rol === 'Contratista') {
-            $accounts = CreateAccount::find($user->id);
-        }else{
+        $exists = CreateAccount::where('documento_proveedor', $user->supplier_document)->exists();
+        if ($user->hasRole('Contratista')) {
+            if ($exists) {
+                $accounts = CreateAccount::where('documento_proveedor', $user->supplier_document)->get();
+            }else{
+                $accounts = [];
+            }
+        } else {
             $accounts = CreateAccount::all();
         }
+
         $regional = Regional::all('rgn_id', 'rgn_nombre');
 
         return view('tables.ShowCreateAccount', compact('accounts', 'regional'));
@@ -34,7 +40,8 @@ class CreateAccountController extends Controller
     {
         // Validación de los datos del formulario
         $request->validate([
-            'rgn_id' =>'required', 'exists:regional,rgn_id',
+            'rgn_id' => 'required',
+            'exists:regional,rgn_id',
             'primer_nombre' => 'required|string|max:255',
             'segundo_nombre' => 'nullable|string|max:255',
             'primer_apellido' => 'required|string|max:255',
@@ -53,9 +60,9 @@ class CreateAccountController extends Controller
 
 
         // Validar con la API del SECOP
-        if (!$this->validarContratoSecop($documentoProveedor, $numeroContrato, $estadoContrato)) {
-            return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.');
-        }
+        // if (!$this->validarContratoSecop($documentoProveedor, $numeroContrato, $estadoContrato)) {
+        //     return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.');
+        // }
 
         // Guardar los datos si pasa la validación
         CreateAccount::create($request->all());
