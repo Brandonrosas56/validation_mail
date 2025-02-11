@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\App;
 use App\Http\Middleware\CheckRole;
 use App\Http\Middleware\CheckIfBlocked;
+use App\Http\Controllers\GlpiController;
+
 
 App::setLocale('es');
 
@@ -60,8 +62,15 @@ Route::middleware(['auth', 'checkIfBlocked'])->group(function () {
                     Route::get('Roles', 'showRolView')->name('show-rol-view');
                     Route::post('/registerRoles', 'store')->name('roles.store');
                     Route::put('/updateRoles/{id}', 'restore')->name('roles.restore');
+                    Route::get('/glpi/init-session', [GlpiController::class, 'initSession']);
+                    Route::get('/glpi/ticket/{id}', [GlpiController::class, 'getTicket']);
+                    Route::post('/glpi/ticket', [GlpiController::class, 'createTicket']);
                 });
             });
         });
     });
 });
+
+
+
+
