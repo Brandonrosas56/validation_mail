@@ -14,7 +14,7 @@
             <div class="space-y-4">
                 <div class="mb-2">
                     <label for="regional" class="block mb-1 TextColor font-bold">Regional</label>
-                    <x-select name="rgn_id" id="rgn_id" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none">
+                    <x-select name="rgn_id" id="rgn_id" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" required>
                         <option value="">{{__('Select_regional')}}</option>
                         @foreach($regional as $region)
                         <option value="{{ $region->rgn_id }}">{{ $region->rgn_nombre }}</option>
@@ -44,7 +44,7 @@
 
                 <div class="mb-2">
                     <label for="documento_proveedor" class="block mb-1 TextColor font-bold">Documento Proveedor</label>
-                    <input type="text" name="documento_proveedor" id="documento_proveedor" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('segundo_apellido') }}">
+                    <input type="text" name="documento_proveedor" id="documento_proveedor" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('segundo_apellido') }}" required>
                 </div>
 
                 <div class="mb-2">
@@ -78,18 +78,14 @@
 
 <!-- Modal toggle logic -->
 <script>
-    // Función para alternar la visibilidad del modal
     function toggleModal() {
         const modal = document.getElementById('userModal');
-        modal.classList.toggle('active');  // Alterna la clase 'hidden' para mostrar/ocultar el modal
+        modal.classList.toggle('active');  
     }
 
-    // Función para actualizar la fecha mínima de terminación
     function updateMinDate() {
         const fechaInicio = document.getElementById("fecha_inicio_contrato").value;
         const fechaTerminacion = document.getElementById("fecha_terminacion_contrato");
-
-        // Actualiza el valor mínimo de la fecha de terminación a la fecha de inicio seleccionada
         fechaTerminacion.setAttribute("min", fechaInicio);
     }
 </script>
