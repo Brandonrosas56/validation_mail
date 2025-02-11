@@ -47,4 +47,21 @@
             </tbody>
         </table>
     </div>
+
+    <script>
+        // Verificar si hay mensajes de éxito o error
+        @if(session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Éxito',
+                text: '{{ session('success') }}',
+            });
+        @elseif(session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: '{{ session('error') }}',
+            });
+        @endif
+    </script>
 </x-app-layout>
