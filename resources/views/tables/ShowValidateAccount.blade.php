@@ -31,7 +31,7 @@
                 @foreach ($accounts as $account)
                     <tr class="text-sm text-gray-700 odd:bg-white even:bg-[#D9D9D9]">
                         <td class="px-4 py-2 border-b">{{ $account->id }}</td>
-                        <td class="px-4 py-2 border-b">{{ $account->regional }}</td>
+                        <td class="px-4 py-2 border-b">{{ $account->regional ? $account->regional->rgn_nombre : 'No asignado' }}</td>
                         <td class="px-4 py-2 border-b">{{ $account->primer_nombre }}</td>
                         <td class="px-4 py-2 border-b">{{ $account->segundo_nombre }}</td>
                         <td class="px-4 py-2 border-b">{{ $account->primer_apellido }}</td>
