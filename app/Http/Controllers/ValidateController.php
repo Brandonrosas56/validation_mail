@@ -12,11 +12,18 @@ class ValidateController extends Controller
     public function show()
     {
         $user = Auth()->user();
-        if ($user->rol === 'Contratista') {
-            $accounts = ValidateAccount::find($user->id);
+        $exists = ValidateAccount::where('documento_proveedor', $user->supplier_document)->exists();
+
+        if ($user->hasRole('Contratista')) {
+            if($exists){
+                $accounts = ValidateAccount::where('documento_proveedor', $user->supplier_document)->get();
+            }else{
+                $accounts = [];
+            }   
         }else{
             $accounts = ValidateAccount::all();
         }
+
         $regional = Regional::all('rgn_id', 'rgn_nombre');
 
         return view('tables.ShowValidateAccount', compact('accounts','regional'));
