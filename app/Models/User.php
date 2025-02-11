@@ -71,7 +71,6 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-
     public function regional()
     {
         return $this->belongsTo(Regional::class, 'rgn_id', 'rgn_id');
@@ -122,6 +121,6 @@ class User extends Authenticatable
     //}
 
 
-   
+
 
 }
