@@ -25,4 +25,9 @@ class ValidateAccount extends Model
         'fecha_terminacion_contrato',
         'usuario'
     ];
+
+    public function regional()
+    {
+        return $this->belongsTo(Regional::class, 'rgn_id', 'rgn_id');
+    }
 }

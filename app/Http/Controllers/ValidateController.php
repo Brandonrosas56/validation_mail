@@ -39,16 +39,16 @@ class ValidateController extends Controller
     {
         $request->validate([
             'rgn_id' =>'required', 'exists:regional,rgn_id',
+            'documento_proveedor' => 'required|String|',
             'primer_nombre' => 'required|string|max:255',
             'segundo_nombre' => 'nullable|string|max:255',
             'primer_apellido' => 'required|string|max:255',
             'segundo_apellido' => 'nullable|string|max:255',
-            'documento_proveedor' => 'required|String|',
             'correo_personal' => 'required|email|unique:validate_account,correo_personal',
             'correo_institucional' => 'required|email|regex:/^[a-zA-Z0-9._%+-]+@sena\.edu\.co$/|unique:validate_account,correo_institucional',
-            'numero_contrato' => 'required|string|max:255',
             'fecha_inicio_contrato' => 'required|date',
             'fecha_terminacion_contrato' => 'required|date|after_or_equal:fecha_inicio_contrato',
+            'numero_contrato' => 'required|string|max:255',
             'usuario' => 'required|string|max:255|unique:validate_account,usuario',
         ]);
 

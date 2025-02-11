@@ -1,6 +1,6 @@
 <!-- Modal -->
 <div class="modal-overlay fixed inset-0 bg-gray-800 bg-opacity-50 hidden" id="activationModal">
-    <div class="ModalColor rounded-lg w-full max-w-xs sm:max-w-lg md:max-w-xl lg:max-w-2xl p-6 shadow-lg">
+    <div class="ModalColor rounded-lg w-full max-w-xl sm:max-w-2xl p-6 shadow-lg">
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-lg font-bold TextColor">Formulario de Activación</h2>
             <button onclick="toggleActivationModal()" class="text-gray-500 hover:text-gray-700 cursor-pointer">
@@ -11,7 +11,10 @@
             @csrf
             <x-validation-errors class="mb-4" />
             <input type="hidden" id="operation" name="operation" value="add">
-            <div class="space-y-4">
+            
+            <!-- Usando grid para dividir el formulario en dos columnas -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- Columna 1 -->
                 <div class="mb-2">
                     <label for="regional" class="block mb-1 TextColor font-bold">Regional</label>
                     <x-select name="rgn_id" id="rgn_id" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" required>
@@ -20,6 +23,11 @@
                         <option value="{{ $region->rgn_id }}">{{ $region->rgn_nombre }}</option>
                         @endforeach
                     </x-select>
+                </div>
+
+                <div class="mb-2">
+                    <label for="documento_proveedor" class="block mb-1 TextColor font-bold">Documento Proveedor</label>
+                    <input type="text" name="documento_proveedor" id="documento_proveedor" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('segundo_apellido') }}">
                 </div>
 
                 <div class="mb-2">
@@ -43,11 +51,6 @@
                 </div>
 
                 <div class="mb-2">
-                    <label for="documento_proveedor" class="block mb-1 TextColor font-bold">Documento Proveedor</label>
-                    <input type="text" name="documento_proveedor" id="documento_proveedor" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('segundo_apellido') }}" required>
-                </div>
-
-                <div class="mb-2">
                     <label for="correo_personal" class="block mb-1 TextColor font-bold">Correo Personal</label>
                     <input type="email" name="correo_personal" id="correo_personal" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('correo_personal') }}" required>
                 </div>
@@ -55,11 +58,6 @@
                 <div class="mb-2">
                     <label for="correo_institucional" class="block mb-1 TextColor font-bold">Correo Institucional (@sena.edu.co)</label>
                     <input type="email" name="correo_institucional" id="correo_institucional" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('correo_institucional') }}" required>
-                </div>
-
-                <div class="mb-2">
-                    <label for="numero_contrato" class="block mb-1 TextColor font-bold">Número de Contrato</label>
-                    <input type="text" name="numero_contrato" id="numero_contrato" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('numero_contrato') }}" required>
                 </div>
 
                 <div class="mb-2">
@@ -73,11 +71,17 @@
                 </div>
 
                 <div class="mb-2">
+                    <label for="numero_contrato" class="block mb-1 TextColor font-bold">Número de Contrato</label>
+                    <input type="text" name="numero_contrato" id="numero_contrato" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('numero_contrato') }}" required>
+                </div>
+
+                <div class="mb-2">
                     <label for="usuario" class="block mb-1 TextColor font-bold">Usuario</label>
                     <input type="text" name="usuario" id="usuario" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('usuario') }}" required>
-                </div>
+                </div>     
             </div>
-            <div class="mt-6 flex justify-between w-full mb-4">
+            <!-- Botón de envío -->
+            <div class="mt-6 flex justify-center w-full mb-4">
                 <button type="submit" class="ButtonColor text-white font-bold py-2 px-4 rounded w-40">
                     Enviar
                 </button>
@@ -87,14 +91,9 @@
 </div>
 
 <script>
+    // Función para alternar la visibilidad del modal
     function toggleActivationModal() {
         const modal = document.getElementById('activationModal');
-        modal.classList.toggle('active');
-    }
-
-    function updateMinDate() {
-        const fechaInicio = document.getElementById("fecha_inicio_contrato").value;
-        const fechaTerminacion = document.getElementById("fecha_terminacion_contrato");
-        fechaTerminacion.setAttribute("min", fechaInicio);
+        modal.classList.toggle('active'); // Alterna la clase 'active' para mostrar/ocultar el modal
     }
 </script>
