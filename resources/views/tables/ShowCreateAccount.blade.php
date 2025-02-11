@@ -43,7 +43,9 @@
                 @endforeach
             </tbody>
         </table>
-        
+    </div>
+
+    
     <script>
         // Verificar si hay mensajes de éxito o error
         @if(session('success'))
@@ -62,5 +64,5 @@
     </script>
 
        
-    </div>
+    
 </x-app-layout>

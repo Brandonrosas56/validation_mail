@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\ValidateAccount;
 use App\Models\Regional;
+use Illuminate\Support\Facades\Http;
 
 class ValidateController extends Controller
 {
@@ -51,8 +52,35 @@ class ValidateController extends Controller
             'usuario' => 'required|string|max:255|unique:validate_account,usuario',
         ]);
 
+        $documentoProveedor = $request->input('documento_proveedor');
+        $numeroContrato = $request->input('numero_contrato');
+
+        if (!$this->validarContratoSecop($documentoProveedor, $numeroContrato)) {
+            return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.');
+        }
+
         ValidateAccount::create($request->all());
 
         return redirect()->back()->with('success', 'Solicitud de activación creada correctamente.');
+    }
+
+    private function validarContratoSecop($documentoProveedor, $numeroContrato)
+    {
+        $apiUrl = "https://www.datos.gov.co/resource/jbjy-vk9h.json?"
+            . "\$where=documento_proveedor='$documentoProveedor' AND id_contrato='$numeroContrato' AND estado_contrato='En ejecución'";
+
+        try {
+            $response = Http::get($apiUrl);
+            $data = $response->json();
+    
+            if (isset($data['error']) || isset($data['message'])) {
+                return false; 
+            }
+    
+            return is_array($data) && count($data) > 0;
+    
+        } catch (\Exception $e) {
+            return false; 
+        }
     }
 }
