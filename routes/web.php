@@ -66,13 +66,16 @@ Route::middleware(['auth', 'checkIfBlocked'])->group(function () {
         Route::middleware(['auth'])->group(function () {
             Route::middleware(CheckRole::class . ':admin_users')->group(function () {
                 Route::controller(rolesController::class)->group(function () {
-                    Route::get('Roles', 'showRolView')->name('show-rol-view');
-                    Route::post('/registerRoles', 'store')->name('roles.store');
-                    Route::put('/updateRoles/{id}', 'restore')->name('roles.restore');
-                    Route::get('/glpi/init-session', [GlpiController::class, 'initSession']);
-                    Route::get('/glpi/ticket/{id}', [GlpiController::class, 'getTicket']);
-                    Route::post('/glpi/ticket', [GlpiController::class, 'createTicket']);
+                Route::get('Roles', 'showRolView')->name('show-rol-view');
+                Route::post('/registerRoles', 'store')->name('roles.store');
+       
                 });
+                Route::middleware('auth')->prefix('glpi')->group(function () {
+                Route::get('/init-session', [GlpiController::class, 'initSession']);
+                Route::get('/ticket/{id}', [GlpiController::class, 'getTicket']);
+                Route::post('/ticket', [GlpiController::class, 'createTicket']);
+                });
+                
             });
         });
     });
