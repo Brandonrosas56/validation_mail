@@ -60,9 +60,9 @@ class CreateAccountController extends Controller
 
 
         // Validar con la API del SECOP
-        // if (!$this->validarContratoSecop($documentoProveedor, $numeroContrato, $estadoContrato)) {
-        //     return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.');
-        // }
+        if (!$this->validarContratoSecop($documentoProveedor, $numeroContrato, $estadoContrato)) {
+            return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.');
+        }
 
         // Guardar los datos si pasa la validación
         CreateAccount::create($request->all());
