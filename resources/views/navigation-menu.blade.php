@@ -26,8 +26,8 @@
 
             @if ($permissionsRegional)
             <div class="hidden sm:-my-px gap-3 sm:flex">
-                <x-nav-link href="{{ route('show-regional') }}" :active="request()->routeIs('show-regional')">
-                    {{ __('show-regional') }}
+                <x-nav-link href="{{ route('show-import') }}" :active="request()->routeIs('show-import')">
+                    {{ __('show-import') }}
                 </x-nav-link>
             </div>
             @endif

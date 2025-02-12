@@ -24,12 +24,13 @@
     @endif
 
     <div class="overflow-x-auto max-w-7xl mx-auto mt-10 rounded-lg">
-        <form action="import-regional" method="post" enctype="multipart/form-data" class="flex flex-col gap-2" id="formUpluadFile">
+        <form action="import-files" method="post" enctype="multipart/form-data" class="flex flex-col gap-2" id="formUpluadFile">
             @csrf
-            <label for="upload_file">Cargar archivo regionales</label>
+            <label for="upload_file">Cargar archivo con formato CSV</label>
             <input type="file" name="upload_file" id="upload_file" class="h-12 block w-full py-2 px-4 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400">
-            <select name="formatCSV" id=formatCSV class="h-12 block w-full py-2 px-4 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400">
-                <option value="formatIMS">Formato CSV</option>
+            <select name="typeFile" id=typeFile class="h-12 block w-full py-2 px-4 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400">
+                <option value="Regional">Regionales</option>
+                <option value="Administrators">Administradores</option>
             </select>
             <button type="submit" class="flex flex-row w-full justify-center px-6 py-2 text-lg rounded-lg" style="background-color:#04324D; color: #FFFFFF;">
                 Subir archivo
