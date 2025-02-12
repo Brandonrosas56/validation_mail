@@ -11,7 +11,7 @@
 
         <!-- Permissions -->
         @php
-        $permissionsRegional = auth()->user()->can('super_admin') || auth()->user()->can('administrador');
+        $permissionsImport = auth()->user()->can('super_admin') || auth()->user()->can('administrador');
         @endphp
 
         <div class="flex">
@@ -24,7 +24,7 @@
                 </x-nav-link>
             </div>
 
-            @if ($permissionsRegional)
+            @if ($permissionsImport)
             <div class="hidden sm:-my-px gap-3 sm:flex">
                 <x-nav-link href="{{ route('show-import') }}" :active="request()->routeIs('show-import')">
                     {{ __('show-import') }}
