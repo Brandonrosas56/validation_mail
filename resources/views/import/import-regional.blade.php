@@ -11,6 +11,18 @@
     </script>
     @endif
 
+    @if (session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            Swal.fire({
+                title: "Éxito!",
+                text: "{{ session('success') }}",
+                icon: "success"
+            });
+        })
+    </script>
+    @endif
+
     <div class="overflow-x-auto max-w-7xl mx-auto mt-10 rounded-lg">
         <form action="import-regional" method="post" enctype="multipart/form-data" class="flex flex-col gap-2" id="formUpluadFile">
             @csrf
