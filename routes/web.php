@@ -12,6 +12,7 @@ use App\Http\Controllers\zipReportController;
 use App\Http\Controllers\moveFileController;
 use App\Http\Controllers\CreateAccountController;
 use App\Http\Controllers\ValidateController;
+use App\Http\Controllers\regionalController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\App;
 use App\Http\Middleware\CheckRole;
@@ -38,6 +39,12 @@ Route::get('/create-account', [CreateAccountController::class, 'index'])->name('
 Route::get('/validate-account', [ValidateController::class, 'index'])->name('validate.account');
 
 Route::post('/activation', [ValidateController::class, 'store'])->name('activation.store');
+
+Route::controller(regionalController::class)->group(function(){
+    Route::get('/show-regional', 'store')->name('show-regional');
+    Route::post('/import-regional', 'importRegional')->name('import-regional');
+});
+
 
 Route::controller(registerUsersController::class)->group(function () {
     Route::get('/registerUsers', 'index')->name('registerUsers');

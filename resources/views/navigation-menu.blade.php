@@ -9,6 +9,11 @@
             </h1>
         </div>
 
+        <!-- Permissions -->
+        @php
+        $permissionsRegional = auth()->user()->can('super_admin') || auth()->user()->can('administrador');
+        @endphp
+
         <div class="flex">
             <!-- Logo -->
 
@@ -18,6 +23,14 @@
                     {{ __('Dashboard') }}
                 </x-nav-link>
             </div>
+
+            @if ($permissionsRegional)
+            <div class="hidden sm:-my-px gap-3 sm:flex">
+                <x-nav-link href="{{ route('show-regional') }}" :active="request()->routeIs('show-regional')">
+                    {{ __('show-regional') }}
+                </x-nav-link>
+            </div>
+            @endif
         </div>
 
         <div class="w-full hidden sm:flex sm:items-center sm:ms-6 justify-end">

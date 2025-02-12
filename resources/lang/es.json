@@ -52,6 +52,6 @@
     "Update date from" : "Fecha de actualización: Desde",
     "Update date to" : "Fecha de actualización: Hasta",
     "Data" : "Dato",
-    "Search" : "Buscar"
-
+    "Search" : "Buscar",
+    "show-regional": "importar regional"
 }
