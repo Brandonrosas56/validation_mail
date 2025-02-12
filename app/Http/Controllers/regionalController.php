@@ -37,7 +37,7 @@ class regionalController extends Controller
                     }
                     fclose($handle);
                 }
-                $this->insertRegional($csvData);
+                return $this->insertRegional($csvData);
             }
         } else {
             return redirect()->back()
