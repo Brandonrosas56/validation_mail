@@ -46,9 +46,9 @@ Route::get('/validate-account', [ValidateController::class, 'index'])->name('val
 
 Route::post('/activation', [ValidateController::class, 'store'])->name('activation.store');
 
-Route::controller(importController::class)->group(function(){
-    Route::get('/show-import', 'store')->name('show-import');
-    Route::post('/import-files', 'importFiles')->name('import-files');
+Route::controller(regionalController::class)->group(function(){
+    Route::get('/show-regional', 'store')->name('show-regional');
+    Route::post('/import-regional', 'importRegional')->name('import-regional');
 });
 
 
