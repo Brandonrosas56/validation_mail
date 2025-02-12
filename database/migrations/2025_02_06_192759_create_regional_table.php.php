@@ -29,6 +29,7 @@ class CreateRegionalTable extends Migration
             $table->string('bar_nombre', 50)->nullable();
             $table->date('rgn_fch_registro')->nullable();
             $table->smallInteger('rgn_estado')->nullable();
+            $table->timestamps();
         });
     }
 
