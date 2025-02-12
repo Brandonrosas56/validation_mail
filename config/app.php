@@ -122,6 +122,11 @@ return [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
+    'glpi' =>[
+        'glpi_api_url' => env('GLPI_API_URL'),
+        'glpi_app_token' => env('GLPI_APP_TOKEN'),
+        'glpi_credentials' => env('GLPI_CREDENTIALS'),
+    ]
 
   
 
