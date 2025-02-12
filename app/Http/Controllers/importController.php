@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
-use GuzzleHttp\Psr7\Message;
+use Carbon\Carbon;
 
 class importController extends Controller
 {
@@ -91,12 +91,15 @@ class importController extends Controller
         return redirect()->route('show-import')->with('success', '!Datos guardados correctamente¡');
     }
 
+
     //Register of administrators
     public function insertAdministrators($csvData)
     {
         try {
             $administrators = [];
             $hashedPassword = bcrypt('Administrator12345*');
+            $now = Carbon::now();
+            
             foreach ($csvData as $rowData) {
                 $administrators[] = [
                     'name' => $rowData['name'],
@@ -105,18 +108,18 @@ class importController extends Controller
                     'email' => $rowData['email'],
                     'password' => $hashedPassword,
                     'rgn_id' => null,
+                    'created_at' => $now,
+                    'updated_at' => $now
                 ];
             }
 
-            
             foreach ($administrators as $chunk) {
                 DB::table('users')->upsert(
                     $chunk,
                     ['supplier_document'],
-                    ['name', 'position', 'email', 'password', 'rgn_id']
+                    ['name', 'position', 'email', 'password', 'rgn_id','created_at','updated_at']
                 );
             }
-
 
             foreach ($administrators as $adminData) {
                 $user = User::where('supplier_document', $adminData['supplier_document'])->first();
@@ -126,8 +129,8 @@ class importController extends Controller
             }
         } catch (Exception $e) {
             return redirect()->back()
-            ->withErrors(['error' => 'Por favor revice que el archivo ese correctamente redactado '])
-            ->withInput()->send();
+                ->withErrors(['error' => 'Por favor revice que el archivo ese correctamente redactado ' . $e->getMessage()])
+                ->withInput()->send();
         }
 
         return redirect()->back()->with('success', '!Datos guardados correctamente¡');
