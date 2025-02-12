@@ -67,30 +67,16 @@ Route::middleware(['auth', 'checkIfBlocked'])->group(function () {
                 Route::post('/registerRoles', 'store')->name('roles.store');
        
                 });
-        
-        
+                Route::middleware('auth')->prefix('glpi')->group(function () {
+                Route::get('/init-session', [GlpiController::class, 'initSession']);
+                Route::get('/ticket/{id}', [GlpiController::class, 'getTicket']);
+                Route::post('/ticket', [GlpiController::class, 'createTicket']);
+                });
                 
             });
         });
     });
 });
-
-    Route::middleware('auth')->prefix('glpi')->group(function () {
-    Route::get('/init-session', [GlpiController::class, 'initSession']);
-    Route::get('/ticket/{id}', [GlpiController::class, 'getTicket']);
-    Route::post('/ticket', [GlpiController::class, 'createTicket']);
-    });
-
-    Route::get('/test-glpi', function (GLPIService $glpiService) {
-        try {
-            // Intenta conectarte y obtener la información de sesión
-            $response = $glpiService->client->get('/initSession');
-            $data = json_decode($response->getBody()->getContents(), true);
-            return response()->json($data);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    });
 
 
 
