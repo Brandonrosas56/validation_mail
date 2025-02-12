@@ -25,6 +25,7 @@ return new class extends Migration
             $table->date('fecha_inicio_contrato');
             $table->date('fecha_terminacion_contrato');
             $table->string('usuario')->unique();
+            $table->string('estado')->nullable();
             $table->timestamps();
         });
     }

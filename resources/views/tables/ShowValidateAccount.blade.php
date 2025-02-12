@@ -25,6 +25,7 @@
                     <th class="px-4 py-2 border-b">Fecha de Inicio</th>
                     <th class="px-4 py-2 border-b">Fecha de Terminación</th>
                     <th class="px-4 py-2 border-b">Usuario</th>
+                    <th class="px-4 py-2 border-b">Estado</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,6 +43,17 @@
                         <td class="px-4 py-2 border-b">{{ $account->fecha_inicio_contrato }}</td>
                         <td class="px-4 py-2 border-b">{{ $account->fecha_terminacion_contrato }}</td>
                         <td class="px-4 py-2 border-b">{{ $account->usuario }}</td>
+                        <td class="px-4 py-2 border-b">
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-3 rounded-full 
+                                    @if ($account->estado === 'pendiente') bg-yellow-500 
+                                    @elseif ($account->estado === 'fallido' || $account->estado === 'rechazado') bg-red-500 
+                                    @elseif ($account->estado === 'exitoso') bg-green-500 
+                                    @else bg-gray-400 @endif">
+                                </span>
+                                <span class="text-gray-700 text-sm">{{ ucfirst($account->estado) }}</span>
+                            </div>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
