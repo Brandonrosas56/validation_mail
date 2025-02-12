@@ -24,6 +24,7 @@
                     <th class="px-4 py-2 border-b">Número de Contrato</th>
                     <th class="px-4 py-2 border-b">Fecha de Inicio</th>
                     <th class="px-4 py-2 border-b">Fecha de Terminación</th>
+                    <th class="px-4 py-2 border-b">Estado</th>
                 </tr>
             </thead>
             <tbody>
@@ -39,6 +40,7 @@
                         <td class="px-4 py-2 border-b">{{ $account->numero_contrato }}</td>
                         <td class="px-4 py-2 border-b">{{ $account->fecha_inicio_contrato }}</td>
                         <td class="px-4 py-2 border-b">{{ $account->fecha_terminacion_contrato }}</td>
+                        <td class="px-4 py-2 border-b">{{ $account->estado }}</td>
                     </tr>
                 @endforeach
             </tbody>
