@@ -1604,3 +1604,269 @@ PHP Warning:  Module "gd" is already loaded in Unknown on line 0
 PHP Warning:  Module "mbstring" is already loaded in Unknown on line 0
 PHP Warning:  Module "pgsql" is already loaded in Unknown on line 0
 PHP Warning:  Module "zip" is already loaded in Unknown on line 0
+PHP Warning:  PHP Startup: Unable to load dynamic library 'openssl' (tried: /usr/lib/php/20220829/openssl (/usr/lib/php/20220829/openssl: cannot open shared object file: No such file or directory), /usr/lib/php/20220829/openssl.so (/usr/lib/php/20220829/openssl.so: cannot open shared object file: No such file or directory)) in Unknown on line 0
+PHP Warning:  PHP Startup: Unable to load dynamic library 'pdo_pgsql' (tried: /usr/lib/php/20220829/pdo_pgsql (/usr/lib/php/20220829/pdo_pgsql: cannot open shared object file: No such file or directory), /usr/lib/php/20220829/pdo_pgsql.so (/usr/lib/php/20220829/pdo_pgsql.so: undefined symbol: pdo_parse_params)) in Unknown on line 0
+PHP Warning:  Module "curl" is already loaded in Unknown on line 0
+PHP Warning:  Module "fileinfo" is already loaded in Unknown on line 0
+PHP Warning:  Module "gd" is already loaded in Unknown on line 0
+PHP Warning:  Module "mbstring" is already loaded in Unknown on line 0
+PHP Warning:  Module "pgsql" is already loaded in Unknown on line 0
+PHP Warning:  Module "zip" is already loaded in Unknown on line 0
+
+   Error 
+
+  Call to undefined method App\Services\SendValidationStatusService::nemotecniaTemplate()
+
+  at app/Services/SendValidationStatusService.php:32
+     28▕             case self::VALIDATION_SUCCESS:
+     29▕                 # code...
+     30▕                 break;
+     31▕             case self::NEMOTECNIA_ERROR:
+  ➜  32▕                 $this->GLPIService->createTicket($this->nemotecniaTemplate());
+     33▕                 break;
+     34▕             default:
+     35▕                 # code...
+     36▕                 break;
+
+  1   app/Console/Commands/RetryValidation.php:51
+      App\Services\SendValidationStatusService::sendTicket()
+      [2m+13 vendor frames [22m
+
+  15  artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+PHP Warning:  PHP Startup: Unable to load dynamic library 'openssl' (tried: /usr/lib/php/20220829/openssl (/usr/lib/php/20220829/openssl: cannot open shared object file: No such file or directory), /usr/lib/php/20220829/openssl.so (/usr/lib/php/20220829/openssl.so: cannot open shared object file: No such file or directory)) in Unknown on line 0
+PHP Warning:  PHP Startup: Unable to load dynamic library 'pdo_pgsql' (tried: /usr/lib/php/20220829/pdo_pgsql (/usr/lib/php/20220829/pdo_pgsql: cannot open shared object file: No such file or directory), /usr/lib/php/20220829/pdo_pgsql.so (/usr/lib/php/20220829/pdo_pgsql.so: undefined symbol: pdo_parse_params)) in Unknown on line 0
+PHP Warning:  Module "curl" is already loaded in Unknown on line 0
+PHP Warning:  Module "fileinfo" is already loaded in Unknown on line 0
+PHP Warning:  Module "gd" is already loaded in Unknown on line 0
+PHP Warning:  Module "mbstring" is already loaded in Unknown on line 0
+PHP Warning:  Module "pgsql" is already loaded in Unknown on line 0
+PHP Warning:  Module "zip" is already loaded in Unknown on line 0
+
+   ParseError 
+
+  syntax error, unexpected identifier "rivate", expecting "function" or "const"
+
+  at app/Services/SendValidationStatusService.php:75
+     71▕             ]
+     72▕         ];
+     73▕ 
+     74▕     }
+  ➜  75▕     rivate function nemotecniaTemplatecontractor(): array
+     76▕     {
+     77▕         return [
+     78▕             'input' => [
+     79▕                 'name' => "Caso por Nemotecnia - Contratista (Fallido)",
+
+      [2m+1 vendor frames [22m
+
+  2   app/Console/Commands/RetryValidation.php:50
+      Composer\Autoload\ClassLoader::loadClass()
+      [2m+13 vendor frames [22m
+
+  16  artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+PHP Warning:  PHP Startup: Unable to load dynamic library 'openssl' (tried: /usr/lib/php/20220829/openssl (/usr/lib/php/20220829/openssl: cannot open shared object file: No such file or directory), /usr/lib/php/20220829/openssl.so (/usr/lib/php/20220829/openssl.so: cannot open shared object file: No such file or directory)) in Unknown on line 0
+PHP Warning:  PHP Startup: Unable to load dynamic library 'pdo_pgsql' (tried: /usr/lib/php/20220829/pdo_pgsql (/usr/lib/php/20220829/pdo_pgsql: cannot open shared object file: No such file or directory), /usr/lib/php/20220829/pdo_pgsql.so (/usr/lib/php/20220829/pdo_pgsql.so: undefined symbol: pdo_parse_params)) in Unknown on line 0
+PHP Warning:  Module "curl" is already loaded in Unknown on line 0
+PHP Warning:  Module "fileinfo" is already loaded in Unknown on line 0
+PHP Warning:  Module "gd" is already loaded in Unknown on line 0
+PHP Warning:  Module "mbstring" is already loaded in Unknown on line 0
+PHP Warning:  Module "pgsql" is already loaded in Unknown on line 0
+PHP Warning:  Module "zip" is already loaded in Unknown on line 0
+
+   Error 
+
+  Call to undefined method App\Services\SendValidationStatusService::nemotecniaTemplate()
+
+  at app/Services/SendValidationStatusService.php:32
+     28▕             case self::VALIDATION_SUCCESS:
+     29▕                 # code...
+     30▕                 break;
+     31▕             case self::NEMOTECNIA_ERROR:
+  ➜  32▕                 $this->GLPIService->createTicket($this->nemotecniaTemplate());
+     33▕                 break;
+     34▕             default:
+     35▕                 # code...
+     36▕                 break;
+
+  1   app/Console/Commands/RetryValidation.php:51
+      App\Services\SendValidationStatusService::sendTicket()
+      [2m+13 vendor frames [22m
+
+  15  artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+PHP Warning:  PHP Startup: Unable to load dynamic library 'openssl' (tried: /usr/lib/php/20220829/openssl (/usr/lib/php/20220829/openssl: cannot open shared object file: No such file or directory), /usr/lib/php/20220829/openssl.so (/usr/lib/php/20220829/openssl.so: cannot open shared object file: No such file or directory)) in Unknown on line 0
+PHP Warning:  PHP Startup: Unable to load dynamic library 'pdo_pgsql' (tried: /usr/lib/php/20220829/pdo_pgsql (/usr/lib/php/20220829/pdo_pgsql: cannot open shared object file: No such file or directory), /usr/lib/php/20220829/pdo_pgsql.so (/usr/lib/php/20220829/pdo_pgsql.so: undefined symbol: pdo_parse_params)) in Unknown on line 0
+PHP Warning:  Module "curl" is already loaded in Unknown on line 0
+PHP Warning:  Module "fileinfo" is already loaded in Unknown on line 0
+PHP Warning:  Module "gd" is already loaded in Unknown on line 0
+PHP Warning:  Module "mbstring" is already loaded in Unknown on line 0
+PHP Warning:  Module "pgsql" is already loaded in Unknown on line 0
+PHP Warning:  Module "zip" is already loaded in Unknown on line 0
+
+   Error 
+
+  Call to undefined method App\Services\SendValidationStatusService::nemotecniaTemplate()
+
+  at app/Services/SendValidationStatusService.php:32
+     28▕             case self::VALIDATION_SUCCESS:
+     29▕                 # code...
+     30▕                 break;
+     31▕             case self::NEMOTECNIA_ERROR:
+  ➜  32▕                 $this->GLPIService->createTicket($this->nemotecniaTemplate());
+     33▕                 break;
+     34▕             default:
+     35▕                 # code...
+     36▕                 break;
+
+  1   app/Console/Commands/RetryValidation.php:51
+      App\Services\SendValidationStatusService::sendTicket()
+      [2m+13 vendor frames [22m
+
+  15  artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+PHP Warning:  PHP Startup: Unable to load dynamic library 'openssl' (tried: /usr/lib/php/20220829/openssl (/usr/lib/php/20220829/openssl: cannot open shared object file: No such file or directory), /usr/lib/php/20220829/openssl.so (/usr/lib/php/20220829/openssl.so: cannot open shared object file: No such file or directory)) in Unknown on line 0
+PHP Warning:  PHP Startup: Unable to load dynamic library 'pdo_pgsql' (tried: /usr/lib/php/20220829/pdo_pgsql (/usr/lib/php/20220829/pdo_pgsql: cannot open shared object file: No such file or directory), /usr/lib/php/20220829/pdo_pgsql.so (/usr/lib/php/20220829/pdo_pgsql.so: undefined symbol: pdo_parse_params)) in Unknown on line 0
+PHP Warning:  Module "curl" is already loaded in Unknown on line 0
+PHP Warning:  Module "fileinfo" is already loaded in Unknown on line 0
+PHP Warning:  Module "gd" is already loaded in Unknown on line 0
+PHP Warning:  Module "mbstring" is already loaded in Unknown on line 0
+PHP Warning:  Module "pgsql" is already loaded in Unknown on line 0
+PHP Warning:  Module "zip" is already loaded in Unknown on line 0
+
+   Error 
+
+  Call to undefined method App\Services\SendValidationStatusService::nemotecniaTemplate()
+
+  at app/Services/SendValidationStatusService.php:32
+     28▕             case self::VALIDATION_SUCCESS:
+     29▕                 # code...
+     30▕                 break;
+     31▕             case self::NEMOTECNIA_ERROR:
+  ➜  32▕                 $this->GLPIService->createTicket($this->nemotecniaTemplate());
+     33▕                 break;
+     34▕             default:
+     35▕                 # code...
+     36▕                 break;
+
+  1   app/Console/Commands/RetryValidation.php:51
+      App\Services\SendValidationStatusService::sendTicket()
+      [2m+13 vendor frames [22m
+
+  15  artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+PHP Warning:  PHP Startup: Unable to load dynamic library 'openssl' (tried: /usr/lib/php/20220829/openssl (/usr/lib/php/20220829/openssl: cannot open shared object file: No such file or directory), /usr/lib/php/20220829/openssl.so (/usr/lib/php/20220829/openssl.so: cannot open shared object file: No such file or directory)) in Unknown on line 0
+PHP Warning:  PHP Startup: Unable to load dynamic library 'pdo_pgsql' (tried: /usr/lib/php/20220829/pdo_pgsql (/usr/lib/php/20220829/pdo_pgsql: cannot open shared object file: No such file or directory), /usr/lib/php/20220829/pdo_pgsql.so (/usr/lib/php/20220829/pdo_pgsql.so: undefined symbol: pdo_parse_params)) in Unknown on line 0
+PHP Warning:  Module "curl" is already loaded in Unknown on line 0
+PHP Warning:  Module "fileinfo" is already loaded in Unknown on line 0
+PHP Warning:  Module "gd" is already loaded in Unknown on line 0
+PHP Warning:  Module "mbstring" is already loaded in Unknown on line 0
+PHP Warning:  Module "pgsql" is already loaded in Unknown on line 0
+PHP Warning:  Module "zip" is already loaded in Unknown on line 0
+PHP Fatal error:  Cannot redeclare App\Services\SendValidationStatusService::nemotecniaTemplaFun() in /home/lu/validation_mail/app/Services/SendValidationStatusService.php on line 118
+
+   Symfony\Component\ErrorHandler\Error\FatalError 
+
+  Cannot redeclare App\Services\SendValidationStatusService::nemotecniaTemplaFun()
+
+  at app/Services/SendValidationStatusService.php:118
+    114▕                 'requesttypes_id' => 1,
+    115▕             ]
+    116▕         ];
+    117▕     }
+  ➜ 118▕         private function nemotecniaTemplaFun(): array
+    119▕         {
+    120▕             return [
+    121▕                 'input' => [
+    122▕                     'name' => "Caso por Nemotecnia - Contratista (Fallido)",
+
+
+   Whoops\Exception\ErrorException 
+
+  Cannot redeclare App\Services\SendValidationStatusService::nemotecniaTemplaFun()
+
+  at app/Services/SendValidationStatusService.php:118
+    114▕                 'requesttypes_id' => 1,
+    115▕             ]
+    116▕         ];
+    117▕     }
+  ➜ 118▕         private function nemotecniaTemplaFun(): array
+    119▕         {
+    120▕             return [
+    121▕                 'input' => [
+    122▕                     'name' => "Caso por Nemotecnia - Contratista (Fallido)",
+
+      [2m+1 vendor frames [22m
+
+  2   [internal]:0
+      Whoops\Run::handleShutdown()
+
+PHP Warning:  PHP Startup: Unable to load dynamic library 'openssl' (tried: /usr/lib/php/20220829/openssl (/usr/lib/php/20220829/openssl: cannot open shared object file: No such file or directory), /usr/lib/php/20220829/openssl.so (/usr/lib/php/20220829/openssl.so: cannot open shared object file: No such file or directory)) in Unknown on line 0
+PHP Warning:  PHP Startup: Unable to load dynamic library 'pdo_pgsql' (tried: /usr/lib/php/20220829/pdo_pgsql (/usr/lib/php/20220829/pdo_pgsql: cannot open shared object file: No such file or directory), /usr/lib/php/20220829/pdo_pgsql.so (/usr/lib/php/20220829/pdo_pgsql.so: undefined symbol: pdo_parse_params)) in Unknown on line 0
+PHP Warning:  Module "curl" is already loaded in Unknown on line 0
+PHP Warning:  Module "fileinfo" is already loaded in Unknown on line 0
+PHP Warning:  Module "gd" is already loaded in Unknown on line 0
+PHP Warning:  Module "mbstring" is already loaded in Unknown on line 0
+PHP Warning:  Module "pgsql" is already loaded in Unknown on line 0
+PHP Warning:  Module "zip" is already loaded in Unknown on line 0
+
+   Error 
+
+  Call to undefined method App\Services\SendValidationStatusService::nemotecniaTemplate()
+
+  at app/Services/SendValidationStatusService.php:32
+     28▕             case self::VALIDATION_SUCCESS:
+     29▕                 # code...
+     30▕                 break;
+     31▕             case self::NEMOTECNIA_ERROR:
+  ➜  32▕                 $this->GLPIService->createTicket($this->nemotecniaTemplate());
+     33▕                 break;
+     34▕             default:
+     35▕                 # code...
+     36▕                 break;
+
+  1   app/Console/Commands/RetryValidation.php:51
+      App\Services\SendValidationStatusService::sendTicket()
+      [2m+13 vendor frames [22m
+
+  15  artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+PHP Warning:  PHP Startup: Unable to load dynamic library 'openssl' (tried: /usr/lib/php/20220829/openssl (/usr/lib/php/20220829/openssl: cannot open shared object file: No such file or directory), /usr/lib/php/20220829/openssl.so (/usr/lib/php/20220829/openssl.so: cannot open shared object file: No such file or directory)) in Unknown on line 0
+PHP Warning:  PHP Startup: Unable to load dynamic library 'pdo_pgsql' (tried: /usr/lib/php/20220829/pdo_pgsql (/usr/lib/php/20220829/pdo_pgsql: cannot open shared object file: No such file or directory), /usr/lib/php/20220829/pdo_pgsql.so (/usr/lib/php/20220829/pdo_pgsql.so: undefined symbol: pdo_parse_params)) in Unknown on line 0
+PHP Warning:  Module "curl" is already loaded in Unknown on line 0
+PHP Warning:  Module "fileinfo" is already loaded in Unknown on line 0
+PHP Warning:  Module "gd" is already loaded in Unknown on line 0
+PHP Warning:  Module "mbstring" is already loaded in Unknown on line 0
+PHP Warning:  Module "pgsql" is already loaded in Unknown on line 0
+PHP Warning:  Module "zip" is already loaded in Unknown on line 0
+PHP Warning:  PHP Startup: Unable to load dynamic library 'openssl' (tried: /usr/lib/php/20220829/openssl (/usr/lib/php/20220829/openssl: cannot open shared object file: No such file or directory), /usr/lib/php/20220829/openssl.so (/usr/lib/php/20220829/openssl.so: cannot open shared object file: No such file or directory)) in Unknown on line 0
+PHP Warning:  PHP Startup: Unable to load dynamic library 'pdo_pgsql' (tried: /usr/lib/php/20220829/pdo_pgsql (/usr/lib/php/20220829/pdo_pgsql: cannot open shared object file: No such file or directory), /usr/lib/php/20220829/pdo_pgsql.so (/usr/lib/php/20220829/pdo_pgsql.so: undefined symbol: pdo_parse_params)) in Unknown on line 0
+PHP Warning:  Module "curl" is already loaded in Unknown on line 0
+PHP Warning:  Module "fileinfo" is already loaded in Unknown on line 0
+PHP Warning:  Module "gd" is already loaded in Unknown on line 0
+PHP Warning:  Module "mbstring" is already loaded in Unknown on line 0
+PHP Warning:  Module "pgsql" is already loaded in Unknown on line 0
+PHP Warning:  Module "zip" is already loaded in Unknown on line 0
+PHP Warning:  PHP Startup: Unable to load dynamic library 'openssl' (tried: /usr/lib/php/20220829/openssl (/usr/lib/php/20220829/openssl: cannot open shared object file: No such file or directory), /usr/lib/php/20220829/openssl.so (/usr/lib/php/20220829/openssl.so: cannot open shared object file: No such file or directory)) in Unknown on line 0
+PHP Warning:  PHP Startup: Unable to load dynamic library 'pdo_pgsql' (tried: /usr/lib/php/20220829/pdo_pgsql (/usr/lib/php/20220829/pdo_pgsql: cannot open shared object file: No such file or directory), /usr/lib/php/20220829/pdo_pgsql.so (/usr/lib/php/20220829/pdo_pgsql.so: undefined symbol: pdo_parse_params)) in Unknown on line 0
+PHP Warning:  Module "curl" is already loaded in Unknown on line 0
+PHP Warning:  Module "fileinfo" is already loaded in Unknown on line 0
+PHP Warning:  Module "gd" is already loaded in Unknown on line 0
+PHP Warning:  Module "mbstring" is already loaded in Unknown on line 0
+PHP Warning:  Module "pgsql" is already loaded in Unknown on line 0
+PHP Warning:  Module "zip" is already loaded in Unknown on line 0
+PHP Warning:  PHP Startup: Unable to load dynamic library 'openssl' (tried: /usr/lib/php/20220829/openssl (/usr/lib/php/20220829/openssl: cannot open shared object file: No such file or directory), /usr/lib/php/20220829/openssl.so (/usr/lib/php/20220829/openssl.so: cannot open shared object file: No such file or directory)) in Unknown on line 0
+PHP Warning:  PHP Startup: Unable to load dynamic library 'pdo_pgsql' (tried: /usr/lib/php/20220829/pdo_pgsql (/usr/lib/php/20220829/pdo_pgsql: cannot open shared object file: No such file or directory), /usr/lib/php/20220829/pdo_pgsql.so (/usr/lib/php/20220829/pdo_pgsql.so: undefined symbol: pdo_parse_params)) in Unknown on line 0
+PHP Warning:  Module "curl" is already loaded in Unknown on line 0
+PHP Warning:  Module "fileinfo" is already loaded in Unknown on line 0
+PHP Warning:  Module "gd" is already loaded in Unknown on line 0
+PHP Warning:  Module "mbstring" is already loaded in Unknown on line 0
+PHP Warning:  Module "pgsql" is already loaded in Unknown on line 0
+PHP Warning:  Module "zip" is already loaded in Unknown on line 0
