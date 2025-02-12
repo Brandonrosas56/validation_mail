@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
         $permissions = [
             'super_admin',
             'administrador',
+            'especialista',
             'asistente',
             'contratista',
         ];
@@ -29,12 +30,15 @@ class DatabaseSeeder extends Seeder
         // Create roles
         $role = Role::create(['name' => 'Super_admin']);
         $roleAdmin = Role::create(['name' => 'Admin']);
+        $roleEspec = Role::create(['name' => 'Especialista']);
         $roleAsist = Role::create(['name' => 'Asistente']);
         $roleContratista = Role::create(['name' => 'Contratista']);
 
         // Assign permissions to roles
         $role->syncPermissions(Permission::all());
         $roleAdmin->givePermissionTo('administrador');
+        $roleEspec->givePermissionTo('especialista');
+        $roleAsist->givePermissionTo('asistente');
         $roleContratista->givePermissionTo('contratista');
 
         // Create user
