@@ -55,11 +55,16 @@ class CreateAccountController extends Controller
         $documentoProveedor = $request->input('documento_proveedor');
         $numeroContrato = $request->input('numero_contrato');
 
+        CreateAccount::create($request->all());
+        
         if (!$this->validarContratoSecop($documentoProveedor, $numeroContrato)) {
+            //TODO debe realizar el registro falllido
             return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.');
         }
-
-        CreateAccount::create($request->all());
+        if (!$this->validarContratoSecop($documentoProveedor:$documentoProveedor, $numeroContrato:$numeroContrato)) {
+            //TODO debe realizar el registro falllido
+            return redirect()->back()->with('error', 'El contrato está vigente según el SECOP.');
+        if (!$this->validarContratoSecop($documentoProveedor:$documentoProveedor, $numeroContrato:$numeroContrato,))
 
         return redirect()->back()->with('success', 'Solicitud creada correctamente.');
     }
