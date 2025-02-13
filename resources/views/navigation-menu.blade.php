@@ -30,6 +30,11 @@
                     {{ __('show-import') }}
                 </x-nav-link>
             </div>
+            <div class="hidden sm:-my-px gap-3 sm:flex">
+                <x-nav-link href="{{ route('show-role-functionary') }}" :active="request()->routeIs('show-role-functionary')">
+                    {{ __('show-role-functionary') }}
+                </x-nav-link>
+            </div>
             @endif
         </div>
 
