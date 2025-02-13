@@ -10,15 +10,16 @@ use App\Http\Controllers\AuditController;
 use App\Http\Controllers\rolesController;
 use App\Http\Controllers\UnzipController;
 use App\Http\Controllers\FolderController;
+use App\Http\Controllers\importController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\MetadataController;
 use App\Http\Controllers\moveFileController;
-use App\Http\Controllers\regionalController;
 use App\Http\Controllers\ValidateController;
 use App\Http\Controllers\zipReportController;
 use App\Http\Controllers\CreateAccountController;
 use App\Http\Controllers\registerUsersController;
 use App\Http\Controllers\VersionControlController;
+use App\Http\Controllers\importControllerController;
 
 
 App::setLocale('es');
@@ -41,9 +42,9 @@ Route::get('/validate-account', [ValidateController::class, 'index'])->name('val
 
 Route::post('/activation', [ValidateController::class, 'store'])->name('activation.store');
 
-Route::controller(regionalController::class)->group(function(){
-    Route::get('/show-regional', 'store')->name('show-regional');
-    Route::post('/import-regional', 'importRegional')->name('import-regional');
+Route::controller(importController::class)->group(function(){
+    Route::get('/show-import', 'store')->name('show-import');
+    Route::post('/import-files', 'importFiles')->name('import-files');
 });
 
 
