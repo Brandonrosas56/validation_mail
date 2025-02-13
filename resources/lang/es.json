@@ -22,6 +22,8 @@
     "Select_regional": "Seleccione regional",
     "Supplier_document": "Documento proveedor",
     "Select_role": "Selección de rol",
+    "Select_functionary": "Selección de funcionario",
+    "Select_all": "Seleccione todos",
     "Reset Password": "Restablecer contraseña",
     "Clear": "Limpiar",
     "Reset Password Notification": "Aviso para restablecer contraseña",
@@ -53,5 +55,8 @@
     "Update date to" : "Fecha de actualización: Hasta",
     "Data" : "Dato",
     "Search" : "Buscar",
-    "show-import": "importar archivos"
+    "show-import": "importar archivos",
+    "show-role-functionary": "Asignación de roles y cargos",
+    "Functionary": "Funcionario",
+    "Contractor": "Contratista"
 }
