@@ -30,9 +30,7 @@ class SendValidationStatusService
                 break;
             case self::NEMOTECNIA_ERROR:
                 $this->GLPIService->createTicket($this->nemotecniaTemplateContractor());
-                $this->GLPIService->createTicket($this->nemotecniaTemplateContractor());
-                $this->GLPIService->createTicket($this->nemotecniaTemplateContractor());
-
+            
                 break;
             default:
                 # code...
@@ -132,8 +130,8 @@ class SendValidationStatusService
                             * *Segundo Apellido:* {$this->userData['segundo_apellido']}
                             * *Usuario:* {$this->userData['usuario']}
                         ",
-                    'type' => 2,
-                    'status' => 1,
+                    'type' => 3,
+                    'status' => 3,
                     'urgency' => 3,
                     'impact' => 3,
                     'requesttypes_id' => 1,
