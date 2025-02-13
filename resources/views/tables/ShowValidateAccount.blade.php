@@ -51,7 +51,7 @@
                                     @elseif ($account->estado === 'exitoso') bg-green-500 
                                     @else bg-gray-400 @endif">
                                 </span>
-                                <span class="text-gray-700 text-sm">{{ ucfirst($account->estado) }}</span>
+                                <span class="text-gray-700 text-sm">{{ $account->estado }}</span>
                             </div>
                         </td>
                     </tr>
