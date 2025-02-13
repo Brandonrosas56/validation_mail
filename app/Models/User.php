@@ -37,6 +37,7 @@ class User extends Authenticatable
         'position',
         'email',
         'password',
+        'functionary',
         'rgn_id',
     ];
 
