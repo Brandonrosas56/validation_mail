@@ -14,7 +14,8 @@ class roleFunctionary extends Controller
     {
         $roles = Role::all();
         $regionals = Regional::all();
-        $users = user::with('roles', 'regional')->get();
+        $users = user::with('roles', 'regional')->paginate(15);
+        
         return view('forms.form-of-role-and-functionary', compact('users', 'roles', 'regionals'));
     }
 
