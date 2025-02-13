@@ -5,13 +5,18 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckIfBlocked;
 use App\Http\Controllers\rolesController;
-use App\Http\Controllers\TicketController;
+use App\Http\Controllers\UnzipController;
+use App\Http\Controllers\FolderController;
 use App\Http\Controllers\importController;
+use App\Http\Controllers\TicketController;
+use App\Http\Controllers\MetadataController;
+use App\Http\Controllers\moveFileController;
 use App\Http\Controllers\ValidateController;
 use App\Http\Controllers\CreateAccountController;
 use App\Http\Controllers\registerUsersController;
-use App\Http\Controllers\roleFunctionary;
-use Laravel\Jetstream\Rules\Role;
+use App\Http\Controllers\VersionControlController;
+use App\Http\Controllers\importControllerController;
+
 
 App::setLocale('es');
 
@@ -36,11 +41,6 @@ Route::post('/activation', [ValidateController::class, 'store'])->name('activati
 Route::controller(importController::class)->group(function(){
     Route::get('/show-import', 'store')->name('show-import');
     Route::post('/import-files', 'importFiles')->name('import-files');
-});
-
-Route::controller(roleFunctionary::class)->group(function(){
-    Route::get('/show-role-functionary', 'show')->name('show-role-functionary');
-    Route::post('/assign-role-functionary', 'assignRoleFuncionary')->name('assign-role-functionary');
 });
 
 Route::controller(registerUsersController::class)->group(function () {
