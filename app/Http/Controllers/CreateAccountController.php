@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 use App\Models\CreateAccount;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Regional;
+use App\Services\SendValidationStatusService;
 
 
 class CreateAccountController extends Controller
@@ -79,7 +80,6 @@ class CreateAccountController extends Controller
             $data = $response->json();
     
             if (isset($data['error']) || isset($data['message'])) {
-                dd('fallo');
                 return false; 
             }
     
