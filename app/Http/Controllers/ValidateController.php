@@ -61,7 +61,6 @@ class ValidateController extends Controller
         ValidateAccount::create($request->all());
 
         if (!$this->validarContratoSecop($documentoProveedor, $numeroContrato, $estadoContrato, $usuarioAsignado)) {
-            dd($documentoProveedor, $numeroContrato, $estadoContrato, $user_id);
             return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.');
         }
 
@@ -75,6 +74,20 @@ class ValidateController extends Controller
         $apiUrl = "https://www.datos.gov.co/resource/jbjy-vk9h.json?"
             . "\$where=documento_proveedor='$documentoProveedor' AND id_contrato='$numeroContrato' AND estado_contrato='En ejecución'";
 
+            try {
+                $response = Http::get($apiUrl);
+                $data = $response->json();
         
+                if (isset($data['error']) || isset($data['message'])) {
+                    dd('error');
+                   /*  return false;  */
+                }
+
+        
+                return is_array($data) && count($data) > 0;
+        
+            } catch (\Exception $e) {
+                /* return false;  */
+            }
     }
 }
