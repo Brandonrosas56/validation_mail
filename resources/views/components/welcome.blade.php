@@ -1,6 +1,8 @@
 <div class="p-6 lg:p-8 bg-white border-b border-gray-200">
 
-
+ @php 
+ $permmissionValidation = auth()->user()->hasRole('Super_admin') || auth()->user()->hasRole('Admin') || auth()->user()->hasRole('Asistente');
+ @endphp
     <h1 class="mt-8 text-2xl font-medium text-gray-900 font-semibold">
         Sistema De Validación De Contratistas 
     </h1>
@@ -9,7 +11,7 @@
         El Sistema de Validación y Gestión de Contratistas es una plataforma que permite a los funcionarios  verificar y gestionar de manera eficiente los datos de contratistas para la creación y activación de su usuario y correo.
     </p>
 </div>
-
+@if ($permmissionValidation)
 <div class="bg-gray-200 bg-opacity-25 grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 p-6 lg:p-8">
     <div>
         <div class="flex items-center">
@@ -57,7 +59,6 @@
                 </svg>
             </a>
         </p>
-    </div>
-
-    
+    </div>    
 </div>
+@endif
