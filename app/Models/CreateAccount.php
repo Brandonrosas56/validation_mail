@@ -23,10 +23,16 @@ class CreateAccount extends Model
         'numero_contrato',
         'fecha_inicio_contrato',
         'fecha_terminacion_contrato',
+        'user_id'
     ];
 
     public function regional()
     {
         return $this->belongsTo(Regional::class, 'rgn_id', 'rgn_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

@@ -76,6 +76,11 @@
                 </div>
 
                 <div class="mb-2">
+                    <label for="user_id" class="block mb-1 TextColor font-bold">Rol asignado</label>
+                    <input type="text" name="user_id" id="user_id" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('user_id') }}" required>
+                </div>
+
+                <div class="mb-2">
                     <label for="usuario" class="block mb-1 TextColor font-bold">Usuario</label>
                     <input type="text" name="usuario" id="usuario" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('usuario') }}" required>
                 </div>     
