@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\ValidateAccount;
 use App\Models\Regional;
 use Illuminate\Support\Facades\Http;
+use App\Models\User;
 use App\Services\SendValidationStatusService;
 
 class ValidateController extends Controller
@@ -17,18 +18,18 @@ class ValidateController extends Controller
         $exists = ValidateAccount::where('documento_proveedor', $user->supplier_document)->exists();
 
         if ($user->hasRole('Contratista')) {
-            if($exists){
+            if ($exists) {
                 $accounts = ValidateAccount::where('documento_proveedor', $user->supplier_document)->get();
-            }else{
+            } else {
                 $accounts = [];
-            }   
-        }else{
+            }
+        } else {
             $accounts = ValidateAccount::all();
         }
 
         $regional = Regional::all('rgn_id', 'rgn_nombre');
 
-        return view('tables.ShowValidateAccount', compact('accounts','regional'));
+        return view('tables.ShowValidateAccount', compact('accounts', 'regional'));
     }
 
     public function index()
@@ -39,7 +40,8 @@ class ValidateController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'rgn_id' =>'required', 'exists:regional,rgn_id',
+            'rgn_id' => 'required',
+            'exists:regional,rgn_id',
             'documento_proveedor' => 'required|String|',
             'primer_nombre' => 'required|string|max:255',
             'segundo_nombre' => 'nullable|string|max:255',
@@ -58,14 +60,27 @@ class ValidateController extends Controller
         $numeroContrato = $request->input('numero_contrato');
         $estadoContrato = "En ejecución";
         $usuarioAsignado = $request->input('user_id');
+        $correoInstitucional = $request->input('correo_institucional');
 
         ValidateAccount::create($request->all());
 
-        if (!$this->validarContratoSecop($documentoProveedor, $numeroContrato, $estadoContrato, $usuarioAsignado, $request)) {
-            return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.');
+        // if (!$this->validarContratoSecop($documentoProveedor, $numeroContrato, $estadoContrato, $usuarioAsignado)) {
+        //     return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.');
+        // } else {
+        $validacionNemotenia = $this->validarNemotenia($documentoProveedor, $correoInstitucional);
+        switch ($validacionNemotenia) {
+            case 'No existe el correo':
+                break;
+            case 'El correo no pertenece a este usuario':
+                dd($validacionNemotenia);
+                break;
+            case 'Activar correo':
+                dd($validacionNemotenia);
+                break;
         }
+        // }
 
-        
+
 
         return redirect()->back()->with('success', 'Solicitud de activación creada correctamente.');
     }
@@ -79,35 +94,42 @@ class ValidateController extends Controller
         try {
             $response = Http::get($apiUrl);
             $data = $response->json();
-    
+
             if (isset($data['error']) || isset($data['message']) || !is_array($data) || count($data) === 0) {
-                $this->rejectedValidate($request);
-                return false; 
+                return false;
             }
-    
-            return true; 
+
+            return true;
         } catch (\Exception $e) {
-            return false; 
+            return false;
         }
     }
 
-   private function rejectedValidate ($request) {
-        $userData = [
-            'rgn_id' => $request->input('rgn_id'),
-            'primer_nombre' => $request->input('primer_nombre'),
-            'segundo_nombre' => $request->input('segundo_nombre'),
-            'primer_apellido' => $request->input('primer_apellido'),
-            'segundo_apellido' => $request->input('segundo_apellido'),
-            'usuario' => $request->input('usuario'),
-            'correo_personal' => $request->input('correo_personal'),
-            'correo_institucional' => $request->input('correo_institucional'),
-            'numero_contrato' => $request->input('numero_contrato'),
-            'fecha_inicio_contrato' => $request->input('fecha_inicio_contrato'),
-            'fecha_terminacion_contrato' => $request->input('fecha_terminacion_contrato'),
-        ];
-
-        $sendValidationStatusService = new SendValidationStatusService($userData, SendValidationStatusService::RECJECTED_ERROR);
-        $sendValidationStatusService->sendTicket();
+    public function validarNemotenia($documentoProveedor, $correoInstitucional)
+    {
+        $estadoCorreo = '';
+        $caseCorreo = '';
+        $estadoCorreo = User::where('email', $correoInstitucional)
+            ->doesntExist();
+        if ($estadoCorreo) {
+            $caseCorreo = 'No existe el correo';
+            return $caseCorreo;
+        } else {
+            $estadoCorreo = User::where('email', $correoInstitucional)
+                ->where('supplier_document', '!=', $documentoProveedor)
+                ->exists();
+            if ($estadoCorreo) {
+                $caseCorreo = 'El correo no pertenece a este usuario';
+                return $caseCorreo;
+            } else {
+                $estadoCorreo = User::where('email', $correoInstitucional)
+                    ->where('supplier_document', $documentoProveedor)
+                    ->exists();
+                if ($estadoCorreo) {
+                    $caseCorreo = 'Activar correo';
+                    return $caseCorreo;
+                }
+            }
+        }
     }
-
 }
