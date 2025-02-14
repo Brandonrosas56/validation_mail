@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\UserService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
@@ -21,6 +22,8 @@ class User extends Authenticatable
     use Notifiable;
     use TwoFactorAuthenticatable;
     use HasRoles;
+
+    const CONTRACTOR = 'Contratista';
 
     /**
      * The attributes that are mass assignable.
@@ -78,6 +81,10 @@ class User extends Authenticatable
     public function regional()
     {
         return $this->belongsTo(Regional::class, 'rgn_id', 'rgn_id');
+    }
+
+    function getService() : UserService {
+        return new UserService($this);
     }
 
     /**

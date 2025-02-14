@@ -16,12 +16,14 @@ class SendValidationStatusService
     const VALIDATION_SUCCESS = 'VALIDATION_OK';
     private array $userData = [];
     private string $state = '';
+    private bool $contractor = false;
     private GLPIService $GLPIService;
 
-    public function __construct(array $userData, string $state)
+    public function __construct(array $userData, string $state, $contractor = false)
     {
         $this->userData = $userData;
         $this->state = $state;
+        $this->contractor = $contractor;
         $this->GLPIService = new GLPIService();
     }
 
@@ -35,7 +37,9 @@ class SendValidationStatusService
 
             case self::NEMOTECNIA_ERROR:
                 // Usar la plantilla nemotecniaTemplateContractor
-                $this->GLPIService->createTicket($this->nemotecniaTemplateContractor());
+                //dd($this->contractor);
+                $template = $this->contractor ? $this->nemotecniaTemplateContractor() : $this->nemotecniaTemplaFun();
+                $this->GLPIService->createTicket($template);
                 break;
 
             case self::RECJECTED_ERROR:
@@ -111,7 +115,7 @@ class SendValidationStatusService
     {
         return [
             'input' => [
-                'name' => "Caso por Nemotecnia - Contratista (Fallido)",
+                'name' => "Caso por Nemotecnia - Funcionario (Fallido)",
                 'content' => "
                         *Datos del Usuario:*
                         * *Regional:* {$this->userData['rgn_id']}
@@ -151,16 +155,16 @@ class SendValidationStatusService
                             * *Segundo Apellido:* {$this->userData['segundo_apellido']}
                             * *Usuario:* {$this->userData['usuario']}
                         ",
-                    'type' => 1,
-                    'status' => 1,
-                    'urgency' => 4,
-                    'impact' => 3,
-                    'requesttypes_id' => 1,
-                    'groups_id' => 5, // ID del grupo asignado
-                    'users_id_assign' => 10, // ID del técnico asignado
+                'type' => 1,
+                'status' => 1,
+                'urgency' => 4,
+                'impact' => 3,
+                'requesttypes_id' => 1,
+                'groups_id' => 5, // ID del grupo asignado
+                'users_id_assign' => 10, // ID del técnico asignado
 
-                ]
-            ];
+            ]
+        ];
 
     }
 }
