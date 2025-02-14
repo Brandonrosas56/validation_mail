@@ -64,12 +64,16 @@ class ValidateController extends Controller
 
         ValidateAccount::create($request->all());
 
+        $User = User::find($request->user_id);
+        $contractor = $User->getService()->isContractor();
         // if (!$this->validarContratoSecop($documentoProveedor, $numeroContrato, $estadoContrato, $usuarioAsignado)) {
         //     return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.');
         // } else {
         $validacionNemotenia = $this->validarNemotenia($documentoProveedor, $correoInstitucional);
         switch ($validacionNemotenia) {
             case 'No existe el correo':
+                $SendValidationStatusService = new SendValidationStatusService($request->all(), SendValidationStatusService::NEMOTECNIA_ERROR, $contractor);
+                $SendValidationStatusService->sendTicket();
                 break;
             case 'El correo no pertenece a este usuario':
                 dd($validacionNemotenia);
@@ -85,7 +89,7 @@ class ValidateController extends Controller
         return redirect()->back()->with('success', 'Solicitud de activación creada correctamente.');
     }
 
-    
+
     private function validarContratoSecop($documentoProveedor, $numeroContrato, $request)
     {
         $apiUrl = "https://www.datos.gov.co/resource/jbjy-vk9h.json?"
