@@ -21,7 +21,14 @@
         <!-- Styles -->
         @livewireStyles
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        
+
+        <link href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" rel="stylesheet">
+
+        <!-- Script de jQuery -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <!-- Script de DataTables -->
+        <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     </head>
     <body class="font-sans antialiased">
         <x-banner />
