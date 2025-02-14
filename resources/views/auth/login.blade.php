@@ -10,7 +10,7 @@
     <div class="flex justify-center h-screen w-screen items-center">
         <div class="flex w-fit gap-4 rounded-lg shadow h-fit">
             <div>
-                <img class="w-96 h-full object-cover rounded-l-xl" src="./img/login-banner.webp" alt="">
+                <img class="w-96 h-full object-cover rounded-l-xl" src="./img/login-banner.jpeg" alt="">
             </div>
             <div class="w-96  p-4 my-auto">
                 <div class="  h-20 rounded-full mx-auto flex items-center justify-center">
