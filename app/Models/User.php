@@ -42,6 +42,7 @@ class User extends Authenticatable
         'password',
         'functionary',
         'rgn_id',
+        'lock',
     ];
 
 
