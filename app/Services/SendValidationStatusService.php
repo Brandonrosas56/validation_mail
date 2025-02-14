@@ -52,11 +52,14 @@ class SendValidationStatusService
                         * *Segundo Apellido:* {$this->userData['segundo_apellido']}
                         * *Usuario:* {$this->userData['usuario']}
                     ",
-                'type' => 2,
+                'type' => 1,
                 'status' => 1,
-                'urgency' => 3,
+                'urgency' => 4,
                 'impact' => 3,
                 'requesttypes_id' => 1,
+                'groups_id' => 5, // ID del grupo asignado
+                'users_id_assign' => 10, // ID del técnico asignado
+
             ]
         ];
     }
@@ -80,11 +83,14 @@ class SendValidationStatusService
                         * *Fecha de Terminación del Contrato:* {$this->userData['fecha_terminacion_contrato']}
                         * *Usuario:* {$this->userData['usuario']}
                     ",
-                'type' => 2,
+                'type' => 1,
                 'status' => 1,
-                'urgency' => 3,
+                'urgency' => 4,
                 'impact' => 3,
                 'requesttypes_id' => 1,
+                'groups_id' => 5, // ID del grupo asignado
+                'users_id_assign' => 10, // ID del técnico asignado
+
             ]
         ];
 
@@ -108,11 +114,14 @@ class SendValidationStatusService
                         * *Fecha de Terminación del Contrato:* {$this->userData['fecha_terminacion_contrato']}
                         * *Usuario:* {$this->userData['usuario']}
                     ",
-                'type' => 2,
+                'type' => 1,
                 'status' => 1,
-                'urgency' => 3,
+                'urgency' => 4,
                 'impact' => 3,
                 'requesttypes_id' => 1,
+                'groups_id' => 5, // ID del grupo asignado
+                'users_id_assign' => 10, // ID del técnico asignado
+
             ]
         ];
     }
@@ -130,11 +139,14 @@ class SendValidationStatusService
                             * *Segundo Apellido:* {$this->userData['segundo_apellido']}
                             * *Usuario:* {$this->userData['usuario']}
                         ",
-                    'type' => 3,
-                    'status' => 3,
-                    'urgency' => 3,
+                    'type' => 1,
+                    'status' => 1,
+                    'urgency' => 4,
                     'impact' => 3,
                     'requesttypes_id' => 1,
+                    'groups_id' => 5, // ID del grupo asignado
+                    'users_id_assign' => 10, // ID del técnico asignado
+
                 ]
             ];
 
