@@ -14,7 +14,7 @@ class roleFunctionary extends Controller
     {
         $roles = Role::all();
         $regionals = Regional::all();
-        $users = user::with('roles', 'regional')->paginate(15);
+        $users = user::with('roles', 'regional')->get();
         
         return view('forms.form-of-role-and-functionary', compact('users', 'roles', 'regionals'));
     }
@@ -43,10 +43,7 @@ class roleFunctionary extends Controller
                     $functionaryValue = $request->Select_functionary;
                     User::whereIn('id', $usersSelect)->update(['functionary' => $functionaryValue]);
                 }
-            }
-            
-           
-            
+            }   
         } catch (Exception $e) {
             return redirect()->back()->withErrors(['error'=> 'No se ha podido registrar' . $e->getMessage()])
             ->withInput();
