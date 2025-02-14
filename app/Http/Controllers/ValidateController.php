@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\ValidateAccount;
 use App\Models\Regional;
 use Illuminate\Support\Facades\Http;
+use App\Services\SendValidationStatusService;
 
 class ValidateController extends Controller
 {
@@ -78,16 +79,13 @@ class ValidateController extends Controller
             $response = Http::get($apiUrl);
             $data = $response->json();
     
-            if (isset($data['error']) || isset($data['message'])) {
-                dd('error');
-                /*  return false;  */
+            if (isset($data['error']) || isset($data['message']) || !is_array($data) || count($data) === 0) {
+                return false; 
             }
-
     
-            return is_array($data) && count($data) > 0;
-    
+            return true; 
         } catch (\Exception $e) {
-            /* return false;  */
+            return false; 
         }
     }
 }
