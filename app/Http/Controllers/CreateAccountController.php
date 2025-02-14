@@ -61,7 +61,6 @@ class CreateAccountController extends Controller
         CreateAccount::create($request->all());
         
         if (!$this->validarContratoSecop($documentoProveedor, $numeroContrato, $estadoContrato, $usuarioAsignado)) {
-            dd($documentoProveedor, $numeroContrato, $estadoContrato, $user_id);
             return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.');
         }
         
@@ -71,6 +70,7 @@ class CreateAccountController extends Controller
 
     private function validarContratoSecop($documentoProveedor, $numeroContrato)
     {
+
         $apiUrl = "https://www.datos.gov.co/resource/jbjy-vk9h.json?"
             . "\$where=documento_proveedor='$documentoProveedor' AND id_contrato='$numeroContrato' AND estado_contrato='En ejecución'";
 
@@ -79,6 +79,7 @@ class CreateAccountController extends Controller
             $data = $response->json();
     
             if (isset($data['error']) || isset($data['message'])) {
+                dd('fallo');
                 return false; 
             }
     
