@@ -53,8 +53,13 @@
                     </div>
 
                     <div class="ml-4">
-                        <button type="submit" class="color text-white py-2 px-4 rounded-lg mt-8">
+                        <button type="submit" name="function" value="assign" class="color text-white py-2 px-4 rounded-lg mt-8">
                             Asignar
+                        </button>
+                    </div>
+                    <div class="ml-4">
+                        <button type="submit" name="function" value="lock" class="color text-white py-2 px-4 rounded-lg mt-8">
+                            Bloquear
                         </button>
                     </div>
                 </div>
@@ -70,6 +75,7 @@
                                 <th class="px-4 py-2 border-b">Nombre</th>
                                 <th class="px-4 py-2 border-b">Cédula</th>
                                 <th class="px-4 py-2 border-b">Cargo de funcionario</th>
+                                <th class="px-4 py-2 border-b">bloaueo</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -84,6 +90,7 @@
                                 <td class="px-4 py-2 border-b">{{ $user->name }}</td>
                                 <td class="px-4 py-2 border-b text-center">{{ $user->supplier_document }}</td>
                                 <td class="px-4 py-2 border-b text-center">{{ $user->functionary }}</td>
+                                <td class="px-4 py-2 border-b text-center">{{ $user->lock ? 'bloqueado' : 'No bloqueado' }}</td>
                             </tr>
                             @endif
                             @endforeach

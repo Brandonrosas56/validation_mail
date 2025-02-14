@@ -108,6 +108,7 @@ class importController extends Controller
                     'email' => $rowData['email'],
                     'password' => $hashedPassword,
                     'rgn_id' => null,
+                    'lock' =>false,
                     'created_at' => $now,
                     'updated_at' => $now
                 ];
