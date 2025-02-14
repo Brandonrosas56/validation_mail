@@ -40,6 +40,7 @@ class SendValidationStatusService
 
             case self::RECJECTED_ERROR:
                 // Usar la plantilla nemotecniaTemplateContractor
+                dd('Entrando en rejectedTemplate', $this->rejectedTemplate());
                 $this->GLPIService->createTicket($this->rejectedTemplate());
                 break;
             case self::NEMOTECNIA_ERROR_FUN:

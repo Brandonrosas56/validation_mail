@@ -61,7 +61,7 @@ class ValidateController extends Controller
 
         ValidateAccount::create($request->all());
 
-        if (!$this->validarContratoSecop($documentoProveedor, $numeroContrato, $estadoContrato, $usuarioAsignado)) {
+        if (!$this->validarContratoSecop($documentoProveedor, $numeroContrato, $estadoContrato, $usuarioAsignado, $request)) {
             return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.');
         }
 
@@ -70,7 +70,8 @@ class ValidateController extends Controller
         return redirect()->back()->with('success', 'Solicitud de activación creada correctamente.');
     }
 
-    private function validarContratoSecop($documentoProveedor, $numeroContrato)
+    
+    private function validarContratoSecop($documentoProveedor, $numeroContrato, $request)
     {
         $apiUrl = "https://www.datos.gov.co/resource/jbjy-vk9h.json?"
             . "\$where=documento_proveedor='$documentoProveedor' AND id_contrato='$numeroContrato' AND estado_contrato='En ejecución'";
@@ -80,6 +81,7 @@ class ValidateController extends Controller
             $data = $response->json();
     
             if (isset($data['error']) || isset($data['message']) || !is_array($data) || count($data) === 0) {
+                $this->rejectedValidate($request);
                 return false; 
             }
     
@@ -88,4 +90,24 @@ class ValidateController extends Controller
             return false; 
         }
     }
+
+   private function rejectedValidate ($request) {
+        $userData = [
+            'rgn_id' => $request->input('rgn_id'),
+            'primer_nombre' => $request->input('primer_nombre'),
+            'segundo_nombre' => $request->input('segundo_nombre'),
+            'primer_apellido' => $request->input('primer_apellido'),
+            'segundo_apellido' => $request->input('segundo_apellido'),
+            'usuario' => $request->input('usuario'),
+            'correo_personal' => $request->input('correo_personal'),
+            'correo_institucional' => $request->input('correo_institucional'),
+            'numero_contrato' => $request->input('numero_contrato'),
+            'fecha_inicio_contrato' => $request->input('fecha_inicio_contrato'),
+            'fecha_terminacion_contrato' => $request->input('fecha_terminacion_contrato'),
+        ];
+
+        $sendValidationStatusService = new SendValidationStatusService($userData, SendValidationStatusService::RECJECTED_ERROR);
+        $sendValidationStatusService->sendTicket();
+    }
+
 }
