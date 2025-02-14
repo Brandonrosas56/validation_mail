@@ -67,6 +67,12 @@
                     <label for="fecha_terminacion_contrato" class="block mb-2 TextColor font-bold">Fecha de Terminación del Contrato</label>
                     <input type="date" name="fecha_terminacion_contrato" id="fecha_terminacion_contrato" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('fecha_terminacion_contrato') }}" required>
                 </div>
+
+                <div class="mb-4">
+                    <label for="user_id" class="block mb-2 TextColor font-bold">Rol Asignado </label>
+                    <input type="text" name="user_id" id="user_id" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('fecha_terminacion_contrato') }}" required>
+                </div>
+
             </div>
 
             <div class="mt-6 flex justify-center w-full mb-4">

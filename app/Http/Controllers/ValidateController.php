@@ -49,17 +49,23 @@ class ValidateController extends Controller
             'fecha_inicio_contrato' => 'required|date',
             'fecha_terminacion_contrato' => 'required|date|after_or_equal:fecha_inicio_contrato',
             'numero_contrato' => 'required|string|max:255',
+            'user_id' => 'required|string',
             'usuario' => 'required|string|max:255|unique:validate_account,usuario',
         ]);
 
         $documentoProveedor = $request->input('documento_proveedor');
         $numeroContrato = $request->input('numero_contrato');
+        $estadoContrato = "En ejecución";
+        $usuarioAsignado = $request->input('user_id');
 
-        if (!$this->validarContratoSecop($documentoProveedor, $numeroContrato)) {
+        ValidateAccount::create($request->all());
+
+        if (!$this->validarContratoSecop($documentoProveedor, $numeroContrato, $estadoContrato, $usuarioAsignado)) {
+            dd($documentoProveedor, $numeroContrato, $estadoContrato, $user_id);
             return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.');
         }
 
-        ValidateAccount::create($request->all());
+        
 
         return redirect()->back()->with('success', 'Solicitud de activación creada correctamente.');
     }
@@ -69,18 +75,6 @@ class ValidateController extends Controller
         $apiUrl = "https://www.datos.gov.co/resource/jbjy-vk9h.json?"
             . "\$where=documento_proveedor='$documentoProveedor' AND id_contrato='$numeroContrato' AND estado_contrato='En ejecución'";
 
-        try {
-            $response = Http::get($apiUrl);
-            $data = $response->json();
-    
-            if (isset($data['error']) || isset($data['message'])) {
-                return false; 
-            }
-    
-            return is_array($data) && count($data) > 0;
-    
-        } catch (\Exception $e) {
-            return false; 
-        }
+        
     }
 }
