@@ -16,7 +16,7 @@ class CheckIfBlocked
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->user_blocked) {
+        if (Auth::check() && Auth::user()->lock) {
             Auth::logout();
 
             $request->session()->invalidate();
