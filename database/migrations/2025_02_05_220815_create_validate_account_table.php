@@ -25,9 +25,9 @@ return new class extends Migration
             $table->date('fecha_inicio_contrato');
             $table->date('fecha_terminacion_contrato');
             $table->string('usuario')->unique();
+            $table->string('rol_asignado')->nullable();
             $table->string('estado')->nullable();
             $table->integer('intentos_validacion')->default(4)->nullable();
-            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

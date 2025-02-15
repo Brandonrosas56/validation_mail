@@ -52,7 +52,7 @@ class ValidateController extends Controller
             'fecha_inicio_contrato' => 'required|date',
             'fecha_terminacion_contrato' => 'required|date|after_or_equal:fecha_inicio_contrato',
             'numero_contrato' => 'required|string|max:255',
-            'user_id' => 'required|string',
+            'rol_asignado' => 'required|string',
             'usuario' => 'required|string|max:255|unique:validate_account,usuario',
         ]);
 
@@ -82,7 +82,7 @@ class ValidateController extends Controller
                 dd($validacionNemotenia);
                 break;
         }
-        // }
+         }
 
 
 
