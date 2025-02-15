@@ -66,9 +66,9 @@ class ValidateController extends Controller
 
         $User = User::find($request->user_id);
         $contractor = $User->getService()->isContractor();
-        // if (!$this->validarContratoSecop($documentoProveedor, $numeroContrato, $estadoContrato, $usuarioAsignado)) {
-        //     return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.');
-        // } else {
+        if (!$this->validarContratoSecop($documentoProveedor, $numeroContrato, $estadoContrato, $usuarioAsignado)) {
+             return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.');
+         } else {
         $validacionNemotenia = $this->validarNemotenia($documentoProveedor, $correoInstitucional);
         switch ($validacionNemotenia) {
             case 'No existe el correo':
