@@ -19,15 +19,17 @@
                     <label for="regional" class="block mb-1 TextColor font-bold">Regional</label>
                     <x-select name="rgn_id" id="rgn_id" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" required>
                         <option value="">{{__('Select_regional')}}</option>
-                        @foreach($regional as $region)
-                        <option value="{{ $region->rgn_id }}">{{ $region->rgn_nombre }}</option>
-                        @endforeach
+                        @if(isset($regional))
+                            @foreach($regional as $region)
+                                <option value="{{ $region->rgn_id }}">{{ $region->rgn_nombre }}</option>
+                            @endforeach
+                        @endif
                     </x-select>
                 </div>
 
                 <div class="mb-2">
                     <label for="documento_proveedor" class="block mb-1 TextColor font-bold">Documento Proveedor</label>
-                    <input type="text" name="documento_proveedor" id="documento_proveedor" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('segundo_apellido') }}">
+                    <input type="text" name="documento_proveedor" id="documento_proveedor" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('documento_proveedor') }}">
                 </div>
 
                 <div class="mb-2">
