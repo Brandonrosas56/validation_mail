@@ -59,7 +59,7 @@
                     </div>
                     <div class="ml-4">
                         <button type="submit" name="function" value="lock" class="color text-white py-2 px-4 rounded-lg mt-8">
-                            Bloquear
+                            {{__('change_state')}}
                         </button>
                     </div>
                 </div>

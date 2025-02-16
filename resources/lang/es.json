@@ -58,5 +58,6 @@
     "show-import": "Importar archivos",
     "show-role-functionary": "Asignación de roles y cargos",
     "Functionary": "Funcionario",
-    "Contractor": "Contratista"
+    "Contractor": "Contratista",
+    "change_state" : "Cambiar Estado"
 }
