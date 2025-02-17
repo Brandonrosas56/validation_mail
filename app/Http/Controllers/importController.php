@@ -85,7 +85,7 @@ class importController extends Controller
             );
         } catch (Exception $e) {
             return redirect()->back()
-                ->withErrors(['error' => 'Por favor revise que el tipo de archivo sea el correctamente'])
+                ->withErrors(['error' => 'Por favor revise que el tipo de archivo sea el correctamento'])
                 ->withInput()->send();
         }
         return redirect()->route('show-import')->with('success', '¡Datos guardados correctamente!');
@@ -130,7 +130,7 @@ class importController extends Controller
             }
         } catch (Exception $e) {
             return redirect()->back()
-                ->withErrors(['error' => 'Por favor revise que el tipo de archivo sea el correctamente' )
+                ->withErrors(['error' => 'Por favor revise que el tipo de archivo sea el correctamento'] )
                 ->withInput()->send();
         }
 
