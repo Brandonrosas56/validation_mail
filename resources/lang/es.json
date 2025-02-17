@@ -59,5 +59,8 @@
     "show-role-functionary": "Asignación de roles y cargos",
     "Functionary": "Funcionario",
     "Contractor": "Contratista",
-    "change_state" : "Cambiar Estado"
+    "change_state" : "Cambiar Estado",
+     "Deputy_Director" : "Subdirector",
+     "Area_Director" : "Director de Área",
+     "Office_Manager": "Jefe de Oficina"
 }

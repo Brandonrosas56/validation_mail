@@ -36,7 +36,7 @@
                         <select name="select_role" id="select_role" class="px-4 py-2 border rounded-md w-64">
                             <option value="select_rol">{{__('Select_role')}}</option>
                             @foreach ($roles as $role)
-                                @if($role->name !== 'Super_admin')
+                                @if($role->name !== 'Super_admin' and $role->name !== 'Contratista')
                                     <option value="{{$role->name}}">{{$role->name}}</option>
                                 @endif
                             @endforeach
@@ -47,8 +47,10 @@
                         <label for="{{__('Select_functionary')}}" class="block mb-2 TextColor font-bold">{{__('Select_functionary')}}</label>
                         <select name="Select_functionary" id="Select_functionary" class="px-4 py-2 border rounded-md w-64">
                             <option value="Select_functionary">{{__('Select_functionary')}}</option>
-                            <option value="Funcionario">{{__('Functionary')}}</option>
-                            <option value="Contratista">{{__('Contractor')}}</option>
+                            <option value="Director">{{__('Director')}}</option>
+                            <option value="Subdirector">{{__('Deputy_Director')}}</option>
+                            <option value="Director de Area">{{__('Area_Director')}}</option>
+                            <option value="Jefe de Oficina">{{__('Office_Manager')}}</option>
                         </select>
                     </div>
 
@@ -74,8 +76,9 @@
                                 <th class="px-4 py-2 border-b">Regional</th>
                                 <th class="px-4 py-2 border-b">Nombre</th>
                                 <th class="px-4 py-2 border-b">Cédula</th>
+                                <th class="px-4 py-2 border-b">Rol</th>
                                 <th class="px-4 py-2 border-b">Cargo de funcionario</th>
-                                <th class="px-4 py-2 border-b">bloaueo</th>
+                                <th class="px-4 py-2 border-b">bloqueo</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -89,6 +92,7 @@
                                 <td class="px-4 py-2 border-b text-center">{{ $user->regional ? $user->regional->rgn_nombre : 'No asignado' }}</td>
                                 <td class="px-4 py-2 border-b">{{ $user->name }}</td>
                                 <td class="px-4 py-2 border-b text-center">{{ $user->supplier_document }}</td>
+                                <td class="px-4 py-2 border-b text-cente">{{$user->roles->first()->name}}</td>
                                 <td class="px-4 py-2 border-b text-center">{{ $user->functionary }}</td>
                                 <td class="px-4 py-2 border-b text-center">{{ $user->lock ? 'bloqueado' : 'No bloqueado' }}</td>
                             </tr>
