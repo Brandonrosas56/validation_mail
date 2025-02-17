@@ -13,6 +13,10 @@
                 <img class="w-96 h-full object-cover rounded-l-xl" src="./img/login-banner.jpeg" alt="">
             </div>
             <div class="w-96  p-4 my-auto">
+                <div>
+                    <img src="{{ asset('img/banner.jpeg')}}" alt="Imagen arriba" class="w-full h-18">
+                </div>
+
                 <div class="  h-20 rounded-full mx-auto flex items-center justify-center">
                     <h1 class="text-ld font-bold">Iniciar Sesión</h1>
                 </div>
