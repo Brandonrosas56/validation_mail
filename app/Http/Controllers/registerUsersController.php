@@ -9,6 +9,7 @@ use App\Models\Regional;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class registerUsersController extends Controller
 {
@@ -36,12 +37,15 @@ class registerUsersController extends Controller
             return redirect()->back()->withErrors(($validator))->withInput();
         }
 
+        $userId = Auth::id();
+        
         $user = User::create([
             'name' => $request->name,
             'supplier_document' => $request->supplier_document,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'rgn_id' => $request->rgn_id,
+            'registrar_id' => $userId,
         ]);
         $user->assignRole($request->rol);
         return redirect()->route('registerUsers')->with('success', '¡Datos guardados correctamente!');

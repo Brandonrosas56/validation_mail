@@ -108,13 +108,6 @@
                     </x-onclick>
                 </div>
             </form>
-
-            <!-- Enlace centrado -->
-            <div class="mt-8 text-center">
-                <a href="{{ route('login') }}" class="text-xl font-semibold text-gray-600 hover:text-gray-900 focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">
-                    Regresar a login
-                </a>
-            </div>
         </div>
     </div>
 </div>

@@ -21,6 +21,10 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+Route::get('/show_user_authorization', function () {
+    return view('auth.user-authorization');
+})->name('show_user_authorization');
+
 Route::get('/show-validate-account', [ValidateController::class, 'show'])->name('show-validate.accounts');
 
 Route::get('/show-account', [CreateAccountController::class, 'show'])->name('show.account');
@@ -33,12 +37,12 @@ Route::get('/validate-account', [ValidateController::class, 'index'])->name('val
 
 Route::post('/activation', [ValidateController::class, 'store'])->name('activation.store');
 
-Route::controller(importController::class)->group(function(){
+Route::controller(importController::class)->group(function () {
     Route::get('/show-import', 'store')->name('show-import');
     Route::post('/import-files', 'importFiles')->name('import-files');
 });
 
-Route::controller(roleFunctionary::class)->group(function(){
+Route::controller(roleFunctionary::class)->group(function () {
     Route::get('/show-role-functionary', 'show')->name('show-role-functionary');
     Route::post('/assign-role-functionary', 'assignRoleFuncionary')->name('assign-role-functionary');
 });
@@ -58,26 +62,20 @@ Route::middleware(['auth', 'checkIfBlocked'])->group(function () {
             return view('dashboard');
         })->name('dashboard');
 
-        
+
 
         Route::middleware(['auth'])->group(function () {
             Route::middleware(CheckRole::class . ':admin_users')->group(function () {
                 Route::controller(rolesController::class)->group(function () {
-                Route::get('Roles', 'showRolView')->name('show-rol-view');
-                Route::post('/registerRoles', 'store')->name('roles.store');
-       
+                    Route::get('Roles', 'showRolView')->name('show-rol-view');
+                    Route::post('/registerRoles', 'store')->name('roles.store');
                 });
                 Route::middleware('auth')->prefix('glpi')->group(function () {
-                Route::get('/init-session', [TicketController::class, 'initSession']);
-                Route::get('/ticket/{id}', [TicketController::class, 'getTicket']);
-                Route::post('/ticket', [TicketController::class, 'createTicket']);
+                    Route::get('/init-session', [TicketController::class, 'initSession']);
+                    Route::get('/ticket/{id}', [TicketController::class, 'getTicket']);
+                    Route::post('/ticket', [TicketController::class, 'createTicket']);
                 });
-                
             });
         });
     });
 });
-
-
-
-
