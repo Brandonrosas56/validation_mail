@@ -85,10 +85,10 @@ class importController extends Controller
             );
         } catch (Exception $e) {
             return redirect()->back()
-                ->withErrors(['error' => 'Por favor revice que el archivo ese correctamente redactado'])
+                ->withErrors(['error' => 'Por favor revise que el tipo de archivo sea el correctamente'])
                 ->withInput()->send();
         }
-        return redirect()->route('show-import')->with('success', '!Datos guardados correctamente¡');
+        return redirect()->route('show-import')->with('success', '¡Datos guardados correctamente!');
     }
 
 
@@ -130,10 +130,10 @@ class importController extends Controller
             }
         } catch (Exception $e) {
             return redirect()->back()
-                ->withErrors(['error' => 'Por favor revice que el archivo ese correctamente redactado ' . $e->getMessage()])
+                ->withErrors(['error' => 'Por favor revise que el tipo de archivo sea el correctamente' )
                 ->withInput()->send();
         }
 
-        return redirect()->back()->with('success', '!Datos guardados correctamente¡');
+        return redirect()->back()->with('success', '¡Datos guardados correctamente!');
     }
 }
