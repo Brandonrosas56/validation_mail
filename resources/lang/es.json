@@ -58,5 +58,9 @@
     "show-import": "Cargue Masivo",
     "show-role-functionary": "Control de Accesos",
     "Functionary": "Funcionario",
-    "Contractor": "Contratista"
+    "Contractor": "Contratista",
+    "change_state" : "Cambiar Estado",
+     "Deputy_Director" : "Subdirector",
+     "Area_Director" : "Director de Área",
+     "Office_Manager": "Jefe de Oficina"
 }
