@@ -18,6 +18,7 @@ class CreateAccount extends Model
         'primer_apellido',
         'segundo_apellido',
         'documento_proveedor',
+        'tipo_documento',
         'correo_personal',
         'correo_institucional',
         'numero_contrato',

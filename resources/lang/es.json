@@ -55,8 +55,8 @@
     "Update date to" : "Fecha de actualización: Hasta",
     "Data" : "Dato",
     "Search" : "Buscar",
-    "show-import": "Importar archivos",
-    "show-role-functionary": "Asignación de roles y cargos",
+    "show-import": "Cargue Masivo",
+    "show-role-functionary": "Control de Accesos",
     "Functionary": "Funcionario",
     "Contractor": "Contratista"
 }

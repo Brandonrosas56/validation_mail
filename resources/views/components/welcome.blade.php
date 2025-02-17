@@ -2,11 +2,11 @@
 
 
     <h1 class="mt-8 text-2xl font-medium text-gray-900 font-semibold">
-        Sistema De Validación De Contratistas 
+        CREACTIVA
     </h1>
 
     <p class="mt-6 text-gray-500 leading-relaxed">
-        El Sistema de Validación y Gestión de Contratistas es una plataforma que permite a los funcionarios  verificar y gestionar de manera eficiente los datos de contratistas para la creación y activación de su usuario y correo.
+    CREACTIVA es una plataforma  diseñada para que los funcionarios gestionen y verifiquen de manera eficiente las cuentas de correo electrónico de contratistas y funcionarios, optimizando así la creación y activación de usuarios y correos electrónicos.
     </p>
 </div>
 
@@ -22,12 +22,12 @@
         </div>
 
         <p class="mt-4 text-gray-500 text-sm leading-relaxed">
-            Al hacer clic en el botón “ver mas”, podrás acceder a una tabla interactiva que muestra de manera clara y organizada todos los usuarios que tienen pendiente la creación de su correo electrónico SENA.
+            Al hacer clic en el botón 'Ver más', podrás acceder a una tabla interactiva que muestra de manera clara y organizada todas las solicitudes emitidas de creación del correo electrónico SENA.
         </p>
 
         <p class="mt-4 text-sm">
             <a href="{{ route('show.account') }}" class="inline-flex items-center font-semibold text-indigo-700">
-                Ver
+                Ver más
                 <svg xmlns="http://www.w3.o/svg" viewBox="0 0 20 20" class="ms-1 w-5 h-5 fill-indigo-500">
                     <path fill-rule="evenodd" d="M5 10a.75.75 0 01.75-.75h6.638L10.23 7.29a.75.75 0 111.04-1.08l3.5 3.25a.75.75 0 010 1.08l-3.5 3.25a.75.75 0 11-1.04-1.08l2.158-1.96H5.75A.75.75 0 015 10z" clip-rule="evenodd" />
                 </svg>
@@ -46,12 +46,12 @@
         </div>
 
         <p class="mt-4 text-gray-500 text-sm leading-relaxed">
-            Al hacer clic en el botón “ver mas”, podrás acceder a una tabla interactiva que muestra de manera clara y organizada todos los usuarios que tienen pendiente la validación de su correo electrónico SENA.
+            Al hacer clic en el botón 'Ver más', podrás acceder a una tabla interactiva que muestra de manera clara y organizada todas las solicitudes emitidas de activación del correo electrónico SENA.
         </p>
             
         <p class="mt-4 text-sm">
             <a href="{{ route('show-validate.accounts') }}" class="inline-flex items-center font-semibold text-indigo-700">
-                Ver
+                Ver más
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="ms-1 w-5 h-5 fill-indigo-500">
                     <path fill-rule="evenodd" d="M5 10a.75.75 0 01.75-.75h6.638L10.23 7.29a.75.75 0 111.04-1.08l3.5 3.25a.75.75 0 010 1.08l-3.5 3.25a.75.75 0 11-1.04-1.08l2.158-1.96H5.75A.75.75 0 015 10z" clip-rule="evenodd" />
                 </svg>

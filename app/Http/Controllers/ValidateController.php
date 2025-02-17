@@ -43,6 +43,7 @@ class ValidateController extends Controller
             'rgn_id' => 'required',
             'exists:regional,rgn_id',
             'documento_proveedor' => 'required|String|',
+            'tipo_documento'=> 'required|String|',
             'primer_nombre' => 'required|string|max:255',
             'segundo_nombre' => 'nullable|string|max:255',
             'primer_apellido' => 'required|string|max:255',

@@ -13,18 +13,19 @@ return new class extends Migration
     {
         Schema::create('create_account', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('rgn_id')->nullable();
+            $table->foreignId('rgn_id');
             $table->string('primer_nombre');
-            $table->string('segundo_nombre')->nullable();
+            $table->string('segundo_nombre');
             $table->string('primer_apellido');
-            $table->string('segundo_apellido')->nullable();
-            $table->string('documento_proveedor')->nullable();
-            $table->string('correo_personal')->unique();
-            $table->string('correo_institucional')->nullable();
+            $table->string('segundo_apellido');
+            $table->string('documento_proveedor');
+            $table->string('tipo_documento');
+            $table->string('correo_personal');
+            $table->string('correo_institucional');
             $table->string('numero_contrato');
             $table->date('fecha_inicio_contrato');
             $table->date('fecha_terminacion_contrato');
-            $table->string('rol_asignado')->nullable();
+            $table->string('rol_asignado');
             $table->string('estado')->nullable();
             $table->timestamps();
         });
