@@ -6,6 +6,12 @@
             alertBlocked();
         });
     </script>
+
+    <head>
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">   
+    </head>
+
+
     @endif
     <div class="flex justify-center h-screen w-screen items-center">
         <div class="flex w-fit gap-4 rounded-lg shadow h-fit">
@@ -14,7 +20,7 @@
             </div>
             <div class="w-96  p-4 my-auto">
                 <div>
-                    <img src="{{ asset('img/banner.jpeg')}}" alt="Imagen arriba" class="w-full h-18">
+                    <img src="{{ asset('img/banner.png')}}" alt="Imagen arriba" class="w-full h-18">
                 </div>
 
                 <div class="  h-20 rounded-full mx-auto flex items-center justify-center">
