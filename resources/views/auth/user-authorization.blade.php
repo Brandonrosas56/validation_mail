@@ -22,13 +22,25 @@
                 </p>
 
                 <h2 class="ms-3 text-xl font-semibold text-gray-900">
-                    <a href="{{ route('registerUsers') }}" :active="request()->routeIs('registerUsers')">
-                        {{ __('registerUsers') }}
-                    </a>
+                    @include('forms.register')
+                    <div class="mt-4 mb-4">
+                        <button onclick="toggleRegisterModal()" class="cms-3 text-xl font-semibold text-gray-900">{{ __('registerUsers') }}</button>
+                    </div>
                 </h2>
             </div>
-
-
         </div>
     </div>
 </x-app-layout>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+@if (session('success'))
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Swal.fire({
+            title: "Éxito!",
+            text: "{{ session('success') }}",
+            icon: "success"
+        });
+    });
+</script>
+@endif

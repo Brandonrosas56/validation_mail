@@ -166,6 +166,7 @@ return [
         'updateStartDate' => 'fecha de actualización desde',
         'updateDateTo' => 'fecha de actualización hasta',
         'rgn_id' => 'Regional',
+        'supplier_document' => 'documento del proveedor',
     ],
 
 ];

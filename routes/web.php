@@ -21,10 +21,6 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-Route::get('/show_user_authorization', function () {
-    return view('auth.user-authorization');
-})->name('show_user_authorization');
-
 Route::get('/show-validate-account', [ValidateController::class, 'show'])->name('show-validate.accounts');
 
 Route::get('/show-account', [CreateAccountController::class, 'show'])->name('show.account');
@@ -48,7 +44,7 @@ Route::controller(roleFunctionary::class)->group(function () {
 });
 
 Route::controller(registerUsersController::class)->group(function () {
-    Route::get('/registerUsers', 'index')->name('registerUsers');
+    Route::get('/show_user_authorization', 'index')->name('show_user_authorization');
     Route::post('registerStore', 'store')->name('registerStore');
 });
 

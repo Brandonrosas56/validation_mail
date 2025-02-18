@@ -14,20 +14,20 @@ use Illuminate\Support\Facades\Auth;
 class registerUsersController extends Controller
 {
     //! show users and roles
-    public function index(Request $request)
+    public function index()
     {
         $roles = role::select('name')->get();
         $regional = Regional::all('rgn_id', 'rgn_nombre');
         $users = user::with('roles', 'regional')->get(); 
-        return view('auth.register', compact('users', 'roles', 'regional'));
+        return view('auth.user-authorization', compact('users', 'roles', 'regional'));
     }
 
     //!Create user
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'supplier_document' => ['required', 'string'],
-            'email' => ['required','unique:users'],
+            'supplier_document' => ['required', 'string','unique:users'],
+            'email' => ['required','unique:users', 'regex:/^[a-zA-Z0-9._%+-]+@sena\.edu\.co$/'],
             'password' => ['required', 'min:8', 'confirmed', 'regex:/[A-Z]/', 'regex:/[a-z]/', 'regex:/[0-9]/', 'regex:/[@$!%*?&#]/',],
             'rgn_id' =>['required', 'exists:regional,rgn_id'],
             'rol' => ['required'],
@@ -48,7 +48,7 @@ class registerUsersController extends Controller
             'registrar_id' => $userId,
         ]);
         $user->assignRole($request->rol);
-        return redirect()->route('registerUsers')->with('success', '¡Datos guardados correctamente!');
+        return redirect()->route('show_user_authorization')->with('success', '¡Datos guardados correctamente!');
     }
 
 
@@ -100,7 +100,7 @@ class registerUsersController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()->withErrors('No ha seleccionado ningún usuario para blockear')->withInput();
+            return redirect()->back()->withErrors(['errors'=>'No ha seleccionado ningún usuario para blockear'])->withInput();
         }
 
         $user = User::find($request->bloked_id);
@@ -111,6 +111,6 @@ class registerUsersController extends Controller
         }
 
         $user->save();
-        return redirect()->route('registerUsers')->with('success', '¡Datos actualizados correctamente!');
+        return redirect()->route('auth.user-authorization')->with('success', '¡Datos actualizados correctamente!');
     }
 }
