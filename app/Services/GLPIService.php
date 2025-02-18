@@ -96,4 +96,66 @@ class GLPIService
             print_r($th->getMessage());
         }
     }
+        public function orderTicketsByLastResponse(array $ticketIds)
+{
+    try {
+        $sessionToken = $this->testConnection()['session_token'] ;
+        if (!$sessionToken) {
+            throw new \Exception("No se pudo obtener el session_token de GLPI.");
+        }
+
+        $ticketsByUser = [];
+
+        foreach ($ticketIds as $ticketId) {
+            try {
+                $ticketResponse = $this->client->get("/apirest.php/Ticket/{$ticketId}", [
+                    'headers' => ['Session-Token' => $sessionToken],
+                ]);
+                $ticketData = json_decode($ticketResponse->getBody()->getContents(), true);
+
+                $userId = $ticketData['user_id'];
+
+                if (!$userId) {
+                    continue; // Si no hay usuario asignado, ignoramos el ticket
+                }
+
+                // Obtener el seguimiento (ITILFollowup) del ticket
+                $response = $this->client->get("/apirest.php/Ticket/{$ticketId}/ITILFollowup", [
+                    'headers' => ['Session-Token' => $sessionToken],
+                ]);
+
+                $followups = json_decode($response->getBody()->getContents(), true);
+
+                if (!empty($followups)) {
+                    // Ordenar por fecha descendente y obtener el último seguimiento
+                    usort($followups, fn($a, $b) => strtotime($b['date_creation']) - strtotime($a['date_creation']));
+                    $lastResponse = $followups[0];
+
+                    if (!isset($ticketsByUser[$userId]) || 
+                        strtotime($lastResponse['date_creation']) > strtotime($ticketsByUser[$userId]['last_response_date'])) {
+                        
+                        $ticketsByUser[$userId] = [
+                            'ticket_id' => $ticketId,
+                            'user_id' => $userId,
+                            'last_response' => $lastResponse,
+                            'last_response_date' => $lastResponse['date_creation'],
+                        ];
+                    }
+                }
+            } catch (\Exception $e) {
+                error_log("Error al procesar ticket {$ticketId}: " . $e->getMessage());
+            }
+        }
+
+        // Convertimos el array asociativo en un array indexado y lo ordenamos
+        $orderedTickets = array_values($ticketsByUser);
+        usort($orderedTickets, fn($a, $b) => strtotime($b['last_response_date']) - strtotime($a['last_response_date']));
+
+        return $orderedTickets;
+    } catch (\Throwable $th) {
+        error_log("Error en orderTicketsByLastResponse: " . $th->getMessage());
+        return [];
+    }
 }
+
+    }

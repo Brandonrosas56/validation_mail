@@ -12,7 +12,6 @@ class SendValidationStatusService
     private const TEMPLATE_SUCCESS = 'success';
     private const NEMOTECNIA_TEMPLATE = 'nemotecnia';
     const NEMOTECNIA_ERROR = 'ERRRO_NEMOTECNIA';
-
     const NEMOTECNIA_ERROR_FUN = 'NEMOTECNIA_ERROR_FUN';
     const RECJECTED_ERROR = 'RECJECTED_ERROR';
     const VALIDATION_SUCCESS = 'VALIDATION_OK';
