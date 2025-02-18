@@ -32,6 +32,17 @@
                     <input type="text" name="documento_proveedor" id="documento_proveedor" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('documento_proveedor') }}">
                 </div>
 
+                <div class="mb-3">
+                    <label for="tipo_documento" class="block mb-1 TextColor font-bold">Tipo de documento*</label>
+                    <select name="tipo_documento" id="tipo_documento" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none">
+                        <option value="CC">Cédula de Ciudadanía</option>
+                        <option value="CE">Cédula de Extranjería</option>
+                        <option value="Pasaporte">Pasaporte</option>
+                        <option value="TI">Tarjeta de Identidad</option>
+                        <option value="NIT">Número de Identificación Tributaria</option>
+                    </select>
+                </div>
+
                 <div class="mb-2">
                     <label for="primer_nombre" class="block mb-1 TextColor font-bold">Primer Nombre*</label>
                     <input type="text" name="primer_nombre" id="primer_nombre" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('primer_nombre') }}" required>
