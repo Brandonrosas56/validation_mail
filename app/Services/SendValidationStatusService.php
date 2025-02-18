@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\AccountTicket;
 use GuzzleHttp\Client;
+use App\Models\CreateAccount;
 use GuzzleHttp\Exception\RequestException;
 
 class SendValidationStatusService
@@ -14,14 +16,14 @@ class SendValidationStatusService
     const NEMOTECNIA_ERROR_FUN = 'NEMOTECNIA_ERROR_FUN';
     const RECJECTED_ERROR = 'RECJECTED_ERROR';
     const VALIDATION_SUCCESS = 'VALIDATION_OK';
-    private array $userData = [];
+    private CreateAccount $createAccount ;
     private string $state = '';
     private bool $contractor = false;
     private GLPIService $GLPIService;
 
-    public function __construct(array $userData, string $state, $contractor = false)
+    public function __construct(CreateAccount $createAccount, string $state, $contractor = false)
     {
-        $this->userData = $userData;
+        $this->createAccount = $createAccount;
         $this->state = $state;
         $this->contractor = $contractor;
         $this->GLPIService = new GLPIService();
@@ -32,7 +34,9 @@ class SendValidationStatusService
         switch ($this->state) {
             case self::VALIDATION_SUCCESS:
                 // Usar la plantilla successTemplate
-                $this->GLPIService->createTicket($this->successTemplate());
+                $response = $this->GLPIService->createTicket($this->successTemplate());
+                $ticketInfo = $this->GLPIService->getTicketInfo($response);
+                AccountTicketService::create($this->createAccount,$ticketInfo);
                 break;
 
             case self::NEMOTECNIA_ERROR:
@@ -54,6 +58,10 @@ class SendValidationStatusService
         }
     }
 
+   public function saveTicketInformation() : void {
+
+    }
+
     private function successTemplate(): array
     {
         return [
@@ -61,12 +69,12 @@ class SendValidationStatusService
                 'name' => "Caso por Nemotecnia - Contratista (Fallido)",
                 'content' => "
                         *Datos del Usuario:*
-                        * *Regional:* {$this->userData['rgn_id']}
-                        * *Primer Nombre:* {$this->userData['primer_nombre']}
-                        * *Segundo Nombre:* {$this->userData['segundo_nombre']}
-                        * *Primer Apellido:* {$this->userData['primer_apellido']}
-                        * *Segundo Apellido:* {$this->userData['segundo_apellido']}
-                        * *Usuario:* {$this->userData['usuario']}
+                        * *Regional:* {$this->createAccount->rgn_id}
+                        * *Primer Nombre:* {$this->createAccount->primer_nombre}
+                        * *Segundo Nombre:* {$this->createAccount->segundo_nombre}
+                        * *Primer Apellido:* {$this->createAccount->primer_apellido}
+                        * *Segundo Apellido:* {$this->createAccount->segundo_apellido}
+                        * *Usuario:* {$this->createAccount->usuario}
                     ",
                 'type' => 1,
                 'status' => 1,
@@ -87,17 +95,17 @@ class SendValidationStatusService
                 'name' => "Caso por Nemotecnia - Contratista (Fallido)",
                 'content' => "
                         *Datos del Usuario:*
-                        * *Regional:* {$this->userData['rgn_id']}
-                        * *Primer Nombre:* {$this->userData['primer_nombre']}
-                        * *Segundo Nombre:* {$this->userData['segundo_nombre']}
-                        * *Primer Apellido:* {$this->userData['primer_apellido']}
-                        * *Segundo Apellido:* {$this->userData['segundo_apellido']}
-                        * *Correo Personal:* {$this->userData['correo_personal']}
-                        * *Correo Electrónico Institucional:* {$this->userData['correo_institucional']}
-                        * *Número de Contrato SECOP II:* {$this->userData['numero_contrato']}
-                        * *Fecha de Inicio del Contrato:* {$this->userData['fecha_inicio_contrato']}
-                        * *Fecha de Terminación del Contrato:* {$this->userData['fecha_terminacion_contrato']}
-                        * *Usuario:* {$this->userData['usuario']}
+                        * *Regional:* {$this->createAccount->rgn_id}
+                        * *Primer Nombre:* {$this->createAccount->primer_nombre}
+                        * *Segundo Nombre:* {$this->createAccount->segundo_nombre}
+                        * *Primer Apellido:* {$this->createAccount->primer_apellido}
+                        * *Segundo Apellido:* {$this->createAccount->segundo_apellido}
+                        * *Correo Personal:* {$this->createAccount->correo_personal}
+                        * *Correo Electrónico Institucional:* {$this->createAccount->correo_institucional}
+                        * *Número de Contrato SECOP II:* {$this->createAccount->numero_contrato}
+                        * *Fecha de Inicio del Contrato:* {$this->createAccount->fecha_inicio_contrato}
+                        * *Fecha de Terminación del Contrato:* {$this->createAccount->fecha_terminacion_contrato}
+                        * *Usuario:* {$this->createAccount->usuario}
                     ",
                 'type' => 1,
                 'status' => 1,
@@ -118,17 +126,17 @@ class SendValidationStatusService
                 'name' => "Caso por Nemotecnia - Funcionario (Fallido)",
                 'content' => "
                         *Datos del Usuario:*
-                        * *Regional:* {$this->userData['rgn_id']}
-                        * *Primer Nombre:* {$this->userData['primer_nombre']}
-                        * *Segundo Nombre:* {$this->userData['segundo_nombre']}
-                        * *Primer Apellido:* {$this->userData['primer_apellido']}
-                        * *Segundo Apellido:* {$this->userData['segundo_apellido']}
-                        * *Correo Personal:* {$this->userData['correo_personal']}
-                        * *Correo Electrónico Institucional:* {$this->userData['correo_institucional']}
-                        * *Número de Contrato SECOP II:* {$this->userData['numero_contrato']}
-                        * *Fecha de Inicio del Contrato:* {$this->userData['fecha_inicio_contrato']}
-                        * *Fecha de Terminación del Contrato:* {$this->userData['fecha_terminacion_contrato']}
-                        * *Usuario:* {$this->userData['usuario']}
+                        * *Regional:* {$this->createAccount->rgn_id}
+                        * *Primer Nombre:* {$this->createAccount->primer_nombre}
+                        * *Segundo Nombre:* {$this->createAccount->segundo_nombre}
+                        * *Primer Apellido:* {$this->createAccount->primer_apellido}
+                        * *Segundo Apellido:* {$this->createAccount->segundo_apellido}
+                        * *Correo Personal:* {$this->createAccount->correo_personal}
+                        * *Correo Electrónico Institucional:* {$this->createAccount->correo_institucional}
+                        * *Número de Contrato SECOP II:* {$this->createAccount->numero_contrato}
+                        * *Fecha de Inicio del Contrato:* {$this->createAccount->fecha_inicio_contrato}
+                        * *Fecha de Terminación del Contrato:* {$this->createAccount->fecha_terminacion_contrato}
+                        * *Usuario:* {$this->createAccount->usuario}
                     ",
                 'type' => 1,
                 'status' => 1,
@@ -148,12 +156,12 @@ class SendValidationStatusService
                 'name' => "Caso por Nemotecnia - Contratista (Fallido)",
                 'content' => "
                             *Datos del Usuario:*
-                            * *Regional:* {$this->userData['rgn_id']}
-                            * *Primer Nombre:* {$this->userData['primer_nombre']}
-                            * *Segundo Nombre:* {$this->userData['segundo_nombre']}
-                            * *Primer Apellido:* {$this->userData['primer_apellido']}
-                            * *Segundo Apellido:* {$this->userData['segundo_apellido']}
-                            * *Usuario:* {$this->userData['usuario']}
+                            * *Regional:* {$this->createAccount->rgn_id}
+                            * *Primer Nombre:* {$this->createAccount->primer_nombre}
+                            * *Segundo Nombre:* {$this->createAccount->segundo_nombre}
+                            * *Primer Apellido:* {$this->createAccount->primer_apellido}
+                            * *Segundo Apellido:* {$this->createAccount->segundo_apellido}
+                            * *Usuario:* {$this->createAccount->usuario}
                         ",
                 'type' => 1,
                 'status' => 1,

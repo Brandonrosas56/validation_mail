@@ -4,10 +4,12 @@ namespace App\Services;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use Predis\Response\ResponseInterface;
 
 class GLPIService
 {
     protected $client;
+    protected string|null $sessionToken = null;
 
     // Constante para la ruta del endpoint
     private const INIT_SESSION_ENDPOINT = '/apirest.php/initSession';
@@ -26,6 +28,7 @@ class GLPIService
                     'Content-Type' => 'application/json',
                 ],
             ]);
+            $this->sessionToken = $this->testConnection()['session_token'];
         } catch (\Throwable $th) {
             print_r($th->getMessage());
         }
@@ -62,22 +65,35 @@ class GLPIService
         }
     }
 
-    function createTicket(array $attributes) :void {
+    function createTicket(array $attributes)
+    {
+
+        try {
+            //code...
+            $response = $this->client->post(self::TICKET_ENDPOINT, [
+                'headers' => [
+                    'Session-Token' => $this->sessionToken
+                ],
+                'body' => json_encode($attributes)
+            ]);
+            return $response;
+        } catch (\Throwable $th) {
+            print_r($th->getMessage());
+        }
+    }
+    function getTicketInfo(array $response)
+    {
         $sessionToken = $this->testConnection()['session_token'];
 
-        if ($sessionToken) {
-            try {
-                //code...
-                $reponse = $this->client->post(self::TICKET_ENDPOINT,[
-                    'headers' => [
-                        'Session-Token' => $sessionToken
-                    ],
-                    'body'=> json_encode($attributes)
-                ]);
-            } catch (\Throwable $th) {
-                print_r( $th->getMessage());
-            }
+        try {
+            $response = $this->client->get(self::TICKET_ENDPOINT."/{$response['id']}", [
+                'headers' => [
+                    'Session-Token' => $sessionToken
+                ],
+            ]);
+            return $response;
+        } catch (\Throwable $th) {
+            print_r($th->getMessage());
         }
-
     }
 }

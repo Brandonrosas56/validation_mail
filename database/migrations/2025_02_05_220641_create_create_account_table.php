@@ -25,7 +25,7 @@ return new class extends Migration
             $table->date('fecha_inicio_contrato');
             $table->date('fecha_terminacion_contrato');
             $table->string('rol_asignado');
-            $table->string('estado')->nullable();
+            $table->string('estado')->nullable()->default('pendiente');
             $table->timestamps();
         });
     }

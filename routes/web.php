@@ -1,17 +1,18 @@
 <?php
 
+use Laravel\Jetstream\Rules\Role;
 use App\Http\Middleware\CheckRole;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckIfBlocked;
+use App\Http\Controllers\roleFunctionary;
 use App\Http\Controllers\rolesController;
-use App\Http\Controllers\TicketController;
 use App\Http\Controllers\importController;
+use App\Http\Controllers\TicketController;
 use App\Http\Controllers\ValidateController;
+use App\Http\Controllers\ChangeStatusController;
 use App\Http\Controllers\CreateAccountController;
 use App\Http\Controllers\registerUsersController;
-use App\Http\Controllers\roleFunctionary;
-use Laravel\Jetstream\Rules\Role;
 
 App::setLocale('es');
 
@@ -32,6 +33,8 @@ Route::get('/create-account', [CreateAccountController::class, 'index'])->name('
 Route::get('/validate-account', [ValidateController::class, 'index'])->name('validate.account');
 
 Route::post('/activation', [ValidateController::class, 'store'])->name('activation.store');
+
+Route::post('/change', [ChangeStatusController::class, 'store'])->name('change.store');
 
 Route::controller(importController::class)->group(function(){
     Route::get('/show-import', 'store')->name('show-import');
