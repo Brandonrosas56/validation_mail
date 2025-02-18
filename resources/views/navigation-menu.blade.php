@@ -35,6 +35,11 @@
                     {{ __('show-role-functionary') }}
                 </x-nav-link>
             </div>
+            <div class="hidden sm:-my-px gap-3 sm:flex">
+                <x-nav-link href="{{ route('show_user_authorization') }}" :active="request()->routeIs('show_user_authorization')">
+                    {{ __('show_user_authorization') }}
+                </x-nav-link>
+            </div>
             @endif
         </div>
 

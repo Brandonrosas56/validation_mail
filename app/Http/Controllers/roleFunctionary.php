@@ -8,18 +8,26 @@ use App\Models\Regional;
 use Exception;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class roleFunctionary extends Controller
 {
     public function show()
     {
+        $userId = Auth::id();
         $roles = Role::all();
         $regionals = Regional::all();
-        $users = user::with('roles', 'regional')->get();
+        $users = user::with('roles', 'regional')->where('registrar_id', $userId)
+            ->orWhere(function ($query) use ($userId) {
+                if ($userId == 1) {
+                    $query->whereNotNull('id');
+                }
+            })->get();
 
         return view('forms.form-of-role-and-functionary', compact('users', 'roles', 'regionals'));
     }
 
+    //Assign roles and permissions
     public function assignRoleFuncionary(Request $request)
     {
         $usersSelect = $request->user_check ?? [];
@@ -56,6 +64,7 @@ class roleFunctionary extends Controller
         return redirect()->back()->with('success', 'Se ha asignado correctamente');
     }
 
+    //block users
     public function lockUsers($usersSelect)
     {
         try {
