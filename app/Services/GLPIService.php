@@ -4,10 +4,12 @@ namespace App\Services;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use Predis\Response\ResponseInterface;
 
 class GLPIService
 {
     protected $client;
+    protected string|null $sessionToken = null;
 
     // Constante para la ruta del endpoint
     private const INIT_SESSION_ENDPOINT = '/apirest.php/initSession';
@@ -26,6 +28,7 @@ class GLPIService
                     'Content-Type' => 'application/json',
                 ],
             ]);
+            $this->sessionToken = $this->testConnection()['session_token'];
         } catch (\Throwable $th) {
             print_r($th->getMessage());
         }
@@ -62,22 +65,66 @@ class GLPIService
         }
     }
 
-    function createTicket(array $attributes) :void {
+    function createTicket(array $attributes)
+    {
+
+        try {
+            //code...
+            $response = $this->client->post(self::TICKET_ENDPOINT, [
+                'headers' => [
+                    'Session-Token' => $this->sessionToken
+                ],
+                'body' => json_encode($attributes)
+            ]);
+
+            $body = $response->getBody()->getContents();
+            // Decodificar y validar el contenido JSON
+            $decoded = json_decode($body, true);
+            return $decoded;
+        } catch (\Throwable $th) {
+            print_r($th->getMessage());
+        }
+    }
+    function getTicketInfo(int $id)
+    {
         $sessionToken = $this->testConnection()['session_token'];
 
-        if ($sessionToken) {
-            try {
-                //code...
-                $reponse = $this->client->post(self::TICKET_ENDPOINT,[
-                    'headers' => [
-                        'Session-Token' => $sessionToken
-                    ],
-                    'body'=> json_encode($attributes)
-                ]);
-            } catch (\Throwable $th) {
-                print_r( $th->getMessage());
-            }
-        }
+        try {
+            $response = $this->client->get(self::TICKET_ENDPOINT . "/{$id}", [
+                'headers' => [
+                    'Session-Token' => $sessionToken
+                ],
+            ]);
+            $body = $response->getBody()->getContents();
 
+            // Decodificar y validar el contenido JSON
+            $decoded = json_decode($body, true);
+            return $decoded;
+        } catch (\Throwable $th) {
+            print_r($th->getMessage());
+        }
+    }
+
+    public function getTicketFollowByLastResponse(int $ticketId)
+    {
+
+        try {
+            // Obtener el seguimiento (ITILFollowup) del ticket
+            $response = $this->client->get("/apirest.php/Ticket/{$ticketId}/ITILFollowup", [
+                'headers' => ['Session-Token' => $this->sessionToken],
+            ]);
+
+            $followups = json_decode($response->getBody()->getContents(), true);
+
+            if (!empty($followups)) {
+                // Ordenar por fecha descendente y obtener el último seguimiento
+                usort($followups, fn($a, $b) => strtotime($b['date_creation']) - strtotime($a['date_creation']));
+                return reset($followups);
+            }else{
+                return [];
+            }
+        } catch (\Exception $e) {
+            error_log("Error al procesar ticket {$ticketId}: " . $e->getMessage());
+        }
     }
 }

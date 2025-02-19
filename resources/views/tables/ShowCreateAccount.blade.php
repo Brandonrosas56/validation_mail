@@ -7,7 +7,7 @@
     <!-- Redondeamos solo el contenedor -->
     <div class="overflow-x-auto max-w-7xl mx-auto mt-10 rounded-lg">
         @include('forms.CreateAccount')
-         <div class="mt-4 mb-4">
+        <div class="mt-4 mb-4">
             <button onclick="toggleModal()" class="color text-white py-2 px-4 rounded-lg">Crear Cuenta</button>
         </div>
         
@@ -25,6 +25,7 @@
                     <th class="px-4 py-2 border-b">Fecha de Inicio</th>
                     <th class="px-4 py-2 border-b">Fecha de Terminación</th>
                     <th class="px-4 py-2 border-b">Estado</th>
+                    <th class="px-4 py-2 border-b">Acción</th>
                 </tr>
             </thead>
             <tbody>
@@ -40,14 +41,16 @@
                         <td class="px-4 py-2 border-b">{{ $account->numero_contrato }}</td>
                         <td class="px-4 py-2 border-b">{{ $account->fecha_inicio_contrato }}</td>
                         <td class="px-4 py-2 border-b">{{ $account->fecha_terminacion_contrato }}</td>
-                        <td class="px-4 py-2 border-b">{{ $account->estado }}</td>
+                        <td class="px-4 py-2 border-b" style="text-transform: capitalize;">{{ $account->estado }}</td>
+                        <td class="px-4 py-2 border-b "> <button class=" bg-blue-500 p-2 rounded-md text-white" onclick="toggleModalState({{ $account->id }})"><i class="fa fa-edit "></i></button></td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
-
-
+    
+    @include('forms.ChangeState')
+    
     <script>
         // Verificar si hay mensajes de éxito o error
         @if(session('success'))

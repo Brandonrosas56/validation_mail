@@ -15,8 +15,18 @@ class CreateAccountController extends Controller
 {
     public function show()
     {
-        $userId = Auth::id();
-        $registrarIds = User::where('registrar_id', $userId)->pluck('id');
+        $user = Auth()->user();
+        $exists = CreateAccount::where('documento_proveedor', $user->supplier_document)->exists();
+        if ($user->hasRole('Contratista')) {
+            if ($exists) {
+                $accounts = CreateAccount::where('documento_proveedor', $user->supplier_document)->get();
+            } else {
+                $accounts = [];
+            }
+        } else {
+            $accounts = CreateAccount::all();
+        }
+
         $regional = Regional::all('rgn_id', 'rgn_nombre');
         $accounts = CreateAccount::with('regional')->where('user_id', $userId)->orWhereIn('user_id', $registrarIds)
         ->orWhere(function ($query) use ($userId) {
@@ -59,9 +69,11 @@ class CreateAccountController extends Controller
         $estadoContrato = "En ejeución";
         $usuarioAsignado = $request->input("user_id");
 
-        CreateAccount::create($request->all());
+        $CreateAccount = CreateAccount::create($request->all());
 
         if (!$this->validarContratoSecop($documentoProveedor, $numeroContrato, $estadoContrato, $usuarioAsignado)) {
+            $SendValidationStatusService = new SendValidationStatusService($CreateAccount, SendValidationStatusService::SECOP_ERROR);
+            $SendValidationStatusService->sendTicket();
             return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.');
         }
 
@@ -84,6 +96,7 @@ class CreateAccountController extends Controller
             }
 
             return is_array($data) && count($data) > 0;
+
         } catch (\Exception $e) {
             return false;
         }

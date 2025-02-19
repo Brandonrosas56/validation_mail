@@ -15,19 +15,17 @@ return new class extends Migration
             $table->id();
             $table->foreignId('rgn_id');
             $table->string('primer_nombre');
-            $table->string('segundo_nombre');
+            $table->string('segundo_nombre')->nullable();
             $table->string('primer_apellido');
             $table->string('segundo_apellido');
             $table->string('documento_proveedor');
             $table->string('tipo_documento');
             $table->string('correo_personal');
-            $table->string('correo_institucional')->nullable();
             $table->string('numero_contrato');
             $table->date('fecha_inicio_contrato');
             $table->date('fecha_terminacion_contrato');
             $table->string('rol_asignado');
-            $table->string('estado')->nullable();
-            $table->foreignId('user_id');
+            $table->string('estado')->nullable()->default('pendiente');
             $table->timestamps();
         });
     }
