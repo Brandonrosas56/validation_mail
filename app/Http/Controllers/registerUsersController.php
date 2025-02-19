@@ -9,11 +9,12 @@ use App\Models\Regional;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class registerUsersController extends Controller
 {
     //! show users and roles
-    public function index(Request $request)
+    public function index()
     {
         $roles = role::select('name')->get();
         $regional = Regional::all('rgn_id', 'rgn_nombre');
@@ -25,26 +26,28 @@ class registerUsersController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'supplier_document' => ['required', 'string'],
-            'email' => ['required','unique:users'],
+            'supplier_document' => ['required', 'string','unique:users'],
+            'email' => ['required','unique:users', 'regex:/^[a-zA-Z0-9._%+-]+@sena\.edu\.co$/'],
             'password' => ['required', 'min:8', 'confirmed', 'regex:/[A-Z]/', 'regex:/[a-z]/', 'regex:/[0-9]/', 'regex:/[@$!%*?&#]/',],
             'rgn_id' =>['required', 'exists:regional,rgn_id'],
-            'rol' => ['required'],
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors(($validator))->withInput();
         }
 
+        $userId = Auth::id();
+        //create user
         $user = User::create([
             'name' => $request->name,
             'supplier_document' => $request->supplier_document,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'rgn_id' => $request->rgn_id,
+            'registrar_id' => $userId,
         ]);
         $user->assignRole($request->rol);
-        return redirect()->route('auth.user-authorization')->with('success', '¡Datos guardados correctamente!');
+        return redirect()->route('show_user_authorization')->with('success', '¡Datos guardados correctamente!');
     }
 
 
@@ -96,7 +99,7 @@ class registerUsersController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()->withErrors('No ha seleccionado ningún usuario para blockear')->withInput();
+            return redirect()->back()->withErrors(['errors'=>'No ha seleccionado ningún usuario para blockear'])->withInput();
         }
 
         $user = User::find($request->bloked_id);
@@ -107,6 +110,6 @@ class registerUsersController extends Controller
         }
 
         $user->save();
-        return redirect()->route('registerUsers')->with('success', '¡Datos actualizados correctamente!');
+        return redirect()->route('auth.user-authorization')->with('success', '¡Datos actualizados correctamente!');
     }
 }
