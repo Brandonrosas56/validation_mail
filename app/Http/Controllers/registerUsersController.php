@@ -30,7 +30,6 @@ class registerUsersController extends Controller
             'email' => ['required','unique:users', 'regex:/^[a-zA-Z0-9._%+-]+@sena\.edu\.co$/'],
             'password' => ['required', 'min:8', 'confirmed', 'regex:/[A-Z]/', 'regex:/[a-z]/', 'regex:/[0-9]/', 'regex:/[@$!%*?&#]/',],
             'rgn_id' =>['required', 'exists:regional,rgn_id'],
-            'rol' => ['required'],
         ]);
 
         if ($validator->fails()) {
