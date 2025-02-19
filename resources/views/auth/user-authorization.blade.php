@@ -1,11 +1,7 @@
 <x-app-layout>
 
 <link rel="stylesheet" href="{{ asset('css/Register.css') }}">
-
-
-   
-
-    <div class="p-6 lg:p-8 bg-white border-b border-gray-200">
+    <div class="p-6 lg:p-8  border-gray-200">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
 
@@ -27,11 +23,11 @@
                     información institucional.
                 </p>
 
-                <h2 class="ms-3 text-xl font-semibold text-gray-900">
+                <h2 class="ms-3 text-xl font-semibold text-white  flex justify-center">
                     
                     @include('forms.register')
 
-                    <div class="mt-4 mb-4">
+                    <div class="mt-4 mb-4 ">
                         <button onclick="toggleRegisterModal()" class="cms-3 text-xl font-semibold text-gray-900">{{ __('registerUsers') }}</button>
                     </div>
                 </h2>
