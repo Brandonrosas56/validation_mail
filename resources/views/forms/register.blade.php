@@ -52,6 +52,8 @@
                 </div>
             </div>
 
+            <input id="password_confirmation" class="block mt-1 w-full" type="hidden" name="rol" value="Asistente" />
+            
             <!-- Botones -->
             <div class="mt-6 flex justify-between w-full mb-4">
                 <x-button class="ButtonColor text-white font-bold py-2 px-4 rounded w-40">
