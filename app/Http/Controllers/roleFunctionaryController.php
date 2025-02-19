@@ -10,7 +10,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
-class roleFunctionary extends Controller
+class roleFunctionaryController extends Controller
 {
     public function show()
     {

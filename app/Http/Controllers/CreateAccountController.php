@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 use App\Models\CreateAccount;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Regional;
+use App\Models\User;
 use App\Services\SendValidationStatusService;
 
 
@@ -14,19 +15,15 @@ class CreateAccountController extends Controller
 {
     public function show()
     {
-        $user = Auth()->user();
-        $exists = CreateAccount::where('documento_proveedor', $user->supplier_document)->exists();
-        if ($user->hasRole('Contratista')) {
-            if ($exists) {
-                $accounts = CreateAccount::where('documento_proveedor', $user->supplier_document)->get();
-            }else{
-                $accounts = [];
-            }
-        } else {
-            $accounts = CreateAccount::all();
-        }
-
+        $userId = Auth::id();
+        $registrarIds = User::where('registrar_id', $userId)->pluck('id');
         $regional = Regional::all('rgn_id', 'rgn_nombre');
+        $accounts = CreateAccount::with('regional')->where('user_id', $userId)->orWhereIn('user_id', $registrarIds)
+        ->orWhere(function ($query) use ($userId) {
+            if ($userId == 1) {
+                $query->whereNotNull('id');
+            }
+        })->get();
 
         return view('tables.ShowCreateAccount', compact('accounts', 'regional'));
     }
@@ -39,6 +36,7 @@ class CreateAccountController extends Controller
 
     public function store(Request $request)
     {
+        $request->merge(['user_id' => Auth::id()]);
         $request->validate([
             'rgn_id' => 'required',
             'exists:regional,rgn_id',
@@ -47,12 +45,13 @@ class CreateAccountController extends Controller
             'primer_apellido' => 'required|string|max:255',
             'segundo_apellido' => 'nullable|string|max:255',
             'documento_proveedor' => 'nullable|string|max:255',
-            'tipo_documento'=> 'required|String|',
+            'tipo_documento' => 'required|String|',
             'correo_personal' => 'required|email|unique:create_account,correo_personal',
             'numero_contrato' => 'required|string|max:255',
             'fecha_inicio_contrato' => 'required|date',
             'fecha_terminacion_contrato' => 'required|date|after_or_equal:fecha_inicio_contrato',
             'rol_asignado' => 'required|string',
+            'user_id' => 'required',
         ]);
 
         $documentoProveedor = $request->input('documento_proveedor');
@@ -61,11 +60,11 @@ class CreateAccountController extends Controller
         $usuarioAsignado = $request->input("user_id");
 
         CreateAccount::create($request->all());
-        
+
         if (!$this->validarContratoSecop($documentoProveedor, $numeroContrato, $estadoContrato, $usuarioAsignado)) {
             return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.');
         }
-        
+
         return redirect()->back()->with('success', 'Solicitud creada correctamente.');
     }
 
@@ -79,15 +78,14 @@ class CreateAccountController extends Controller
         try {
             $response = Http::get($apiUrl);
             $data = $response->json();
-    
+
             if (isset($data['error']) || isset($data['message'])) {
-                return false; 
+                return false;
             }
-    
+
             return is_array($data) && count($data) > 0;
-    
         } catch (\Exception $e) {
-            return false; 
+            return false;
         }
     }
 }

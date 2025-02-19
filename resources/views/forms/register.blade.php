@@ -67,7 +67,7 @@
                             </x-select>
                         </div>
 
-                        <input id="password_confirmation" class="block mt-1 w-full" type="hidden" name="rol" value="Contratista" />
+                        <input id="password_confirmation" class="block mt-1 w-full" type="hidden" name="rol" value="Asistente" />
 
                         <div class="flex justify-between w-full mb-4">
                             <x-button class="mt-4">

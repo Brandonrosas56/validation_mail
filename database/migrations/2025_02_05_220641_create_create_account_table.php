@@ -21,12 +21,13 @@ return new class extends Migration
             $table->string('documento_proveedor');
             $table->string('tipo_documento');
             $table->string('correo_personal');
-            $table->string('correo_institucional');
+            $table->string('correo_institucional')->nullable();
             $table->string('numero_contrato');
             $table->date('fecha_inicio_contrato');
             $table->date('fecha_terminacion_contrato');
             $table->string('rol_asignado');
             $table->string('estado')->nullable();
+            $table->foreignId('user_id');
             $table->timestamps();
         });
     }

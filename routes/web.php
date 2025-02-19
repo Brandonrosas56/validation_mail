@@ -10,7 +10,7 @@ use App\Http\Controllers\importController;
 use App\Http\Controllers\ValidateController;
 use App\Http\Controllers\CreateAccountController;
 use App\Http\Controllers\registerUsersController;
-use App\Http\Controllers\roleFunctionary;
+use App\Http\Controllers\roleFunctionaryController;
 use Laravel\Jetstream\Rules\Role;
 
 App::setLocale('es');
@@ -38,7 +38,7 @@ Route::controller(importController::class)->group(function () {
     Route::post('/import-files', 'importFiles')->name('import-files');
 });
 
-Route::controller(roleFunctionary::class)->group(function () {
+Route::controller(roleFunctionaryController::class)->group(function () {
     Route::get('/show-role-functionary', 'show')->name('show-role-functionary');
     Route::post('/assign-role-functionary', 'assignRoleFuncionary')->name('assign-role-functionary');
 });

@@ -24,7 +24,8 @@ class CreateAccount extends Model
         'numero_contrato',
         'fecha_inicio_contrato',
         'fecha_terminacion_contrato',
-        'rol_asignado'
+        'rol_asignado',
+        'user_id'
     ];
 
     public function regional()
