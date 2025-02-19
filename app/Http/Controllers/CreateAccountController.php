@@ -19,7 +19,7 @@ class CreateAccountController extends Controller
         if ($user->hasRole('Contratista')) {
             if ($exists) {
                 $accounts = CreateAccount::where('documento_proveedor', $user->supplier_document)->get();
-            }else{
+            } else {
                 $accounts = [];
             }
         } else {
@@ -47,7 +47,7 @@ class CreateAccountController extends Controller
             'primer_apellido' => 'required|string|max:255',
             'segundo_apellido' => 'nullable|string|max:255',
             'documento_proveedor' => 'nullable|string|max:255',
-            'tipo_documento'=> 'required|String|',
+            'tipo_documento' => 'required|String|',
             'correo_personal' => 'required|email|unique:create_account,correo_personal',
             'numero_contrato' => 'required|string|max:255',
             'fecha_inicio_contrato' => 'required|date',
@@ -60,12 +60,14 @@ class CreateAccountController extends Controller
         $estadoContrato = "En ejeución";
         $usuarioAsignado = $request->input("user_id");
 
-        CreateAccount::create($request->all());
-        
+        $CreateAccount = CreateAccount::create($request->all());
+
         if (!$this->validarContratoSecop($documentoProveedor, $numeroContrato, $estadoContrato, $usuarioAsignado)) {
+            $SendValidationStatusService = new SendValidationStatusService($CreateAccount, SendValidationStatusService::SECOP_ERROR);
+            $SendValidationStatusService->sendTicket();
             return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.');
         }
-        
+
         return redirect()->back()->with('success', 'Solicitud creada correctamente.');
     }
 
@@ -79,15 +81,15 @@ class CreateAccountController extends Controller
         try {
             $response = Http::get($apiUrl);
             $data = $response->json();
-    
+
             if (isset($data['error']) || isset($data['message'])) {
-                return false; 
+                return false;
             }
-    
+
             return is_array($data) && count($data) > 0;
-    
+
         } catch (\Exception $e) {
-            return false; 
+            return false;
         }
     }
 }

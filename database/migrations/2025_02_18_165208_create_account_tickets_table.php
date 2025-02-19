@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('account_ticket', function (Blueprint $table) {
+        Schema::create('account_tickets', function (Blueprint $table) {
             $table->id();
             $table->foreignId('create_account_id')->constrained('create_account')->onDelete('cascade');
             $table->integer('ticket_id');

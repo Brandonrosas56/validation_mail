@@ -76,24 +76,55 @@ class GLPIService
                 ],
                 'body' => json_encode($attributes)
             ]);
-            return $response;
+
+            $body = $response->getBody()->getContents();
+            // Decodificar y validar el contenido JSON
+            $decoded = json_decode($body, true);
+            return $decoded;
         } catch (\Throwable $th) {
             print_r($th->getMessage());
         }
     }
-    function getTicketInfo(array $response)
+    function getTicketInfo(int $id)
     {
         $sessionToken = $this->testConnection()['session_token'];
 
         try {
-            $response = $this->client->get(self::TICKET_ENDPOINT."/{$response['id']}", [
+            $response = $this->client->get(self::TICKET_ENDPOINT . "/{$id}", [
                 'headers' => [
                     'Session-Token' => $sessionToken
                 ],
             ]);
-            return $response;
+            $body = $response->getBody()->getContents();
+
+            // Decodificar y validar el contenido JSON
+            $decoded = json_decode($body, true);
+            return $decoded;
         } catch (\Throwable $th) {
             print_r($th->getMessage());
+        }
+    }
+
+    public function getTicketFollowByLastResponse(int $ticketId)
+    {
+
+        try {
+            // Obtener el seguimiento (ITILFollowup) del ticket
+            $response = $this->client->get("/apirest.php/Ticket/{$ticketId}/ITILFollowup", [
+                'headers' => ['Session-Token' => $this->sessionToken],
+            ]);
+
+            $followups = json_decode($response->getBody()->getContents(), true);
+
+            if (!empty($followups)) {
+                // Ordenar por fecha descendente y obtener el último seguimiento
+                usort($followups, fn($a, $b) => strtotime($b['date_creation']) - strtotime($a['date_creation']));
+                return reset($followups);
+            }else{
+                return [];
+            }
+        } catch (\Exception $e) {
+            error_log("Error al procesar ticket {$ticketId}: " . $e->getMessage());
         }
     }
 }

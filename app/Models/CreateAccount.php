@@ -15,6 +15,8 @@ class CreateAccount extends Model
     const EXITOSO = 'exitoso';
     const EXITO = 'éxito';
     const REVISION = 'revisión';
+
+    const INDETERMINADO = 'indeterminado';
     
 
     const MANUAL_STATES= [

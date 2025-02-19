@@ -10,13 +10,13 @@ use GuzzleHttp\Exception\RequestException;
 class SendValidationStatusService
 {
     private const TEMPLATE_SUCCESS = 'success';
-    private const NEMOTECNIA_TEMPLATE = 'nemotecnia';
+    const SECOP_ERROR = 'SECOP_ERROR';
     const NEMOTECNIA_ERROR = 'ERRRO_NEMOTECNIA';
 
     const NEMOTECNIA_ERROR_FUN = 'NEMOTECNIA_ERROR_FUN';
     const RECJECTED_ERROR = 'RECJECTED_ERROR';
     const VALIDATION_SUCCESS = 'VALIDATION_OK';
-    private CreateAccount $createAccount ;
+    private CreateAccount $createAccount;
     private string $state = '';
     private bool $contractor = false;
     private GLPIService $GLPIService;
@@ -35,31 +35,23 @@ class SendValidationStatusService
             case self::VALIDATION_SUCCESS:
                 // Usar la plantilla successTemplate
                 $response = $this->GLPIService->createTicket($this->successTemplate());
-                $ticketInfo = $this->GLPIService->getTicketInfo($response);
-                AccountTicketService::create($this->createAccount,$ticketInfo);
                 break;
-
+            case self::SECOP_ERROR:
+                $response = $this->GLPIService->createTicket($this->secopTemplate());
+                $ticketInfo = $this->GLPIService->getTicketInfo($response['id']);
+                AccountTicketService::create($this->createAccount, $ticketInfo);
+                break;
             case self::NEMOTECNIA_ERROR:
-                // Usar la plantilla nemotecniaTemplateContractor
-                //dd($this->contractor);
                 $template = $this->contractor ? $this->nemotecniaTemplateContractor() : $this->nemotecniaTemplaFun();
-                $this->GLPIService->createTicket($template);
-                break;
-
-            case self::RECJECTED_ERROR:
-                // Usar la plantilla nemotecniaTemplateContractor
-                dd('Entrando en rejectedTemplate', $this->rejectedTemplate());
-                $this->GLPIService->createTicket($this->rejectedTemplate());
+                $response = $this->GLPIService->createTicket($template);
+                $ticketInfo = $this->GLPIService->getTicketInfo($response['id']);
+                AccountTicketService::create($this->createAccount, $ticketInfo);
                 break;
             case self::NEMOTECNIA_ERROR_FUN:
                 // Usar la plantilla nemotecniaTemplateContractor
                 $this->GLPIService->createTicket($this->nemotecniaTemplaFun());
                 break;
         }
-    }
-
-   public function saveTicketInformation() : void {
-
     }
 
     private function successTemplate(): array
@@ -149,11 +141,11 @@ class SendValidationStatusService
             ]
         ];
     }
-    private function rejectedTemplate(): array
+    private function secopTemplate(): array
     {
         return [
             'input' => [
-                'name' => "Caso por Nemotecnia - Contratista (Fallido)",
+                'name' => "Caso por SECOP RECHAZADO",
                 'content' => "
                             *Datos del Usuario:*
                             * *Regional:* {$this->createAccount->rgn_id}
