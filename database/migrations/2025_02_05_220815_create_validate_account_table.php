@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('rol_asignado');
             $table->string('estado')->nullable();
             $table->integer('intentos_validacion')->default(4)->nullable();
+            $table->foreignId('user_id');
             $table->timestamps();
         });
     }

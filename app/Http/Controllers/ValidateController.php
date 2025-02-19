@@ -8,24 +8,22 @@ use App\Models\Regional;
 use Illuminate\Support\Facades\Http;
 use App\Models\User;
 use App\Services\SendValidationStatusService;
+use Illuminate\Support\Facades\Auth;
 
 class ValidateController extends Controller
 {
 
     public function show()
     {
-        $user = Auth()->user();
-        $exists = ValidateAccount::where('documento_proveedor', $user->supplier_document)->exists();
+        $userId = Auth::id();
+        $registrarIds = User::where('registrar_id', $userId)->pluck('id');
 
-        if ($user->hasRole('Contratista')) {
-            if ($exists) {
-                $accounts = ValidateAccount::where('documento_proveedor', $user->supplier_document)->get();
-            } else {
-                $accounts = [];
+        $accounts = ValidateAccount::with('regional')->where('user_id', $userId)->orWhereIn('user_id', $registrarIds)
+        ->orWhere(function ($query) use ($userId) {
+            if ($userId == 1) {
+                $query->whereNotNull('id');
             }
-        } else {
-            $accounts = ValidateAccount::all();
-        }
+        })->get();
 
         $regional = Regional::all('rgn_id', 'rgn_nombre');
 
@@ -39,6 +37,7 @@ class ValidateController extends Controller
 
     public function store(Request $request)
     {
+        $request->merge(['user_id' => Auth::id()]);
         $request->validate([
             'rgn_id' => 'required',
             'exists:regional,rgn_id',
@@ -55,8 +54,9 @@ class ValidateController extends Controller
             'numero_contrato' => 'required|string|max:255',
             'rol_asignado' => 'required|string',
             'usuario' => 'required|string|max:255|unique:validate_account,usuario',
+            'user_id' => 'required',
         ]);
-
+        
         $documentoProveedor = $request->input('documento_proveedor');
         $numeroContrato = $request->input('numero_contrato');
         $estadoContrato = "En ejecución";
@@ -64,7 +64,7 @@ class ValidateController extends Controller
         $correoInstitucional = $request->input('correo_institucional');
 
         ValidateAccount::create($request->all());
-
+        
         $User = User::find($request->user_id);
         $contractor = $User->getService()->isContractor();
         if (!$this->validarContratoSecop($documentoProveedor, $numeroContrato, $estadoContrato, $usuarioAsignado)) {
