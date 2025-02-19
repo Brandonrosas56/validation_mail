@@ -39,11 +39,15 @@ class ValidateController extends Controller
 
     public function store(Request $request)
     {
+        $request->merge([
+            'correo_institucional' => strtolower($request->correo_institucional),
+            'usuario' => strtolower($request->usuario),
+        ]);
+    
         $request->validate([
-            'rgn_id' => 'required',
-            'exists:regional,rgn_id',
-            'documento_proveedor' => 'required|String|',
-            'tipo_documento'=> 'required|String|',
+            'rgn_id' => 'required|exists:regional,rgn_id',
+            'documento_proveedor' => 'required|string',
+            'tipo_documento'=> 'required|string',
             'primer_nombre' => 'required|string|max:255',
             'segundo_nombre' => 'nullable|string|max:255',
             'primer_apellido' => 'required|string|max:255',
@@ -65,8 +69,14 @@ class ValidateController extends Controller
 
         ValidateAccount::create($request->all());
 
+    
         $User = User::find($request->user_id);
-        $contractor = $User->getService()->isContractor();
+
+            if (!$User) {
+                return redirect()->back()->with('error', 'Usuario no encontrado.');
+            }
+
+            $contractor = $User->isContractor(); 
         if (!$this->validarContratoSecop($documentoProveedor, $numeroContrato, $estadoContrato, $usuarioAsignado)) {
              return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.');
          } else {
@@ -85,11 +95,8 @@ class ValidateController extends Controller
         }
          }
 
-
-
         return redirect()->back()->with('success', 'Solicitud de activación creada correctamente.');
     }
-
 
     private function validarContratoSecop($documentoProveedor, $numeroContrato, $request)
     {

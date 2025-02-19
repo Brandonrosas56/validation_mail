@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('rgn_id');
             $table->string('primer_nombre');
-            $table->string('segundo_nombre');
+            $table->string('segundo_nombre')->nullable();
             $table->string('primer_apellido');
             $table->string('segundo_apellido');
             $table->string('documento_proveedor');
