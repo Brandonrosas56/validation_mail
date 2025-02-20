@@ -18,32 +18,32 @@
                 <!-- Columna 1 -->
                 <div class="mb-2">
                     <x-label for="name" value="{{ __('Name') }}" class="block mb-1 TextColor font-bold" />
-                    <x-input id="name" class="block mt-1 w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 custom-border p-2" type="text" name="name" :value="old('name')" required autofocus />
+                    <x-input id="name" class="block mt-1 w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 custom-border p-2 text-black" type="text" name="name" :value="old('name')" required autofocus />
                 </div>
 
                 <div class="mb-2">
                     <x-label for="supplier_document" value="{{ __('Supplier_document') }}" class="block mb-1 TextColor font-bold" />
-                    <x-input id="supplier_document" class="block mt-1 w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 custom-border p-2" type="text" name="supplier_document" :value="old('supplier_document')" required />
+                    <x-input id="supplier_document" class="block mt-1 w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 custom-border p-2 text-black" type="text" name="supplier_document" :value="old('supplier_document')" required />
                 </div>
 
                 <div class="mb-2">
                     <x-label for="email" value="{{ __('Email') }}" class="block mb-1 TextColor font-bold" />
-                    <x-input id="email" class="block mt-1 w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 custom-border p-2" type="email" name="email" :value="old('email')" required />
+                    <x-input id="email" class="block mt-1 w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 custom-border p-2 text-black" type="email" name="email" :value="old('email')" required />
                 </div>
 
                 <div class="mb-2">
                     <x-label for="password" value="{{ __('Password') }}" class="block mb-1 TextColor font-bold" />
-                    <x-input id="password" class="block mt-1 w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 custom-border p-2" type="password" name="password" required />
+                    <x-input id="password" class="block mt-1 w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 custom-border p-2 text-black" type="password" name="password" required />
                 </div>
 
                 <div class="mb-2">
                     <x-label for="password_confirmation" value="{{ __('Confirm Password') }}" class="block mb-1 TextColor font-bold" />
-                    <x-input id="password_confirmation" class="block mt-1 w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 custom-border p-2" type="password" name="password_confirmation" required />
+                    <x-input id="password_confirmation" class="block mt-1 w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 custom-border p-2 text-black" type="password" name="password_confirmation" required />
                 </div>
 
                 <div class="mb-2">
                     <x-label for="rgn_id" value="{{ __('Select_regional') }}" class="block mb-1 TextColor font-bold" />
-                    <x-select name="rgn_id" id="rgn_id" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none">
+                    <x-select name="rgn_id" id="rgn_id" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none text-black">
                         <option value="">{{__('Select_regional')}}</option>
                         @foreach($regional as $region)
                             <option value="{{ $region->rgn_id }}">{{ $region->rgn_nombre }}</option>
