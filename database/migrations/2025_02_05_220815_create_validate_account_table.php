@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -27,8 +26,9 @@ return new class extends Migration
             $table->date('fecha_terminacion_contrato');
             $table->string('usuario');
             $table->string('rol_asignado');
-            $table->string('estado')->nullable();
-            $table->integer('intentos_validacion')->default(4)->nullable();
+            $table->string('estado')->nullable()->default('pendiente');
+            $table->integer('intentos_validacion')->default(value: 4)->nullable();
+            $table->foreignId('user_id');
             $table->timestamps();
         });
     }

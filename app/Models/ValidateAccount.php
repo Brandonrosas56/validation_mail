@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Services\ValidateAccountService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ValidateAccount extends Model
 {
     use HasFactory;
-
+    const CONTRACTOR = 'Contratista';
     protected $table = 'validate_account';
 
     protected $fillable = [
@@ -25,7 +26,8 @@ class ValidateAccount extends Model
         'fecha_inicio_contrato',
         'fecha_terminacion_contrato',
         'rol_asignado',
-        'usuario'
+        'usuario',
+        'user_id'
     ];
 
     public function regional()
@@ -33,5 +35,9 @@ class ValidateAccount extends Model
         return $this->belongsTo(Regional::class, 'rgn_id', 'rgn_id');
     }
 
+    public function getService(): ValidateAccountService
+    {
+        return new ValidateAccountService($this);
+    }
 
 }

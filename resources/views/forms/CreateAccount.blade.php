@@ -61,7 +61,7 @@
 
                 <div class="mb-3">
                     <label for="correo_personal" class="block mb-1 TextColor font-bold">Correo Personal*</label>
-                    <input type="email" name="correo_personal" id="correo_personal" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('correo_personal') }}" required>
+                    <input type="email" name="correo_personal" id="correo_personal" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none @error('correo_personal') border-red-500 @enderror" value="{{ old('correo_personal') }}" required>
                 </div>
 
                 <div class="mb-3">

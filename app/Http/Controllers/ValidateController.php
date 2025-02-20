@@ -2,30 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\SecopService;
 use Illuminate\Http\Request;
 use App\Models\ValidateAccount;
 use App\Models\Regional;
 use Illuminate\Support\Facades\Http;
 use App\Models\User;
 use App\Services\SendValidationStatusService;
+use Illuminate\Support\Facades\Auth;
 
 class ValidateController extends Controller
 {
 
     public function show()
     {
-        $user = Auth()->user();
-        $exists = ValidateAccount::where('documento_proveedor', $user->supplier_document)->exists();
+        $userId = Auth::id();
+        $registrarIds = User::where('registrar_id', $userId)->pluck('id');
 
-        if ($user->hasRole('Contratista')) {
-            if ($exists) {
-                $accounts = ValidateAccount::where('documento_proveedor', $user->supplier_document)->get();
-            } else {
-                $accounts = [];
-            }
-        } else {
-            $accounts = ValidateAccount::all();
-        }
+        $accounts = ValidateAccount::with('regional')->where('user_id', $userId)->orWhereIn('user_id', $registrarIds)
+            ->orWhere(function ($query) use ($userId) {
+                if ($userId == 1) {
+                    $query->whereNotNull('id');
+                }
+            })->get();
 
         $regional = Regional::all('rgn_id', 'rgn_nombre');
 
@@ -36,112 +35,63 @@ class ValidateController extends Controller
     {
         return view('forms.ActivateAccount');
     }
-
     public function store(Request $request)
     {
-        $request->merge([
-            'correo_institucional' => strtolower($request->correo_institucional),
-            'usuario' => strtolower($request->usuario),
-        ]);
-    
-        $request->validate([
-            'rgn_id' => 'required|exists:regional,rgn_id',
-            'documento_proveedor' => 'required|string',
-            'tipo_documento'=> 'required|string',
-            'primer_nombre' => 'required|string|max:255',
-            'segundo_nombre' => 'nullable|string|max:255',
-            'primer_apellido' => 'required|string|max:255',
-            'segundo_apellido' => 'nullable|string|max:255',
-            'correo_personal' => 'required|email|unique:validate_account,correo_personal',
-            'correo_institucional' => 'required|email|regex:/^[a-zA-Z0-9._%+-]+@sena\.edu\.co$/|unique:validate_account,correo_institucional',
-            'fecha_inicio_contrato' => 'required|date',
-            'fecha_terminacion_contrato' => 'required|date|after_or_equal:fecha_inicio_contrato',
-            'numero_contrato' => 'required|string|max:255',
-            'rol_asignado' => 'required|string',
-            'usuario' => 'required|string|max:255|unique:validate_account,usuario',
-        ]);
-
-        $documentoProveedor = $request->input('documento_proveedor');
-        $numeroContrato = $request->input('numero_contrato');
-        $estadoContrato = "En ejecución";
-        $usuarioAsignado = $request->input('user_id');
-        $correoInstitucional = $request->input('correo_institucional');
-
-        ValidateAccount::create($request->all());
-
-    
-        $User = User::find($request->user_id);
-
-            if (!$User) {
-                return redirect()->back()->with('error', 'Usuario no encontrado.');
-            }
-
-            $contractor = $User->isContractor(); 
-        if (!$this->validarContratoSecop($documentoProveedor, $numeroContrato, $estadoContrato, $usuarioAsignado)) {
-             return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.');
-         } else {
-        $validacionNemotenia = $this->validarNemotenia($documentoProveedor, $correoInstitucional);
-        switch ($validacionNemotenia) {
-            case 'No existe el correo':
-                $SendValidationStatusService = new SendValidationStatusService($request->all(), SendValidationStatusService::NEMOTECNIA_ERROR, $contractor);
-                $SendValidationStatusService->sendTicket();
-                break;
-            case 'El correo no pertenece a este usuario':
-                dd($validacionNemotenia);
-                break;
-            case 'Activar correo':
-                dd($validacionNemotenia);
-                break;
-        }
-         }
-
-        return redirect()->back()->with('success', 'Solicitud de activación creada correctamente.');
-    }
-
-    private function validarContratoSecop($documentoProveedor, $numeroContrato, $request)
-    {
-        $apiUrl = "https://www.datos.gov.co/resource/jbjy-vk9h.json?"
-            . "\$where=documento_proveedor='$documentoProveedor' AND id_contrato='$numeroContrato' AND estado_contrato='En ejecución'";
-
         try {
-            $response = Http::get($apiUrl);
-            $data = $response->json();
+            $request->merge([
+                'correo_institucional' => strtolower($request->correo_institucional),
+                'usuario' => strtolower($request->usuario),
+            ]);
 
-            if (isset($data['error']) || isset($data['message']) || !is_array($data) || count($data) === 0) {
-                return false;
-            }
+            $request->validate([
+                'rgn_id' => 'required|exists:regional,rgn_id',
+                'documento_proveedor' => 'required|string',
+                'tipo_documento' => 'required|string',
+                'primer_nombre' => 'required|string|max:255',
+                'segundo_nombre' => 'nullable|string|max:255',
+                'primer_apellido' => 'required|string|max:255',
+                'segundo_apellido' => 'nullable|string|max:255',
+                'correo_personal' => 'required|email|unique:validate_account,correo_personal',
+                'correo_institucional' => 'required|email|regex:/^[a-zA-Z0-9._%+-]+@sena\.edu\.co$/|unique:validate_account,correo_institucional',
+                'fecha_inicio_contrato' => 'required|date',
+                'fecha_terminacion_contrato' => 'required|date|after_or_equal:fecha_inicio_contrato',
+                'numero_contrato' => 'required|string|max:255',
+                'rol_asignado' => 'required|string',
+                'usuario' => 'required|string|max:255|unique:validate_account,usuario',
+                'user_id' => 'required',
+            ]);
 
-            return true;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
+            $documentoProveedor = $request->input('documento_proveedor');
+            $numeroContrato = $request->input('numero_contrato');
+            $correoInstitucional = $request->input('correo_institucional');
 
-    public function validarNemotenia($documentoProveedor, $correoInstitucional)
-    {
-        $estadoCorreo = '';
-        $caseCorreo = '';
-        $estadoCorreo = User::where('email', $correoInstitucional)
-            ->doesntExist();
-        if ($estadoCorreo) {
-            $caseCorreo = 'No existe el correo';
-            return $caseCorreo;
-        } else {
-            $estadoCorreo = User::where('email', $correoInstitucional)
-                ->where('supplier_document', '!=', $documentoProveedor)
-                ->exists();
-            if ($estadoCorreo) {
-                $caseCorreo = 'El correo no pertenece a este usuario';
-                return $caseCorreo;
+            $ValidateAccount = ValidateAccount::create($request->all());
+
+            $isContractor = $ValidateAccount->isContractor();
+
+            if ($isContractor && !SecopService::isValidSecopContract($documentoProveedor, $numeroContrato)) {
+                $SendValidationStatusService = new SendValidationStatusService($ValidateAccount, SendValidationStatusService::SECOP_ERROR);
+                $SendValidationStatusService->sendTicket();
+                return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.');
             } else {
-                $estadoCorreo = User::where('email', $correoInstitucional)
-                    ->where('supplier_document', $documentoProveedor)
-                    ->exists();
-                if ($estadoCorreo) {
-                    $caseCorreo = 'Activar correo';
-                    return $caseCorreo;
+                $validacionNemotenia = $this->validarNemotenia($documentoProveedor, $correoInstitucional);
+                switch ($validacionNemotenia) {
+                    case 'No existe el correo':
+                        $SendValidationStatusService = new SendValidationStatusService($ValidateAccount, SendValidationStatusService::NEMOTECNIA_ERROR, $isContractor);
+                        $SendValidationStatusService->sendTicket();
+                        break;
+                    case 'El correo no pertenece a este usuario':
+                        dd($validacionNemotenia);
+                        break;
+                    case 'Activar correo':
+                        dd($validacionNemotenia);
+                        break;
                 }
             }
+
+            return redirect()->back()->with('success', 'Solicitud de activación creada correctamente.');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error-modal', $th->getMessage())->withInput();
         }
     }
 }

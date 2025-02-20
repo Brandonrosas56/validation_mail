@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class importController extends Controller
 {
@@ -99,6 +100,7 @@ class importController extends Controller
             $administrators = [];
             $hashedPassword = bcrypt('Administrator12345*');
             $now = Carbon::now();
+            $userId = Auth::id();
             
             foreach ($csvData as $rowData) {
                 $administrators[] = [
@@ -108,6 +110,7 @@ class importController extends Controller
                     'email' => $rowData['email'],
                     'password' => $hashedPassword,
                     'rgn_id' => null,
+                    'registrar_id' => $userId,
                     'lock' =>false,
                     'created_at' => $now,
                     'updated_at' => $now
@@ -130,7 +133,7 @@ class importController extends Controller
             }
         } catch (Exception $e) {
             return redirect()->back()
-                ->withErrors(['error' => 'Por favor revise que el tipo de archivo sea el correctamento'] )
+                ->withErrors(['error' => 'Por favor revise que el tipo de archivo sea el correctamente'])
                 ->withInput()->send();
         }
 

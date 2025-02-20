@@ -14,10 +14,6 @@ class UserService
         $this->Model = $Model;
     }
 
-    public function isContractor() : bool {
-        return $this->getModel()->functionary === User::CONTRACTOR;
-    }
-
     public function getModel() : User {
         return $this->Model;
     }

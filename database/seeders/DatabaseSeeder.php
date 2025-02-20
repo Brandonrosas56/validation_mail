@@ -44,7 +44,8 @@ class DatabaseSeeder extends Seeder
             'supplier_document' => '00000000',
             'email' => 'admin@sena.edu.co',
             'password' => bcrypt('Admin12345*'),
-            'functionary' => 'Director de Area'
+            'functionary' => 'Director de Area',
+            'registrar_id' => 0,
         ]);
 
 

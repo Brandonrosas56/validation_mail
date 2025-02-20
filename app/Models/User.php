@@ -23,8 +23,6 @@ class User extends Authenticatable
     use TwoFactorAuthenticatable;
     use HasRoles;
 
-    const CONTRACTOR = 'Contratista';
-
     /**
      * The attributes that are mass assignable.
      *
@@ -42,6 +40,7 @@ class User extends Authenticatable
         'password',
         'functionary',
         'rgn_id',
+        'registrar_id',
         'lock',
     ];
 

@@ -29,6 +29,7 @@
                 </div>
                 <div class="mb-3">
                     <input type="hidden" name="account_id" id="account_id" class="hidden" value="" required>
+                    <input type="hidden" name="type" id="type" class="hidden" value="" required>
                 </div>
 
             </div>
@@ -44,12 +45,14 @@
 
 <!-- Modal toggle logic -->
 <script>
-    function toggleModalState(id) {
+    function toggleModalState(id,type) {
         const modal = document.getElementById('stateModal');
         modal.classList.toggle('active');
         if (id) {
             const field_id = document.getElementById('account_id');
+            const field_type = document.getElementById('type');
             field_id.value = id;
+            field_type.value = type;
         }
     }
     

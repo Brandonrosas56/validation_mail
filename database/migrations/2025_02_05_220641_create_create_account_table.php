@@ -21,11 +21,14 @@ return new class extends Migration
             $table->string('documento_proveedor');
             $table->string('tipo_documento');
             $table->string('correo_personal');
+            $table->string('correo_institucional')->nullable();
             $table->string('numero_contrato');
             $table->date('fecha_inicio_contrato');
             $table->date('fecha_terminacion_contrato');
             $table->string('rol_asignado');
             $table->string('estado')->nullable()->default('pendiente');
+            $table->foreignId('user_id');
+            $table->integer('intentos_validacion')->default(value: 4)->nullable();
             $table->timestamps();
         });
     }

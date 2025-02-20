@@ -17,9 +17,11 @@ class CreateAccount extends Model
     const REVISION = 'revisión';
 
     const INDETERMINADO = 'indeterminado';
-    
 
-    const MANUAL_STATES= [
+    const CREATE_ACCOUNT = 1;
+    const VALIDATE_ACCOUNT = 2;
+
+    const MANUAL_STATES = [
         self::RECHAZADO,
         self::EXITOSO
     ];
@@ -42,7 +44,9 @@ class CreateAccount extends Model
         'fecha_inicio_contrato',
         'fecha_terminacion_contrato',
         'rol_asignado',
-        'estado'
+        'estado',
+        'user_id',
+        'intentos_validacion'
     ];
 
     public function regional()
@@ -55,9 +59,10 @@ class CreateAccount extends Model
         return $this->belongsTo(AccountTicket::class, 'create_account_id', 'create_account_id');
     }
 
-   public function getService() : CreateAccountService {
+    public function getService(): CreateAccountService
+    {
         return new CreateAccountService($this);
     }
 
-   
+
 }

@@ -53,8 +53,8 @@ class VerifyTicketStatus extends Command
         if (!empty($lastFollow)) {
             $state = $this->getState(strtolower($lastFollow['content']));
             if ($state != CreateAccount::INDETERMINADO) {
-                $CreateAccount = CreateAccount::find($AccountTicket->create_account_id);
-                $CreateAccount->getService()->changeStatus($state);
+                $Account = $AccountTicket->getService()->getAccount();
+                $Account->getService()->changeStatus($state);
             } else {
                 $AccountTicket->update(['ticket_state' => AccountTicket::CERRADO_SIN_COMENTARIO]);
             }

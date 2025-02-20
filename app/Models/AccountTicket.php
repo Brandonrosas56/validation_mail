@@ -34,7 +34,8 @@ class AccountTicket extends Model
     ];
 
     protected $fillable = [
-        'create_account_id',
+        'account_id',
+        'type_account',
         'ticket_id',
         'ticket_state',
         'ticket_info'

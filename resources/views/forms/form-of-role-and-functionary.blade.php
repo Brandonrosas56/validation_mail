@@ -28,7 +28,7 @@
     <link rel="stylesheet" href="{{ asset('css/ShowValidateAccount.css') }}">
     <div class="overflow-x-auto max-w-7xl mx-auto mt-8 rounded-lg">
         <div class="inline">
-            <form method="POST" action="assign-role-functionary" id="formRoleFunctionary">
+            <form method="POST" action="assign-role-functionary" id="formroleFunctionaryController">
                 @csrf
                 <div class="flex items-center mt-4">
                     <div class="">

@@ -3,8 +3,9 @@
 namespace App\Services;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
+use Illuminate\Support\Facades\Log;
 use Predis\Response\ResponseInterface;
+use GuzzleHttp\Exception\RequestException;
 
 class GLPIService
 {
@@ -82,7 +83,7 @@ class GLPIService
             $decoded = json_decode($body, true);
             return $decoded;
         } catch (\Throwable $th) {
-            print_r($th->getMessage());
+            Log::error($th->getMessage());
         }
     }
     function getTicketInfo(int $id)
