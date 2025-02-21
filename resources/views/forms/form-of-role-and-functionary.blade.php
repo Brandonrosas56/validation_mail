@@ -31,7 +31,7 @@
             <form method="POST" action="assign-role-functionary" id="formroleFunctionaryController">
                 @csrf
                 <div class="flex items-center mt-4">
-                    <div class="">
+                    <div>
                         <label for="{{__('Select_role')}}" class="block mb-2 TextColor font-bold">{{__('Select_role')}}</label>
                         <select name="select_role" id="select_role" class="px-4 py-2 border rounded-md w-64">
                             <option value="select_rol">{{__('Select_role')}}</option>
@@ -59,13 +59,17 @@
                             Asignar
                         </button>
                     </div>
+
                     <div class="ml-4">
                         <button type="submit" name="function" value="lock" class="color text-white py-2 px-4 rounded-lg mt-8">
                             {{__('change_state')}}
                         </button>
                     </div>
+                    <div class="ml-4 mt-8  ">
+                        <input type="text" placeholder="Buscar..." class="px-4 py-2 border rounded-md w-full max-w-xs" id="search-input">
+                    </div>
                 </div>
-                <div class="mt-8">
+                <div class="ml-auto mt-8">
                     <table id="users-table" class="w-full bg-white shadow-md display overflow-y-auto max-h-full">
                         <thead>
                             <tr class="bg-gray-100 text-gray-700 text-sm">
@@ -78,7 +82,7 @@
                                 <th class="px-4 py-2 border-b">Cédula</th>
                                 <th class="px-4 py-2 border-b">Rol</th>
                                 <th class="px-4 py-2 border-b">Cargo de funcionario</th>
-                                <th class="px-4 py-2 border-b">bloqueo</th>
+                                <th class="px-4 py-2 border-b">Bloqueo</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -130,4 +134,15 @@
             button: "OK"
         });
     }
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#search-input').on('keyup', function() {
+            var value = $(this).val().toLowerCase();
+            $('#users-table tbody tr').filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
 </script>
