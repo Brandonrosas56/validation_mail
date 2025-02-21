@@ -34,9 +34,11 @@ class GLPIService
             if (!isset($response['session_token'])) {
                 throw new \Exception("Error: No se pudo obtener el session_token. Respuesta: " . json_encode($response));
             }
-            
+
             $this->sessionToken = $response['session_token'];
-        }            
+        } catch (\Throwable $th) {
+            print_r($th->getMessage());
+        }
     }
 
     /**
@@ -125,7 +127,7 @@ class GLPIService
                 // Ordenar por fecha descendente y obtener el último seguimiento
                 usort($followups, fn($a, $b) => strtotime($b['date_creation']) - strtotime($a['date_creation']));
                 return reset($followups);
-            }else{
+            } else {
                 return [];
             }
         } catch (\Exception $e) {
