@@ -37,7 +37,7 @@ class GLPIService
 
             $this->sessionToken = $response['session_token'];
         } catch (\Throwable $th) {
-            print_r($th->getMessage());
+            Log::error($th->getMessage());
         }
     }
 
