@@ -57,7 +57,7 @@
     "Data": "Dato",
     "Search": "Buscar",
     "show-import": "Cargue Masivo",
-    "show-role-functionary": "Control de Accesos",
+    "show_role_functionary": "Control de Accesos",
     "Functionary": "Funcionario",
     "Contractor": "Contratista",
     "change_state": "Cambiar Estado",

@@ -24,13 +24,16 @@
     </script>
     @endif
 
-
+@php
+    $validatPermissionsAssing = auth()->user()->can('administrador');
+@endphp
     <link rel="stylesheet" href="{{ asset('css/ShowValidateAccount.css') }}">
     <div class="overflow-x-auto max-w-7xl mx-auto mt-8 rounded-lg">
         <div class="inline">
             <form method="POST" action="assign-role-functionary" id="formroleFunctionaryController">
                 @csrf
                 <div class="flex items-center mt-4">
+                @if (!$validatPermissionsAssing)
                     <div class="">
                         <label for="{{__('Select_role')}}" class="block mb-2 TextColor font-bold">{{__('Select_role')}}</label>
                         <select name="select_role" id="select_role" class="px-4 py-2 border rounded-md w-64">
@@ -53,12 +56,13 @@
                             <option value="Jefe de Oficina">{{__('Office_Manager')}}</option>
                         </select>
                     </div>
-
+                    
                     <div class="ml-4">
                         <button type="submit" name="function" value="assign" class="color text-white py-2 px-4 rounded-lg mt-8">
                             Asignar
                         </button>
                     </div>
+                    @endif
                     <div class="ml-4">
                         <button type="submit" name="function" value="lock" class="color text-white py-2 px-4 rounded-lg mt-8">
                             {{__('change_state')}}
