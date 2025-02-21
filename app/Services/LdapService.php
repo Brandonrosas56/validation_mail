@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Services;
 
 use Symfony\Component\Ldap\Ldap;
 use Illuminate\Support\Facades\Log;
