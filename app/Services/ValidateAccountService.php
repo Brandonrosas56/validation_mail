@@ -20,10 +20,6 @@ class ValidateAccountService
         return $this->getModel()->rol_asignado === ValidateAccount::CONTRACTOR;
     }
 
-    public function getAccount() : CreateAccount|ValidateAccount {
-        
-    }
-
     public function getModel(): ValidateAccount
     {
         return $this->Model;

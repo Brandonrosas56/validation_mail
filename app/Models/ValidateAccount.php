@@ -27,7 +27,8 @@ class ValidateAccount extends Model
         'fecha_terminacion_contrato',
         'rol_asignado',
         'usuario',
-        'user_id'
+        'user_id',
+        'estado'
     ];
 
     public function regional()

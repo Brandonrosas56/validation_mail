@@ -42,7 +42,7 @@ class ValidateController extends Controller
                 'correo_institucional' => strtolower($request->correo_institucional),
                 'usuario' => strtolower($request->usuario),
             ]);
-
+            $request->merge(['user_id' => Auth::id()]);
             $request->validate([
                 'rgn_id' => 'required|exists:regional,rgn_id',
                 'documento_proveedor' => 'required|string',
@@ -58,35 +58,19 @@ class ValidateController extends Controller
                 'numero_contrato' => 'required|string|max:255',
                 'rol_asignado' => 'required|string',
                 'usuario' => 'required|string|max:255|unique:validate_account,usuario',
-                'user_id' => 'required',
             ]);
 
             $documentoProveedor = $request->input('documento_proveedor');
             $numeroContrato = $request->input('numero_contrato');
-            $correoInstitucional = $request->input('correo_institucional');
 
             $ValidateAccount = ValidateAccount::create($request->all());
 
-            $isContractor = $ValidateAccount->isContractor();
+            $isContractor = $ValidateAccount->getService()->isContractor();
 
             if ($isContractor && !SecopService::isValidSecopContract($documentoProveedor, $numeroContrato)) {
                 $SendValidationStatusService = new SendValidationStatusService($ValidateAccount, SendValidationStatusService::SECOP_ERROR);
                 $SendValidationStatusService->sendTicket();
                 return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.');
-            } else {
-                $validacionNemotenia = $this->validarNemotenia($documentoProveedor, $correoInstitucional);
-                switch ($validacionNemotenia) {
-                    case 'No existe el correo':
-                        $SendValidationStatusService = new SendValidationStatusService($ValidateAccount, SendValidationStatusService::NEMOTECNIA_ERROR, $isContractor);
-                        $SendValidationStatusService->sendTicket();
-                        break;
-                    case 'El correo no pertenece a este usuario':
-                        dd($validacionNemotenia);
-                        break;
-                    case 'Activar correo':
-                        dd($validacionNemotenia);
-                        break;
-                }
             }
 
             return redirect()->back()->with('success', 'Solicitud de activación creada correctamente.');

@@ -61,7 +61,7 @@
                                 <span class="text-gray-700 text-sm">{{ $account->estado }}</span>
                             </div>
                         </td>
-                        <td class="px-4 py-2 border-b "> <button class=" bg-blue-500 p-2 rounded-md text-white"
+                        <td class="px-4 py-2 border-b "><button class=" bg-blue-500 p-2 rounded-md text-white"
                                 onclick="toggleModalState({{ $account->id }},{{ CreateAccount::VALIDATE_ACCOUNT }})"><i
                                     class="fa fa-edit "></i></button></td>
                     </tr>
@@ -70,6 +70,8 @@
         </table>
     </div>
 
+    @include('forms.ChangeState')
+    
     <script>
         // Verificar si hay mensajes de éxito o error
         @if(session('success'))

@@ -13,9 +13,9 @@ class GLPIService
     protected string|null $sessionToken = null;
 
     // Constante para la ruta del endpoint
-    private const INIT_SESSION_ENDPOINT = '/apirest.php/initSession';
+    private const INIT_SESSION_ENDPOINT = 'initSession';
 
-    private const TICKET_ENDPOINT = '/apirest.php/Ticket';
+    private const TICKET_ENDPOINT = 'Ticket';
 
     public function __construct()
     {
