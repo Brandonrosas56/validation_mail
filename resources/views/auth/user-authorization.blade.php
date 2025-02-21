@@ -23,12 +23,17 @@
                     información institucional.
                 </p>
 
-                <h2 class="ms-3 text-xl font-semibold text-white  flex justify-center">
-                    
+                <h2 class="ms-3 text-xl font-semibold text-white  flex justify-center">                    
                     @include('forms.register')
 
-                    <div class="mt-4 mb-4 ">
-                        <button onclick="toggleRegisterModal()" class="cms-3 text-xl font-semibold text-gray-900">{{ __('registerUsers') }}</button>
+                    <div class="color textte py-2 px-4 rounded-lg mt-4 mb-4 ">
+                        <button onclick="toggleRegisterModal()" class="cms-3 text-xl font-semibold ">{{ __('registerUsers') }}</button>
+                    </div>
+                </h2>
+
+                <h2 class="ms-3 text-xl font-semibold text-white  flex justify-center">
+                    <div class="color textte py-2 px-4 rounded-lg mt-4 mb-4 ">
+                        <a href="{{ route('show_role_functionary') }}" class="cms-3 text-xl font-semibold ">{{ __('show_role_functionary') }}</a>
                     </div>
                 </h2>
             </div>
