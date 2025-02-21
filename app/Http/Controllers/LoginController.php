@@ -1,35 +1,40 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
-use Illuminate\Http\Request;
+use App\Models\User;
 use App\Service\LdapService;
+use Illuminate\Http\Request;
+use Symfony\Component\Ldap\Ldap;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    protected $ldapService;
-
-    public function __construct(LdapService $ldapService)
-    {
-        $this->ldapService = $ldapService;
-    }
-
     public function login(Request $request)
     {
         $request->validate([
-            'username' => 'required|string',
-            'password' => 'required|string',
+            'email' => 'required|email',
+            'password' => 'required',
         ]);
 
-        $username = $request->input('username');
-        $password = $request->input('password');
+        try {
+            $LdapService = new LdapService($request->get('email'), $request->get('password'));
+            if ($LdapService->isValid()) {
+                // Encuentra o crea un usuario en la BD
+                $user = User::updateOrCreate(
+                    ['username' => $request->get('email')],
+                );
+                dd($user);
 
-        if ($this->ldapService->autenticarUsuario($username, $password)) {
-            // Aquí podrías autenticar al usuario en Laravel si ya existe en la base de datos
-            return redirect()->route('dashboard')->with('success', 'Autenticación correcta');
+                #Auth::login($user);
+            }else{
+                throw new Exception("No se logro autenticar en el Directorio Activo", 1);
+            }
+
+            return redirect()->intended('dashboard');
+        } catch (\Exception $e) {
+            return back()->withErrors(['password' => 'Credenciales incorrectas.']);
         }
-
-        return redirect()->route('login')->withErrors(['username' => 'Credenciales inválidas en LDAP']);
     }
 }

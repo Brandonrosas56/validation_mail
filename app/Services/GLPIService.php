@@ -29,10 +29,14 @@ class GLPIService
                     'Content-Type' => 'application/json',
                 ],
             ]);
-            $this->sessionToken = $this->testConnection()['session_token'];
-        } catch (\Throwable $th) {
-            print_r($th->getMessage());
-        }
+            $response = $this->testConnection();
+
+            if (!isset($response['session_token'])) {
+                throw new \Exception("Error: No se pudo obtener el session_token. Respuesta: " . json_encode($response));
+            }
+            
+            $this->sessionToken = $response['session_token'];
+        }            
     }
 
     /**
