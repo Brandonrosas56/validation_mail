@@ -11,7 +11,7 @@
             @csrf
             <x-validation-errors class="mb-4" />
             <input type="hidden" id="operation" name="operation" value="add">
-            
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="mb-3">
                     <label for="regional" class="block mb-1 TextColor font-bold">Regional*</label>
@@ -24,13 +24,21 @@
                 </div>
 
                 <div class="mb-3">
+                    <label for="rol_asignado" class="block mb-1 TextColor font-bold">Relación Contractual*</label>
+                    <select name="rol_asignado" id="rol_asignado" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" required onclick="changeRolAssing()">
+                        <option value="Contratista">Contratista</option>
+                        <option value="Funcionario">Funcionario</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
                     <label for="primer_nombre" class="block mb-1 TextColor font-bold">Primer Nombre*</label>
                     <input type="text" name="primer_nombre" id="primer_nombre" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('primer_nombre') }}" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="segundo_nombre" class="block mb-1 TextColor font-bold">Segundo Nombre*</label>
-                    <input type="text" name="segundo_nombre" id="segundo_nombre" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('segundo_nombre') }}" >
+                    <input type="text" name="segundo_nombre" id="segundo_nombre" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('segundo_nombre') }}">
                 </div>
 
                 <div class="mb-3">
@@ -65,7 +73,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="numero_contrato" class="block mb-1 TextColor font-bold">Número de Contrato*</label>
+                    <label for="numero_contrato" id="labelNum" class="block mb-1 TextColor font-bold">Número de Contrato*</label>
                     <input type="text" name="numero_contrato" id="numero_contrato" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('numero_contrato') }}" required>
                 </div>
 
@@ -74,17 +82,9 @@
                     <input type="date" name="fecha_inicio_contrato" id="fecha_inicio_contrato" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('fecha_inicio_contrato') }}" required onchange="updateMinDate()">
                 </div>
 
-                <div class="mb-3">
+                <div class="mb-3"  id="divTermination">
                     <label for="fecha_terminacion_contrato" class="block mb-1 TextColor font-bold">Fecha de Terminación del Contrato*</label>
                     <input type="date" name="fecha_terminacion_contrato" id="fecha_terminacion_contrato" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('fecha_terminacion_contrato') }}" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="rol_asignado" class="block mb-1 TextColor font-bold">Relación Contractual*</label>
-                    <select name="rol_asignado" id="rol_asignado" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" required>
-                        <option value="Contratista">Contratista</option>
-                        <option value="Funcionario">Funcionario</option>
-                    </select>
                 </div>
             </div>
 
@@ -101,12 +101,26 @@
 <script>
     function toggleModal() {
         const modal = document.getElementById('userModal');
-        modal.classList.toggle('active');  
+        modal.classList.toggle('active');
     }
 
     function updateMinDate() {
         const fechaInicio = document.getElementById("fecha_inicio_contrato").value;
         const fechaTerminacion = document.getElementById("fecha_terminacion_contrato");
         fechaTerminacion.setAttribute("min", fechaInicio);
+    }
+
+    function changeRolAssing(){
+        const selectRol = document.getElementById('rol_asignado');
+        const labelNum = document.getElementById('labelNum');
+        const divTermination = document.getElementById('divTermination')
+
+        if(selectRol.value === 'Contratista'){
+            labelNum.textContent = 'Número de Contrato*';
+            divTermination.style.display = 'block';
+        }else if(selectRol.value === 'Funcionario'){
+            labelNum.textContent = 'Acta de resolución*';
+            divTermination.style.display = 'none'
+        }
     }
 </script>
