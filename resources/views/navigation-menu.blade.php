@@ -31,8 +31,8 @@
                 </x-nav-link>
             </div>
             <div class="hidden sm:-my-px gap-3 sm:flex">
-                <x-nav-link href="{{ route('show-role-functionary') }}" :active="request()->routeIs('show-role-functionary')">
-                    {{ __('show-role-functionary') }}
+                <x-nav-link href="{{ route('show_role_functionary') }}" :active="request()->routeIs('show_role_functionary')">
+                    {{ __('show_role_functionary') }}
                 </x-nav-link>
             </div>
             <div class="hidden sm:-my-px gap-3 sm:flex">

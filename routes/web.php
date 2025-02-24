@@ -47,7 +47,7 @@ Route::controller(importController::class)->group(function () {
 });
 
 Route::controller(roleFunctionaryController::class)->group(function () {
-    Route::get('/show-role-functionary', 'show')->name('show-role-functionary');
+    Route::get('/show_role_functionary', 'show')->name('show_role_functionary');
     Route::post('/assign-role-functionary', 'assignRoleFuncionary')->name('assign-role-functionary');
 });
 
