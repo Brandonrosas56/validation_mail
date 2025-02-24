@@ -40,6 +40,10 @@ class CreateAccountController extends Controller
     public function store(Request $request)
     {
         try {
+            if ($request->rol_asignado === 'Funcionario') {
+                $date_termination = '1000-01-01';
+                $request->merge(['fecha_terminacion_contrato' => $date_termination]);
+            }
             $userId = Auth::id();
             $request->merge(['user_id' => $userId]);
 
@@ -57,14 +61,9 @@ class CreateAccountController extends Controller
                 'user_id' => 'required|exists:users,id',
                 'numero_contrato' => 'required|string|max:255',
                 'fecha_inicio_contrato' => 'required|date',
+                'fecha_terminacion_contrato' => 'date',
             ];
-
-            if ($request->rol_asignado === 'Contratista') {
-                $rules += [
-                    'fecha_terminacion_contrato' => 'required|date|after_or_equal:fecha_inicio_contrato',
-                ];
-            }
-
+            
             $request->validate($rules);
 
             if ($request->rol_asignado === 'Contratista') {

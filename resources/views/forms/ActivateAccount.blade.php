@@ -28,6 +28,14 @@
                 </div>
 
                 <div class="mb-2">
+                    <label for="rol_asignado" class="block mb-1 TextColor font-bold">Relación Contractual*</label>
+                    <select name="rol_asignado" id="rol_asignado" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" required>
+                        <option value="Contratista">Contratista</option>
+                        <option value="Funcionario">Funcionario</option>
+                    </select>
+                </div>
+
+                <div class="mb-2">
                     <label for="documento_proveedor" class="block mb-1 TextColor font-bold">Documento de identidad*</label>
                     <input type="text" name="documento_proveedor" id="documento_proveedor" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('documento_proveedor') }}">
                 </div>
@@ -42,7 +50,6 @@
                         <option value="NIT">Número de Identificación Tributaria</option>
                     </select>
                 </div>
-
                
                 <div class="mb-2">
                     <label for="primer_nombre" class="block mb-1 TextColor font-bold">Primer Nombre*</label>
@@ -87,14 +94,6 @@
                 <div class="mb-2">
                     <label for="numero_contrato" class="block mb-1 TextColor font-bold">Número de Contrato*</label>
                     <input type="text" name="numero_contrato" id="numero_contrato" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('numero_contrato') }}" required>
-                </div>
-
-                <div class="mb-2">
-                    <label for="rol_asignado" class="block mb-1 TextColor font-bold">Relación Contractual*</label>
-                    <select name="rol_asignado" id="rol_asignado" required>
-                        <option value="Contratista">Contratista</option>
-                        <option value="Funcionario">Funcionario</option>
-                    </select>
                 </div>
 
                 <div class="mb-2">
