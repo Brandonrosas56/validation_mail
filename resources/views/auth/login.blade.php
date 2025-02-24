@@ -35,7 +35,7 @@
                 </div>
                 @endsession
 
-                <form class="w-full flex flex-col gap-4" method="POST" action="{{ route('login-controller') }}">
+                <form class="w-full flex flex-col gap-4" method="POST" action="{{ route('login') }}">
                     @csrf
 
                     <div>

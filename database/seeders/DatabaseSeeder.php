@@ -50,7 +50,7 @@ class DatabaseSeeder extends Seeder
 
 
         // Assign role to user
-        $user->assignRole($role);
+        $user->assignRole(roles: $role);
     }
 
     /**
