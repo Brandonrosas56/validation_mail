@@ -26,7 +26,7 @@ class LoginController extends Controller
                         'email' => $request->get('email'),
                         'name' => explode('@', $request->get('email'))[0],
                         'password' => '******',
-                        'supplier_document' => 88888888,
+                        'supplier_document' => 999999,
                         'registrar_id' => 01
                     ],
                 );
