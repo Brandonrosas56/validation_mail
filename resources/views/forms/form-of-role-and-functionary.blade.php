@@ -24,24 +24,24 @@
     </script>
     @endif
 
-@php
-    $validatPermissionsAssing = auth()->user()->can('administrador');
-@endphp
+    @php
+    $validatPermissionsAssing = auth()->user()->hasRole('Admin');
+    @endphp
     <link rel="stylesheet" href="{{ asset('css/ShowValidateAccount.css') }}">
     <div class="overflow-x-auto max-w-7xl mx-auto mt-8 rounded-lg">
         <div class="inline">
             <form method="POST" action="assign-role-functionary" id="formroleFunctionaryController">
                 @csrf
                 <div class="flex items-center mt-4">
-                @if (!$validatPermissionsAssing)
+                    @if (!$validatPermissionsAssing)
                     <div class="">
                         <label for="{{__('Select_role')}}" class="block mb-2 TextColor font-bold">{{__('Select_role')}}</label>
                         <select name="select_role" id="select_role" class="px-4 py-2 border rounded-md w-64">
                             <option value="select_rol">{{__('Select_role')}}</option>
                             @foreach ($roles as $role)
-                                @if($role->name !== 'Super_admin' and $role->name !== 'Contratista')
-                                    <option value="{{$role->name}}">{{$role->name}}</option>
-                                @endif
+                            @if($role->name === 'Super_admin' and $role->name !== 'Contratista')
+                            <option value="{{$role->name}}">{{$role->name}}</option>
+                            @endif
                             @endforeach
                         </select>
                     </div>
@@ -56,7 +56,7 @@
                             <option value="Jefe de Oficina">{{__('Office_Manager')}}</option>
                         </select>
                     </div>
-                    
+
                     <div class="ml-4">
                         <button type="submit" name="function" value="assign" class="color text-white py-2 px-4 rounded-lg mt-8">
                             Asignar
@@ -68,7 +68,12 @@
                             {{__('change_state')}}
                         </button>
                     </div>
+                    <div class="ml-4 mt-8  ">
+                        <input type="text" placeholder="Buscar..." class="px-4 py-2 border rounded-md w-full max-w-xs" id="search-input">
+                    </div>
                 </div>
+
+
                 <div class="mt-8">
                     <table id="users-table" class="w-full bg-white shadow-md display overflow-y-auto max-h-full">
                         <thead>
@@ -134,4 +139,15 @@
             button: "OK"
         });
     }
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#search-input').on('keyup', function() {
+            var value = $(this).val().toLowerCase();
+            $('#users-table tbody tr').filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
 </script>

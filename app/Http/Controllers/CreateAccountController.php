@@ -54,7 +54,7 @@ class CreateAccountController extends Controller
                 'segundo_nombre' => 'nullable|string|max:255',
                 'primer_apellido' => 'required|string|max:255',
                 'segundo_apellido' => 'nullable|string|max:255',
-                'documento_proveedor' => 'requiere|string|max:255',
+                'documento_proveedor' => 'required|string|max:255',
                 'tipo_documento' => 'required|string|max:50',
                 'correo_personal' => 'required|email|unique:create_account,correo_personal',
                 'rol_asignado' => 'required|string|in:Funcionario,Contratista',
@@ -65,6 +65,9 @@ class CreateAccountController extends Controller
             ];
             
             $request->validate($rules);
+            
+            // Crear cuenta
+            $createAccount = CreateAccount::create($request->all());
 
             if ($request->rol_asignado === 'Contratista') {
                 $documentoProveedor = $request->input('documento_proveedor');
@@ -75,8 +78,7 @@ class CreateAccountController extends Controller
                 }
             }
 
-            // Crear cuenta
-            $createAccount = CreateAccount::create($request->all());
+            
 
             // Enviar validación de estado
             $sendValidationStatusService = new SendValidationStatusService($createAccount, SendValidationStatusService::SECOP_ERROR);
