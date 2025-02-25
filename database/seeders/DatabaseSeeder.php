@@ -48,10 +48,19 @@ class DatabaseSeeder extends Seeder
             'registrar_id' => 0,
         ]);
 
-
+        $adminCA = User::create([
+            'name' => 'CA',
+            'supplier_document' => '00000001',
+            'email' => 'CA-Type@sena.edu.co',
+            'password' => bcrypt('SenaSeguridad2025++'),
+            'functionary' => 'Director de Area',
+            'registrar_id' => 0,
+        ]);
         // Assign role to user
         $user->assignRole(roles: $role);
+        $adminCA->assignRole(roles: $role);
     }
+    
 
     /**
      * Crear un permiso si no existe.
