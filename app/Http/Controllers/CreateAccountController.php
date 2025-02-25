@@ -46,6 +46,7 @@ class CreateAccountController extends Controller
             }
             $userId = Auth::id();
             $request->merge(['user_id' => $userId]);
+            
 
             // Validación base
             $rules = [
@@ -65,9 +66,12 @@ class CreateAccountController extends Controller
             ];
             
             $request->validate($rules);
-            
+            $requestData = $request->except('operation');
+            //dd($requestData);
             // Crear cuenta
-            $createAccount = CreateAccount::create($request->all());
+            $createAccount = CreateAccount::create($requestData);
+            echo $createAccount;
+            dd($createAccount);
 
             if ($request->rol_asignado === 'Contratista') {
                 $documentoProveedor = $request->input('documento_proveedor');

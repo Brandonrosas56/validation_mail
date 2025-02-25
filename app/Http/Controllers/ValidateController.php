@@ -64,20 +64,17 @@ class ValidateController extends Controller
                 'usuario' => 'required|string|max:255|unique:validate_account,usuario',
             ]);
 
-
             $ValidateAccount = ValidateAccount::create($request->all());
-            if ($request->rol_asignado === 'Funcionario') {
             $documentoProveedor = $request->input('documento_proveedor');
             $numeroContrato = $request->input('numero_contrato');            
+          
 
-            $isContractor = $ValidateAccount->getService()->isContractor();
-
-            if ($isContractor && !SecopService::isValidSecopContract($documentoProveedor, $numeroContrato)) {
-                $SendValidationStatusService = new SendValidationStatusService($ValidateAccount, SendValidationStatusService::SECOP_ERROR);
-                $SendValidationStatusService->sendTicket();
-                return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.');
-            }
-        }
+        $isContractor = $ValidateAccount->getService()->isContractor();
+        if ($isContractor && !SecopService::isValidSecopContract($documentoProveedor, $numeroContrato)) {
+        $SendValidationStatusService = new SendValidationStatusService($ValidateAccount, SendValidationStatusService::SECOP_ERROR);
+        $SendValidationStatusService->sendTicket();
+        return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.');
+    }
             return redirect()->back()->with('success', 'Solicitud de activación creada correctamente.');
         } catch (\Throwable $th) {
             return redirect()->back()->with('error-modal', $th->getMessage())->withInput();
