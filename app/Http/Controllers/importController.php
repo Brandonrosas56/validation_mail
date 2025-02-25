@@ -117,11 +117,16 @@ class importController extends Controller
                 ];
             }
 
-            foreach ($administrators as $chunk) {
-                DB::table('users')->upsert(
-                    $chunk,
-                    ['supplier_document'],
-                    ['name', 'position', 'email', 'password', 'rgn_id','created_at','updated_at']
+            foreach ($administrators as $data) {
+                DB::table('users')->updateOrInsert(
+                    ['supplier_document' => $data['supplier_document'], 'email' => $data['email']],
+                    [
+                        'name' => $data['name'],
+                        'position' => $data['position'],
+                        'password' => $data['password'],
+                        'rgn_id' => $data['rgn_id'],
+                        'updated_at' => now()
+                    ]
                 );
             }
 
