@@ -69,7 +69,7 @@ class CreateAccountController extends Controller
             // Crear cuenta
             $createAccount = CreateAccount::create($request->all());
   
-            if ($request->rol_asignado === 'Contratista') {
+            if ($request->rol_asignado === 'Contratista') { 
                 $documentoProveedor = $request->input('documento_proveedor');
                 $numeroContrato = $request->input('numero_contrato');            
     
