@@ -66,7 +66,7 @@ class ValidateController extends Controller
 
 
             $ValidateAccount = ValidateAccount::create($request->all());
-            if ($request->rol_asignado === 'Funcionario') {
+            if ($request->rol_asignado === 'Contratista') {
             $documentoProveedor = $request->input('documento_proveedor');
             $numeroContrato = $request->input('numero_contrato');            
 
