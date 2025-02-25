@@ -18,7 +18,7 @@ use App\Http\Controllers\roleFunctionaryController;
 
 App::setLocale('es');
 
-//app()->singleton('checkIfBlocked', CheckIfBlocked::class);
+app()->singleton('checkIfBlocked', CheckIfBlocked::class);
 
 Route::get('/', function () {
     return view('auth.login');
@@ -56,5 +56,29 @@ Route::controller(registerUsersController::class)->group(function () {
     Route::post('registerStore', 'store')->name('registerStore');
 });
 
+Route::middleware(['auth', 'checkIfBlocked'])->group(function () {
+    Route::middleware([
+        'auth:web',
+        config('jetstream.auth_session'),
+        'verified',
+    ])->group(function () {
+        Route::get('/dashboard', function () {
+            return view('dashboard');
+        })->name('dashboard');
 
+        Route::middleware(['auth'])->group(function () {
+            Route::middleware(CheckRole::class . ':admin_users')->group(function () {
+                Route::controller(rolesController::class)->group(function () {
+                    Route::get('Roles', 'showRolView')->name('show-rol-view');
+                    Route::post('/registerRoles', 'store')->name('roles.store');
+                });
+                Route::middleware('auth')->prefix('glpi')->group(function () {
+                    Route::get('/init-session', [TicketController::class, 'initSession']);
+                    Route::get('/ticket/{id}', [TicketController::class, 'getTicket']);
+                    Route::post('/ticket', [TicketController::class, 'createTicket']);
+                });
+            });
+        });
+    });
+});
 
