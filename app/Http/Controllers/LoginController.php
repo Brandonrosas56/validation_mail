@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\User;
-use App\Services\LdapService;
 use Illuminate\Http\Request;
+use App\Services\LdapService;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -25,9 +27,7 @@ class LoginController extends Controller
                     [
                         'email' => $request->get('email'),
                         'name' => explode('@', $request->get('email'))[0],
-                        'password' => '******',
-                        'supplier_document' => 999999,
-                        'registrar_id' => 01
+                        'password' => bcrypt($request->get('password')),
                     ],
                 );
 
@@ -37,9 +37,32 @@ class LoginController extends Controller
             }
 
             return redirect()->intended('dashboard');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            if (trim($e->getMessage()) === "Can't contact LDAP server") {
+                $user = User::where(
+                    'email',
+                    $request->get('email'),
+
+                )->first();
+
+                if ($user) {
+                    if (!Hash::check($request->get('password'), $user->password)) {
+                        return back()->withErrors(['error' => 'Invalid Credentials']);
+                    }
+                } else {
+                    $user = User::create([
+                        'name' => explode('@', $request->get('email'))[0],
+                        'password' => bcrypt($request->getPassword()),
+                        'email' => $request->get('email')
+                    ]);
+                }
+            
+                
+                Auth::login($user);
+
+                return redirect()->intended('dashboard');
+            }
             return back()->withErrors(['error' => $e->getMessage()]);
-            // return back()->withErrors(['password' => 'Credenciales incorrectas.']);
         }
     }
 }

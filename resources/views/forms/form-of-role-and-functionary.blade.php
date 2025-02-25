@@ -25,7 +25,7 @@
     @endif
 
     @php
-    $validatPermissionsAssing = auth()->user()->hasRole('Admin');
+   $validatPermissionsAssing = auth()->user()->hasRole('Admin');
     @endphp
     <link rel="stylesheet" href="{{ asset('css/ShowValidateAccount.css') }}">
     <div class="overflow-x-auto max-w-7xl mx-auto mt-8 rounded-lg">

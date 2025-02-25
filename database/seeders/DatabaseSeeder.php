@@ -23,14 +23,14 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($permissions as $permission) {
-            Permission::firstOrCreate(['name' => $permission]);
+            Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
         }
 
         // Create roles
-        $role = Role::create(['name' => 'Super_admin']);
-        $roleAdmin = Role::create(['name' => 'Admin']);
-        $roleAsist = Role::create(['name' => 'Asistente']);
-        $roleContratista = Role::create(['name' => 'Contratista']);
+        $role = Role::firstOrCreate(['name' => 'Super_admin', 'guard_name' => 'web']);
+        $roleAdmin = Role::firstOrCreate(['name' => 'Admin', 'guard_name' => 'web']);
+        $roleAsist = Role::firstOrCreate(['name' => 'Asistente', 'guard_name' => 'web']);
+        $roleContratista = Role::firstOrCreate(['name' => 'Contratista', 'guard_name' => 'web']);
 
         // Assign permissions to roles
         $role->syncPermissions(Permission::all());
@@ -39,36 +39,30 @@ class DatabaseSeeder extends Seeder
         $roleContratista->givePermissionTo('contratista');
 
         // Create user
-        $user = User::create([
+        $user = User::firstOrCreate([
+            'email' => 'admin@sena.edu.co',
+        ], [
             'name' => 'admin',
             'supplier_document' => '00000000',
-            'email' => 'admin@sena.edu.co',
             'password' => bcrypt('Admin12345*'),
             'functionary' => 'Director de Area',
             'registrar_id' => 0,
         ]);
 
-        $adminCA = User::create([
+        $adminCA = User::firstOrCreate([
+            'email' => 'CA-Type@sena.edu.co',
+        ], [
             'name' => 'CA',
             'supplier_document' => '00000001',
-            'email' => 'CA-Type@sena.edu.co',
             'password' => bcrypt('SenaSeguridad2025++'),
             'functionary' => 'Director de Area',
             'registrar_id' => 0,
         ]);
-        // Assign role to user
-        $user->assignRole(roles: $role);
-        $adminCA->assignRole(roles: $role);
-    }
-    
 
-    /**
-     * Crear un permiso si no existe.
-     */
-    protected function createPermission(string $name, string $guard = 'web')
-    {
-        if (Permission::where('name', $name)->where('guard_name', $guard)->doesntExist()) {
-            Permission::create(['name' => $name, 'guard_name' => $guard]);
-        }
+        // Assign role to users
+        $adminCA->assignRole($role);
+        $adminCA->load('roles');
+        $user->assignRole($role);
+        $user->load('roles');
     }
 }

@@ -22,7 +22,11 @@ class User extends Authenticatable
     use Notifiable;
     use TwoFactorAuthenticatable;
     use HasRoles;
+    
+    protected $with = ['roles']; // Esto carga siempre los roles
 
+    // Si ya tienes el guard especificado en config/permission.php, esto no es necesario:
+    protected $guard_name = 'web';
     /**
      * The attributes that are mass assignable.
      *

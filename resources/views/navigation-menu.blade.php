@@ -11,7 +11,9 @@
 
         <!-- Permissions -->
         @php
-        $permissionsImport = auth()->user()->can('super_admin') || auth()->user()->can('administrador');
+        $user = auth()->user()->fresh();
+        //dd($user->getRoleNames());
+        $permissionsImport = auth()->user()->hasRole('Super_admin') || auth()->user()->hasRole('Admin');
         @endphp
 
         <div class="flex">
