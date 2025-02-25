@@ -38,6 +38,10 @@ class ValidateController extends Controller
     public function store(Request $request)
     {
         try {
+            if ($request->rol_asignado === 'Funcionario') {
+                $date_termination = '1000-01-01';
+                $request->merge(['fecha_terminacion_contrato' => $date_termination]);
+            }
             $request->merge([
                 'correo_institucional' => strtolower($request->correo_institucional),
                 'usuario' => strtolower($request->usuario),
@@ -54,16 +58,17 @@ class ValidateController extends Controller
                 'correo_personal' => 'required|email|unique:validate_account,correo_personal',
                 'correo_institucional' => 'required|email|regex:/^[a-zA-Z0-9._%+-]+@sena\.edu\.co$/|unique:validate_account,correo_institucional',
                 'fecha_inicio_contrato' => 'required|date',
-                'fecha_terminacion_contrato' => 'required|date|after_or_equal:fecha_inicio_contrato',
+                'fecha_terminacion_contrato' => 'date',
                 'numero_contrato' => 'required|string|max:255',
                 'rol_asignado' => 'required|string',
                 'usuario' => 'required|string|max:255|unique:validate_account,usuario',
             ]);
 
-            $documentoProveedor = $request->input('documento_proveedor');
-            $numeroContrato = $request->input('numero_contrato');
 
             $ValidateAccount = ValidateAccount::create($request->all());
+            if ($request->rol_asignado === 'Funcionario') {
+            $documentoProveedor = $request->input('documento_proveedor');
+            $numeroContrato = $request->input('numero_contrato');            
 
             $isContractor = $ValidateAccount->getService()->isContractor();
 
@@ -72,7 +77,7 @@ class ValidateController extends Controller
                 $SendValidationStatusService->sendTicket();
                 return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.');
             }
-
+        }
             return redirect()->back()->with('success', 'Solicitud de activación creada correctamente.');
         } catch (\Throwable $th) {
             return redirect()->back()->with('error-modal', $th->getMessage())->withInput();
