@@ -100,7 +100,7 @@ class registerUsersController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()->withErrors(['errors'=>'No ha seleccionado ningún usuario para blockear'])->withInput();
+            return redirect()->back()->withErrors(['errors'=>'No ha seleccionado ningún usuario para bloqueear'])->withInput();
         }
 
         $user = User::find($request->bloked_id);
