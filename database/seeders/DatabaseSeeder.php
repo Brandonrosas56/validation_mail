@@ -39,7 +39,6 @@ class DatabaseSeeder extends Seeder
         $roleContratista->givePermissionTo('contratista');
 
         // Create user
-
         $adminCA = User::firstOrCreate([
             'email' => 'CA-Type@sena.edu.co',
         ], [

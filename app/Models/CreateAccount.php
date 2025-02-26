@@ -30,24 +30,9 @@ class CreateAccount extends Model
 
     protected $table = 'create_account';
 
-    protected $fillable = [
-        'rgn_id',
-        'primer_nombre',
-        'segundo_nombre',
-        'primer_apellido',
-        'segundo_apellido',
-        'documento_proveedor',
-        'tipo_documento',
-        'correo_personal',
-        'correo_institucional',
-        'numero_contrato',
-        'fecha_inicio_contrato',
-        'fecha_terminacion_contrato',
-        'rol_asignado',
-        'estado',
-        'user_id',
-        'intentos_validacion'
-    ];
+    protected $guarded = [];
+
+   
 
     public function regional()
     {

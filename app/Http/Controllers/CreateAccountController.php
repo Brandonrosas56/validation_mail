@@ -47,6 +47,7 @@ class CreateAccountController extends Controller
             $userId = Auth::id();
             $request->merge(['user_id' => $userId]);
             
+
             // Validación base
             $rules = [
                 'rgn_id' => 'required|exists:regional,rgn_id',
@@ -65,27 +66,34 @@ class CreateAccountController extends Controller
             ];
             
             $request->validate($rules);
-            
+            $requestData = $request->except('operation');
+            //dd($requestData);
             // Crear cuenta
-            $createAccount = CreateAccount::create($request->all());
-  
-            if ($request->rol_asignado === 'Contratista') { 
+            $createAccount = CreateAccount::create($requestData);
+            
+
+            if ($request->rol_asignado === 'Contratista') {
                 $documentoProveedor = $request->input('documento_proveedor');
-                $numeroContrato = $request->input('numero_contrato');            
-    
-                $isContractor = $createAccount->getService()->isContractor();
-    
-                if ($isContractor && !SecopService::isValidSecopContract($documentoProveedor, $numeroContrato)) {
-                    $SendValidationStatusService = new SendValidationStatusService($createAccount, SendValidationStatusService::SECOP_ERROR);
-                    $SendValidationStatusService->sendTicket();
-                    return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.');
+                $numeroContrato = $request->input('numero_contrato');
+
+                if (!SecopService::isValidSecopContract($documentoProveedor, $numeroContrato)) {
+                    $sendValidationStatusService = new SendValidationStatusService($createAccount, SendValidationStatusService::SECOP_ERROR);
+                    $sendValidationStatusService->sendTicket();
+                    return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.')->withInput();
                 }
             }
+
             
+
+            // Enviar validación de estado
+            $sendValidationStatusService = new SendValidationStatusService($createAccount, SendValidationStatusService::SECOP_ERROR);
+            $sendValidationStatusService->sendTicket();
+            
+
             return redirect()->back()->with('success', 'Solicitud creada correctamente.');
         } catch (\Throwable $th) {
             \Log::error('Error al crear cuenta: ' . $th->getMessage());
-            return redirect()->back()->with('error-modal', 'Ocurrió un error. Inténtelo de nuevo.')->withInput();
+            return redirect()->back()->with('error-modal', 'Ocurrió un error. Inténtelo de nuevo.' . $th->getMessage())->withInput();
         }
     }
 }

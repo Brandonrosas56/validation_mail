@@ -22,7 +22,8 @@ return new class extends Migration
             $table->string('tipo_documento');
             $table->string('correo_personal');
             $table->string('correo_institucional')->nullable();
-            $table->string('numero_contrato');
+            $table->string('documento_soporte')->nullable();
+            $table->string('numero_contrato')->nullable();
             $table->date('fecha_inicio_contrato');
             $table->date('fecha_terminacion_contrato')->nullable();
             $table->string('rol_asignado');

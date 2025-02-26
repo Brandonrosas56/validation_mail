@@ -23,14 +23,19 @@ class LoginController extends Controller
             $LdapService = new LdapService();
             if ($LdapService->autenticarUsuario($request->get('email'), $request->get('password'))) {
                 // Encuentra o crea un usuario en la BD
-                $user = User::updateOrCreate(
-                    [
-                        'email' => $request->get('email'),
+                $user = User::where(
+                        'email',
+						$request->get('email'),
+                )->first();
+				
+				if (empty($user)){
+					$user = User::create([ 'email'=>$request->get('email'),
                         'name' => explode('@', $request->get('email'))[0],
-                        'password' => bcrypt($request->get('password')),
-                    ],
-                );
-
+                        'password' => bcrypt($request->get('password')),]
+						);
+				 }
+				 
+				$user->load('roles');
                 Auth::login($user);
             } else {
                 throw new Exception("No se logro autenticar en el Directorio Activo", 1);
@@ -57,7 +62,7 @@ class LoginController extends Controller
                     ]);
                 }
             
-                
+                $user->load('roles');
                 Auth::login($user);
 
                 return redirect()->intended('dashboard');
