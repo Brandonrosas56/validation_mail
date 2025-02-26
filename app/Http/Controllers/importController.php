@@ -97,49 +97,31 @@ class importController extends Controller
     public function insertAdministrators($csvData)
     {
         try {
-            $administrators = [];
             $hashedPassword = bcrypt('Administrator12345*');
             $now = Carbon::now();
             $userId = Auth::id();
 
             foreach ($csvData as $rowData) {
-                $administrators[] = [
-                    'name' => $rowData['name'],
-                    'supplier_document' => $rowData['supplier_document'],
-                    'position' => $rowData['position'],
-                    'email' => $rowData['email'],
-                    'password' => $hashedPassword,
-                    'rgn_id' => null,
-                    'registrar_id' => $userId,
-                    'lock' => false,
-                    'created_at' => $now,
-                    'updated_at' => $now
-                ];
-            }
-
-            $adminDocuments = collect($administrators)->pluck('email')->toArray();
-
-            foreach ($administrators as $data) {
-                DB::table('users')->updateOrInsert(
-                    ['supplier_document' => $data['supplier_document'], 'email' => $data['email']],
+                $User = User::updateOrCreate(
+                    ['supplier_document' => $rowData['supplier_document'], 'email' => $rowData['email']],
                     [
-                        'name' => $data['name'],
-                        'position' => $data['position'],
-                        'password' => $data['password'],
-                        'rgn_id' => $data['rgn_id'],
-                        'updated_at' => now()
+                        'name' => $rowData['name'],
+                        'position' => $rowData['position'],
+                        'password' => $hashedPassword,
+                        'rgn_id' => false,
+                        'registrar_id' => $userId,
+                        'lock' => false,
+                        'created_at' => $now,
+                        'updated_at' => $now
                     ]
                 );
+
+                $User->syncRoles(['Admin']);
             }
 
-            $users = User::whereIn('email', $adminDocuments)->get();
-
-            foreach ($users as $user) {
-                $user->syncRoles(['Admin']);
-            }
         } catch (Exception $e) {
             return redirect()->back()
-                ->withErrors(['error' => 'Por favor revise que el tipo de archivo sea el correctamente'])
+                ->withErrors(['error' => $e->getMessage()])
                 ->withInput()->send();
         }
 
