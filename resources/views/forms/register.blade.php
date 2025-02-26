@@ -1,5 +1,18 @@
 <!-- Modal -->
-<div id="registerModal" class="modal-overlay fixed inset-0 bg-gray-800 bg-opacity-50 hidden" >
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+@if(session('error_messages'))
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        Swal.fire({
+            icon: "error",
+            title: "Error de validación",
+            html: `{!! implode('<br>', session('error_messages')) !!}`,
+        });
+    });
+</script>
+@endif
+
+<div id="registerModal" class="modal-overlay fixed inset-0 bg-gray-800 bg-opacity-50 hidden">
     <div class="ModalColor rounded-lg w-full max-w-xl sm:max-w-2xl p-6 shadow-lg">
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-lg font-bold TextColor">Formulario de Registro</h2>
@@ -7,7 +20,7 @@
                 <img src="{{ asset('img/cancel.png') }}" alt="Cerrar" class="h-6 w-6" />
             </button>
         </div>
-        
+
         <form method="POST" action="registerStore" id="formUser">
             @csrf
             <x-validation-errors class="mb-4" />
@@ -46,14 +59,14 @@
                     <x-select name="rgn_id" id="rgn_id" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none text-black">
                         <option value="">{{__('Select_regional')}}</option>
                         @foreach($regional as $region)
-                            <option value="{{ $region->rgn_id }}">{{ $region->rgn_nombre }}</option>
+                        <option value="{{ $region->rgn_id }}">{{ $region->rgn_nombre }}</option>
                         @endforeach
                     </x-select>
                 </div>
             </div>
 
             <input id="password_confirmation" class="block mt-1 w-full" type="hidden" name="rol" value="Asistente" />
-            
+
             <!-- Botones -->
             <div class="mt-6 flex justify-between w-full mb-4">
                 <x-button class="ButtonColor text-white font-bold py-2 px-4 rounded w-40">

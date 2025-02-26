@@ -85,7 +85,7 @@ class CreateAccountController extends Controller
             return redirect()->back()->with('success', 'Solicitud creada correctamente.');
         } catch (\Throwable $th) {
             \Log::error('Error al crear cuenta: ' . $th->getMessage());
-            return redirect()->back()->with('error-modal', 'Ocurrió un error. Inténtelo de nuevo.' . $th->getMessage())->withInput();
+            return redirect()->back()->with('error-modal', 'Ocurrió un error. Inténtelo de nuevo.')->withInput();
         }
     }
 }

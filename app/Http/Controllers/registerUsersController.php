@@ -18,7 +18,7 @@ class registerUsersController extends Controller
     {
         $roles = role::select('name')->get();
         $regional = Regional::all('rgn_id', 'rgn_nombre');
-        $users = user::with('roles', 'regional')->get(); 
+        $users = user::with('roles', 'regional')->get();
         return view('auth.user-authorization', compact('users', 'roles', 'regional'));
     }
 
@@ -26,14 +26,15 @@ class registerUsersController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'supplier_document' => ['string','unique:users'],
-            'email' => ['required','unique:users', 'regex:/^[a-zA-Z0-9._%+-]+@sena\.edu\.co$/'],
+            'supplier_document' => ['string', 'unique:users'],
+            'email' => ['required', 'unique:users', 'regex:/^[a-zA-Z0-9._%+-]+@sena\.edu\.co$/'],
             'password' => ['required', 'min:8', 'confirmed', 'regex:/[A-Z]/', 'regex:/[a-z]/', 'regex:/[0-9]/', 'regex:/[@$!%*?&#]/',],
-            'rgn_id' =>['required', 'exists:regional,rgn_id'],
+            'rgn_id' => ['required', 'exists:regional,rgn_id'],
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()->withErrors(($validator))->withInput();
+            session()->flash('error_messages', $validator->errors()->all());
+            return redirect()->back()->withInput();
         }
 
         $userId = Auth::id();
@@ -60,7 +61,9 @@ class registerUsersController extends Controller
         $rules = [
             'name' => 'required|string|max:255',
             'email' => [
-                'required', 'email', 'unique:users,email,' . $id,
+                'required',
+                'email',
+                'unique:users,email,' . $id,
                 function ($attribute, $value, $fail) {
                     if (!str_ends_with($value, '@sena.edu.co')) {
                         $fail('El correo debe ser @sena.edu.co');
@@ -100,7 +103,7 @@ class registerUsersController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()->withErrors(['errors'=>'No ha seleccionado ningún usuario para blockear'])->withInput();
+            return redirect()->back()->withErrors(['errors' => 'No ha seleccionado ningún usuario para blockear'])->withInput();
         }
 
         $user = User::find($request->bloked_id);
