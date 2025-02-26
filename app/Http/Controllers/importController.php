@@ -16,7 +16,7 @@ class importController extends Controller
         return view('import.import-files');
     }
 
-    //Validation and creation of array
+    
     public function importFiles(Request $request)
     {
         if ($request->hasFile('upload_file') && $request->file('upload_file')->isValid()) {
