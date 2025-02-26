@@ -24,7 +24,7 @@ class ValidateController extends Controller
                 if ($userId == 1) {
                     $query->whereNotNull('id');
                 }
-            })->get();
+            })->paginate(20);
 
         $regional = Regional::all('rgn_id', 'rgn_nombre');
 

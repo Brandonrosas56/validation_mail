@@ -55,6 +55,9 @@
                 @endforeach
             </tbody>
         </table>
+        <div class="mt-4 flex justify-center w-full">
+            {{ $accounts->links() }}
+        </div>
     </div>
 
     @include('forms.ChangeState')
