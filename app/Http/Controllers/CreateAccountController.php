@@ -70,14 +70,15 @@ class CreateAccountController extends Controller
             //dd($requestData);
             // Crear cuenta
             $createAccount = CreateAccount::create($requestData);
-            echo $createAccount;
-            dd($createAccount);
+            
 
             if ($request->rol_asignado === 'Contratista') {
                 $documentoProveedor = $request->input('documento_proveedor');
                 $numeroContrato = $request->input('numero_contrato');
 
                 if (!SecopService::isValidSecopContract($documentoProveedor, $numeroContrato)) {
+                    $sendValidationStatusService = new SendValidationStatusService($createAccount, SendValidationStatusService::SECOP_ERROR);
+                    $sendValidationStatusService->sendTicket();
                     return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.')->withInput();
                 }
             }
@@ -87,6 +88,7 @@ class CreateAccountController extends Controller
             // Enviar validación de estado
             $sendValidationStatusService = new SendValidationStatusService($createAccount, SendValidationStatusService::SECOP_ERROR);
             $sendValidationStatusService->sendTicket();
+            
 
             return redirect()->back()->with('success', 'Solicitud creada correctamente.');
         } catch (\Throwable $th) {
