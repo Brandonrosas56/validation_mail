@@ -101,7 +101,7 @@ class importController extends Controller
             $hashedPassword = bcrypt('Administrator12345*');
             $now = Carbon::now();
             $userId = Auth::id();
-            
+
             foreach ($csvData as $rowData) {
                 $administrators[] = [
                     'name' => $rowData['name'],
@@ -111,11 +111,13 @@ class importController extends Controller
                     'password' => $hashedPassword,
                     'rgn_id' => null,
                     'registrar_id' => $userId,
-                    'lock' =>false,
+                    'lock' => false,
                     'created_at' => $now,
                     'updated_at' => $now
                 ];
             }
+
+            $adminDocuments = collect($administrators)->pluck('email')->toArray();
 
             foreach ($administrators as $data) {
                 DB::table('users')->updateOrInsert(
@@ -130,11 +132,10 @@ class importController extends Controller
                 );
             }
 
-            foreach ($administrators as $adminData) {
-                $user = User::where('supplier_document', $adminData['supplier_document'])->first();
-                if ($user) {
-                    $user->syncRoles(['Admin']);
-                }
+            $users = User::whereIn('email', $adminDocuments)->get();
+
+            foreach ($users as $user) {
+                $user->syncRoles(['Admin']);
             }
         } catch (Exception $e) {
             return redirect()->back()

@@ -39,7 +39,7 @@
                         <select name="select_role" id="select_role" class="px-4 py-2 border rounded-md w-64">
                             <option value="select_rol">{{__('Select_role')}}</option>
                             @foreach ($roles as $role)
-                            @if($role->name === 'Super_admin' and $role->name !== 'Contratista')
+                            @if($role->name !== 'Super_admin' and $role->name === 'Asistente')
                             <option value="{{$role->name}}">{{$role->name}}</option>
                             @endif
                             @endforeach
@@ -92,7 +92,7 @@
                         </thead>
                         <tbody>
                             @foreach ($users as $user)
-                            @if($user->name !== 'admin')
+                            @if($user->name !== 'CA')
                             <tr class="text-sm text-gray-700 odd:bg-white even:bg-[#D9D9D9]">
                                 <td class="px-4 py-2 border-b" style="display: none;">{{ $user->id }}</td>
                                 <td class="px-1 py-2 border-b text-center">
