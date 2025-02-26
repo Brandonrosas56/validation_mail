@@ -26,6 +26,7 @@
                 <div class="mb-2">
                     <label for="rol_asignado" class="block mb-1 TextColor font-bold">Relación Contractual*</label>
                     <select name="rol_asignado" id="rol_asignado" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" onclick="changeRolAssing()" required>
+                    <option value="" selected disabled>Seleccione ...</option>
                         <option value="Contratista">Contratista</option>
                         <option value="Funcionario">Funcionario</option>
                     </select>
@@ -39,7 +40,8 @@
                 <div class="mb-3">
                     <label for="tipo_documento" class="block mb-1 TextColor font-bold">Tipo de documento*</label>
                     <select name="tipo_documento" id="tipo_documento" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none">
-                        <option value="CC">Cédula de Ciudadanía</option>
+                    <option value="" selected disabled>Selecciona el tipo de documento</option>
+                    <option value="CC">Cédula de Ciudadanía</option>
                         <option value="CE">Cédula de Extranjería</option>
                         <option value="Pasaporte">Pasaporte</option>
                         <option value="TI">Tarjeta de Identidad</option>
