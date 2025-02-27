@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Regional;
 
 class importController extends Controller
 {
@@ -16,7 +17,7 @@ class importController extends Controller
         return view('import.import-files');
     }
 
-    
+
     public function importFiles(Request $request)
     {
         if ($request->hasFile('upload_file') && $request->file('upload_file')->isValid()) {
@@ -97,28 +98,52 @@ class importController extends Controller
     public function insertAdministrators($csvData)
     {
         try {
-            $hashedPassword = bcrypt('Administrator12345*');
-            $now = Carbon::now();
-            $userId = Auth::id();
+            $regionals = Regional::all('rgn_id', 'rgn_nombre');
 
-            foreach ($csvData as $rowData) {
-                $User = User::updateOrCreate(
-                    ['supplier_document' => $rowData['supplier_document'], 'email' => $rowData['email']],
-                    [
-                        'name' => $rowData['name'],
-                        'position' => $rowData['position'],
-                        'password' => $hashedPassword,
-                        'rgn_id' => false,
-                        'registrar_id' => $userId,
-                        'lock' => false,
-                        'created_at' => $now,
-                        'updated_at' => $now
-                    ]
-                );
+            if ($regionals->isEmpty()) {
+                return redirect()->back()->withErrors(['error' => 'Por favor importe primero las reginales'])->withInput()->send();
+            } else {
+                $hashedPassword = bcrypt('Administrator12345*');
+                $now = Carbon::now();
+                $userId = Auth::id();
 
-                $User->syncRoles(['Admin']);
+                foreach ($csvData as $rowData) {
+                    foreach ($csvData as $rowData) {
+                        $regional = $regionals->firstWhere('rgn_nombre', $rowData['regional']);
+
+                        if (empty(trim($rowData['regional']))) {
+                            $rgnId = null;
+                        } else {
+                            $regional = $regionals->firstWhere('rgn_nombre', trim($rowData['regional']));
+
+                            if (!$regional) {
+                               
+                                return redirect()->back()->withErrors([
+                                    'error' => 'No se encontró la regional: ' . $rowData['regional']
+                                ])->withInput()->send();
+                            }
+                           
+                            $rgnId = $regional->rgn_id;
+                        }
+
+                        $User = User::updateOrCreate(
+                            ['supplier_document' => $rowData['supplier_document'], 'email' => $rowData['email']],
+                            [
+                                'name' => $rowData['name'],
+                                'position' => $rowData['position'],
+                                'password' => $hashedPassword,
+                                'rgn_id' => $rgnId,
+                                'registrar_id' => $userId,
+                                'lock' => false,
+                                'created_at' => $now,
+                                'updated_at' => $now
+                            ]
+                        );
+
+                        $User->syncRoles(['Admin']);
+                    }
+                }
             }
-
         } catch (Exception $e) {
             return redirect()->back()
                 ->withErrors(['error' => $e->getMessage()])
