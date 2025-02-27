@@ -73,7 +73,7 @@ class ValidateController extends Controller
         if ($isContractor && !SecopService::isValidSecopContract($documentoProveedor, $numeroContrato)) {
         $SendValidationStatusService = new SendValidationStatusService($ValidateAccount, SendValidationStatusService::SECOP_ERROR);
         $SendValidationStatusService->sendTicket();
-        return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.');
+        return redirect()->back()->with('error', 'Nos encontramos validando su solicitud');
     }
             return redirect()->back()->with('success', 'Solicitud de activación creada correctamente.');
         } catch (\Throwable $th) {

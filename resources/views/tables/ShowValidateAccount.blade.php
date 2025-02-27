@@ -82,12 +82,14 @@
                 icon: 'success',
                 title: 'Éxito',
                 text: '{{ session('success') }}',
+                confirmButtonColor: '#00334f'
             });
         @elseif(session('error'))
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: '{{ session('error') }}'
+                text: '{{ session('error') }}',
+                confirmButtonColor: '#00334f'
             });
         @elseif(session('error-modal'))
             toggleActivationModal();
@@ -95,7 +97,7 @@
                 icon: 'error',
                 title: 'Error',
                 text: '{{ session('error-modal') }}',
-                confirmButtonColor: '#D9D9D9'
+                confirmButtonColor: '#00334f'
             });
         @endif
     </script>

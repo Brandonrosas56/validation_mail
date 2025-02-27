@@ -34,11 +34,6 @@
                     </select>
                 </div>
 
-                <div class="mb-2">
-                    <label for="documento_proveedor" class="block mb-1 TextColor font-bold">Documento de identidad*</label>
-                    <input type="text" name="documento_proveedor" id="documento_proveedor" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('documento_proveedor') }}">
-                </div>
-
                 <div class="mb-3">
                     <label for="tipo_documento" class="block mb-1 TextColor font-bold">Tipo de documento*</label>
                     <select name="tipo_documento" id="tipo_documento" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none">
@@ -49,6 +44,11 @@
                         <option value="TI">Tarjeta de Identidad</option>
                         <option value="NIT">Número de Identificación Tributaria</option>
                     </select>
+                </div>
+
+                <div class="mb-2">
+                    <label for="documento_proveedor" class="block mb-1 TextColor font-bold">Documento de identidad*</label>
+                    <input type="text" name="documento_proveedor" id="documento_proveedor" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('documento_proveedor') }}">
                 </div>
 
                 <div class="mb-2">

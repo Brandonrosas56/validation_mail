@@ -79,7 +79,7 @@ class CreateAccountController extends Controller
                 if (!SecopService::isValidSecopContract($documentoProveedor, $numeroContrato)) {
                     $sendValidationStatusService = new SendValidationStatusService($createAccount, SendValidationStatusService::SECOP_ERROR);
                     $sendValidationStatusService->sendTicket();
-                    return redirect()->back()->with('error', 'El contrato no está vigente según el SECOP.')->withInput();
+                    return redirect()->back()->with('error', 'Nos encontramos validando su solicitud')->withInput();
                 }
             }
 
