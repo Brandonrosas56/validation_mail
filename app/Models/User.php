@@ -41,7 +41,6 @@ class User extends Authenticatable
         'supplier_document',
         'position',
         'email',
-        'password',
         'functionary',
         'rgn_id',
         'registrar_id',

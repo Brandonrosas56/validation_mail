@@ -44,7 +44,6 @@ class DatabaseSeeder extends Seeder
         ], [
             'name' => 'CA',
             'supplier_document' => '00000001',
-            'password' => bcrypt('SenaSeguridad2025++'),
             'functionary' => 'Director de Area',
             'registrar_id' => 0,
         ]);

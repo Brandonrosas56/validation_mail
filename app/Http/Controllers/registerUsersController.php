@@ -28,7 +28,6 @@ class registerUsersController extends Controller
         $validator = Validator::make($request->all(), [
             'supplier_document' => ['string', 'unique:users'],
             'email' => ['required', 'unique:users', 'regex:/^[a-zA-Z0-9._%+-]+@sena\.edu\.co$/'],
-            'password' => ['required', 'min:8', 'confirmed', 'regex:/[A-Z]/', 'regex:/[a-z]/', 'regex:/[0-9]/', 'regex:/[@$!%*?&#]/',],
             'rgn_id' => ['required', 'exists:regional,rgn_id'],
         ]);
 
@@ -43,7 +42,6 @@ class registerUsersController extends Controller
             'name' => $request->name,
             'supplier_document' => $request->supplier_document,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
             'rgn_id' => $request->rgn_id,
             'registrar_id' => $userId,
         ]);
@@ -72,10 +70,7 @@ class registerUsersController extends Controller
             ],
             'rol' => ['required', 'exists:roles,name'],
         ];
-        // If the password field is present and not empty, add validation rules for the password
-        if ($request->filled('password')) {
-            $rules['password'] = ['required', 'string', 'min:8', 'confirmed', 'regex:/[A-Z]/', 'regex:/[a-z]/', 'regex:/[0-9]/', 'regex:/[@$!%*?&#]/',];
-        }
+
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return redirect()->back()->withErrors(($validator))->withInput();
@@ -86,9 +81,7 @@ class registerUsersController extends Controller
 
         $user->name = $request->name;
         $user->email = $request->email;
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
-        }
+
 
         $user->syncRoles([$request->rol]);
         $user->save();

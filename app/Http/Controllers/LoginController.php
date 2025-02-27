@@ -30,8 +30,7 @@ class LoginController extends Controller
 				
 				if (empty($user)){
 					$user = User::create([ 'email'=>$request->get('email'),
-                        'name' => explode('@', $request->get('email'))[0],
-                        'password' => bcrypt($request->get('password')),]
+                        'name' => explode('@', $request->get('email'))[0],]
 						);
 				 }
 				 
@@ -50,14 +49,9 @@ class LoginController extends Controller
 
                 )->first();
 
-                if ($user) {
-                    if (!Hash::check($request->get('password'), $user->password)) {
-                        return back()->withErrors(['error' => 'Invalid Credentials']);
-                    }
-                } else {
+                if ($user)  {
                     $user = User::create([
                         'name' => explode('@', $request->get('email'))[0],
-                        'password' => bcrypt($request->getPassword()),
                         'email' => $request->get('email')
                     ]);
                 }

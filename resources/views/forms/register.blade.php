@@ -45,16 +45,6 @@
                 </div>
 
                 <div class="mb-2">
-                    <x-label for="password" value="{{ __('Password') }}" class="block mb-1 TextColor font-bold" />
-                    <x-input id="password" class="block mt-1 w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 custom-border p-2 text-black" type="password" name="password" required />
-                </div>
-
-                <div class="mb-2">
-                    <x-label for="password_confirmation" value="{{ __('Confirm Password') }}" class="block mb-1 TextColor font-bold" />
-                    <x-input id="password_confirmation" class="block mt-1 w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500 custom-border p-2 text-black" type="password" name="password_confirmation" required />
-                </div>
-
-                <div class="mb-2">
                     <x-label for="rgn_id" value="{{ __('Select_regional') }}" class="block mb-1 TextColor font-bold" />
                     <x-select name="rgn_id" id="rgn_id" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none text-black">
                         <option value="">{{__('Select_regional')}}</option>
