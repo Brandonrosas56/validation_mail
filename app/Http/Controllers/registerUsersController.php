@@ -28,7 +28,7 @@ class registerUsersController extends Controller
         $validator = Validator::make($request->all(), [
             'supplier_document' => ['string', 'unique:users'],
             'email' => ['required', 'unique:users', 'regex:/^[a-zA-Z0-9._%+-]+@sena\.edu\.co$/'],
-            'password' => ['required', 'min:8', 'confirmed', 'regex:/[A-Z]/', 'regex:/[a-z]/', 'regex:/[0-9]/', 'regex:/[@$!%*?&#]/',],
+            'password' => [ 'min:8', 'confirmed', 'regex:/[A-Z]/', 'regex:/[a-z]/', 'regex:/[0-9]/', 'regex:/[@$!%*?&#]/',],
             'rgn_id' => ['required', 'exists:regional,rgn_id'],
         ]);
 

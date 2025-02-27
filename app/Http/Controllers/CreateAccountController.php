@@ -27,7 +27,7 @@ class CreateAccountController extends Controller
             $accountsQuery = CreateAccount::with('regional');
         }
 
-        $accounts = $accountsQuery->get();
+        $accounts = $accountsQuery->paginate(20);
 
         return view('tables.ShowCreateAccount', compact('accounts', 'regional'));
     }
