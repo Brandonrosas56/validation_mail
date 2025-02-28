@@ -103,7 +103,6 @@ class importController extends Controller
             if ($regionals->isEmpty()) {
                 return redirect()->back()->withErrors(['error' => 'Por favor importe primero las reginales'])->withInput()->send();
             } else {
-                $hashedPassword = bcrypt('Administrator12345*');
                 $now = Carbon::now();
                 $userId = Auth::id();
 
@@ -131,7 +130,6 @@ class importController extends Controller
                             [
                                 'name' => $rowData['name'],
                                 'position' => $rowData['position'],
-                                'password' => $hashedPassword,
                                 'rgn_id' => $rgnId,
                                 'registrar_id' => $userId,
                                 'lock' => false,
