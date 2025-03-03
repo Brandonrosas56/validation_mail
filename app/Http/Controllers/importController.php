@@ -22,7 +22,7 @@ class importController extends Controller
     {
         if ($request->hasFile('upload_file') && $request->file('upload_file')->isValid()) {
             $file = $request->file('upload_file');
-            $extension = $file->extension();
+            $extension = $file->getClientOriginalExtension();
             if ($extension !== 'csv') {
                 return redirect()->back()
                     ->withErrors(['error' => 'Este archivo tiene que ser de tipo csv'])
