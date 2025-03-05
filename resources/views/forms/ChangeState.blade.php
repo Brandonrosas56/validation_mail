@@ -6,7 +6,7 @@
 <div class="modal-overlay fixed inset-0 bg-gray-800 bg-opacity-50 hidden" id="stateModal">
     <div class="ModalColor rounded-lg w-full max-w-2xl p-6 shadow-lg max-h-[75vh] overflow-y-auto">
         <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-bold TextColor">Cambiar estado</h2>
+            <h2 class="text-lg font-bold TextColor">Cambiar estados</h2>
             <button onclick="toggleModalState()" class="text-gray-500 hover:text-gray-700 cursor-pointer">
                 <img src="{{ asset('img/cancel.png') }}" alt="Cerrar" class="h-6 w-6" />
             </button>

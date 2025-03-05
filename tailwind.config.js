@@ -40,4 +40,8 @@ export default {
     },
   },
   plugins: [forms, typography],
+  corePlugins: {
+    preflight: false, // Desactiva los estilos predeterminados de Tailwind
+  },
+
 };
