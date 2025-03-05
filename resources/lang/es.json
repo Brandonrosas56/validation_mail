@@ -62,8 +62,9 @@
     "Contractor": "Contratista",
     "change_state": "Cambiar Estado",
     "Deputy_Director": "Subdirector",
-    "Area_Director": "Director de Área",
+    "Coordinator": "Coordinador",
     "Office_Manager": "Jefe de Oficina",
     "show_user_authorization" : "Autorización de Usuarios",
-    "registerUsers" : "Registro de usuarios"
+    "registerUsers" : "Registro de usuarios",
+    "Others" : "Otros"
 }

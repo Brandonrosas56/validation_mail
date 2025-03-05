@@ -167,6 +167,7 @@ return [
         'updateDateTo' => 'fecha de actualización hasta',
         'rgn_id' => 'Regional',
         'supplier_document' => 'documento del proveedor',
+        'Select_functionary' => 'Seleccinar funcionario',
     ],
 
 ];

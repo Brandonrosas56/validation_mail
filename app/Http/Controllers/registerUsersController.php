@@ -28,7 +28,8 @@ class registerUsersController extends Controller
         $validator = Validator::make($request->all(), [
             'supplier_document' => ['string', 'unique:users'],
             'email' => ['required', 'unique:users', 'regex:/^[a-zA-Z0-9._%+-]+@sena\.edu\.co$/'],
-            'password' => [ 'min:8', 'confirmed', 'regex:/[A-Z]/', 'regex:/[a-z]/', 'regex:/[0-9]/', 'regex:/[@$!%*?&#]/',],
+            'password' => ['min:8', 'confirmed', 'regex:/[A-Z]/', 'regex:/[a-z]/', 'regex:/[0-9]/', 'regex:/[@$!%*?&#]/',],
+            'Select_functionary' => ['not_in:default'],
             'rgn_id' => ['required', 'exists:regional,rgn_id'],
         ]);
 
@@ -46,6 +47,7 @@ class registerUsersController extends Controller
             'password' => Hash::make($request->password),
             'rgn_id' => $request->rgn_id,
             'registrar_id' => $userId,
+            'position' => $request->Select_functionary,
         ]);
 
         $user->assignRole($request->rol);

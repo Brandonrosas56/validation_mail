@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('email');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
-            $table->enum('functionary',['Director','Subdirector', 'Director de Area', 'Jefe de Oficina'])->default('Director de Area');
             $table->boolean('lock')->default(false);
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();

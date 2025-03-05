@@ -53,6 +53,18 @@
                         @endforeach
                     </x-select>
                 </div>
+
+                <div class="mb-2">
+                    <x-label for="Select_functionary" value="{{ __('Select_functionary')}}" class="block mb-1 TextColor font-bold" />
+                    <x-select name="Select_functionary" id="Select_functionary" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none text-black">
+                        <option value="default">{{__('Select_functionary')}}</option>
+                        <option value="Director">{{__('Director')}}</option>
+                        <option value="Subdirector">{{__('Deputy_Director')}}</option>
+                        <option value="Coordinador">{{__('Coordinator')}}</option>
+                        <option value="Jefe de Oficina">{{__('Office_Manager')}}</option>
+                        <option value="Otros">{{__('Others')}}</option>
+                    </x-select>
+                </div>
             </div>
 
             <input id="password_confirmation" class="block mt-1 w-full" type="hidden" name="rol" value="Asistente" />
