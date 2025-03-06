@@ -54,32 +54,33 @@
 
                 <div>
                     <label for="primer_nombre" class="block mb-1 TextColor font-bold">Primer Nombre*</label>
-                    <input type="text" name="primer_nombre" id="primer_nombre" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none"value="{{ old('primer_nombre') }}"required
+                    <input type="text" name="primer_nombre" id="primer_nombre" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('primer_nombre') }}" required>
+
                 </div>
 
                 <div class="mb-2">
-                    <label for="segundo_nombre" class="block mb-1 TextColor font-bold">Segundo Nombre*</label>
-                    <input type="text" name="segundo_nombre" id="segundo_nombre" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('segundo_nombre') }}">
+                    <label for="segundo_nombre" class="block mb-1 TextColor font-bold">Segundo Nombre</label>
+                    <input type="text" name="segundo_nombre" id="segundo_nombre" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('segundo_nombre') }}"value="{{ old('primer_apellido') }}">
                 </div>
 
                 <div class="mb-2">
                     <label for="primer_apellido" class="block mb-1 TextColor font-bold">Primer Apellido*</label>
-                    <input type="text" name="primer_apellido" id="primer_apellido" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('primer_apellido') }}" required>
+                    <input type="text" name="primer_apellido" id="primer_apellido" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none"value="{{ old('primer_apellido') }}" required>
                 </div>
 
                 <div class="mb-2">
                     <label for="segundo_apellido" class="block mb-1 TextColor font-bold">Segundo Apellido*</label>
-                    <input type="text" name="segundo_apellido" id="segundo_apellido" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('segundo_apellido') }}">
+                    <input type="text" name="segundo_apellido" id="segundo_apellido" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none"value="{{ old('segundo_apellido') }}">
                 </div>
 
                 <div>
                     <label for="correo_personal" class="block mb-1 TextColor font-bold">Correo Personal*</label>
-                    <input type="email" name="correo_personal" id="correo_personal" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" required>
+                    <input type="email" name="correo_personal" id="correo_personal" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none"value="{{ old('correo_personal') }}"required>
                 </div>
 
                 <div>
                     <label for="correo_institucional" class="block mb-1 TextColor font-bold">Correo Institucional (@sena.edu.co)*</label>
-                    <input type="email" name="correo_institucional" id="correo_institucional" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" required>
+                    <input type="email" name="correo_institucional" id="correo_institucional" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none"value="{{ old('correo_institucional') }}" required>
                 </div>
 
                 <div>
@@ -94,12 +95,12 @@
 
                 <div>
                     <label for="numero_contrato" id="labelNum" class="block mb-1 TextColor font-bold">Número de Contrato*</label>
-                    <input type="text" name="numero_contrato" id="numero_contrato" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" required>
+                    <input type="text" name="numero_contrato" id="numero_contrato" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none"value="{{ old('numero_contrato') }}"required>
                 </div>
 
                 <div>
                     <label for="usuario" class="block mb-1 TextColor font-bold">Usuario</label>
-                    <input type="text" name="usuario" id="usuario" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" required>
+                    <input type="text" name="usuario" id="usuario" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none"value="{{ old('usuario') }}" required>
                 </div>
             </div>
 

@@ -102,7 +102,7 @@
                                 <td class="px-4 py-2 border-b">{{ $user->name }}</td>
                                 <td class="px-4 py-2 border-b text-center">{{ $user->supplier_document }}</td>
                                 <td class="px-4 py-2 border-b text-cente">{{$user->roles->first()->name}}</td>
-                                <td class="px-4 py-2 border-b text-center">{{ $user->functionary }}</td>
+                                <td class="px-4 py-2 border-b text-center">{{ $user->position}}</td>
                                 <td class="px-4 py-2 border-b text-center">{{ $user->lock ? 'bloqueado' : 'No bloqueado' }}</td>
                             </tr>
                             @endif

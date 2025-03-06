@@ -57,7 +57,7 @@
                 </div>
 
                 <div class="mb-2">
-                    <label for="segundo_nombre" class="block mb-1 TextColor font-bold">Segundo Nombre*</label>
+                    <label for="segundo_nombre" class="block mb-1 TextColor font-bold">Segundo Nombre</label>
                     <input type="text" name="segundo_nombre" id="segundo_nombre" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('segundo_nombre') }}">
                 </div>
 
