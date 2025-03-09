@@ -55,26 +55,26 @@ class ValidateController extends Controller
                 'segundo_nombre' => 'nullable|string|max:255',
                 'primer_apellido' => 'required|string|max:255',
                 'segundo_apellido' => 'nullable|string|max:255',
-                'correo_personal' => 'required|email|unique:validate_account,correo_personal',
-                'correo_institucional' => 'required|email|regex:/^[a-zA-Z0-9._%+-]+@sena\.edu\.co$/|unique:validate_account,correo_institucional',
+                'correo_personal' => 'required|email|',
+                'correo_institucional' => 'required|email|regex:/^[a-zA-Z0-9._%+-]+@sena\.edu\.co$/|',
                 'fecha_inicio_contrato' => 'required|date',
                 'fecha_terminacion_contrato' => 'date',
                 'numero_contrato' => 'required|string|max:255',
                 'rol_asignado' => 'required|string',
-                'usuario' => 'required|string|max:255|unique:validate_account,usuario',
+                'usuario' => 'required|string|max:255|'
             ]);
 
             $ValidateAccount = ValidateAccount::create($request->all());
             $documentoProveedor = $request->input('documento_proveedor');
-            $numeroContrato = $request->input('numero_contrato');            
-          
+            $numeroContrato = $request->input('numero_contrato');
 
-        $isContractor = $ValidateAccount->getService()->isContractor();
-        if ($isContractor && !SecopService::isValidSecopContract($documentoProveedor, $numeroContrato)) {
-        $SendValidationStatusService = new SendValidationStatusService($ValidateAccount, SendValidationStatusService::SECOP_ERROR);
-        $SendValidationStatusService->sendTicket();
-        return redirect()->back()->with('error', 'Nos encontramos validando su solicitud');
-    }
+
+            $isContractor = $ValidateAccount->getService()->isContractor();
+            if ($isContractor && !SecopService::isValidSecopContract($documentoProveedor, $numeroContrato)) {
+                $SendValidationStatusService = new SendValidationStatusService($ValidateAccount, SendValidationStatusService::SECOP_ERROR);
+                $SendValidationStatusService->sendTicket();
+                return redirect()->back()->with('error', 'Nos encontramos validando su solicitud');
+            }
             return redirect()->back()->with('success', 'Solicitud de activación creada correctamente.');
         } catch (\Throwable $th) {
             return redirect()->back()->with('error-modal', $th->getMessage())->withInput();

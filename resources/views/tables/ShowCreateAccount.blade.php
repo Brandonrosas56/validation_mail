@@ -46,7 +46,9 @@
                         <td class="px-4 py-2 border-b">{{ $account->correo_personal }}</td>
                         <td class="px-4 py-2 border-b">{{ $account->numero_contrato }}</td>
                         <td class="px-4 py-2 border-b">{{ $account->fecha_inicio_contrato }}</td>
-                        <td class="px-4 py-2 border-b">{{ $account->fecha_terminacion_contrato !== '1000-01-01' ? $account->fecha_terminacion_contrato : ''}}</td>
+                        <td class="px-4 py-2 border-b">
+                            {{ $account->fecha_terminacion_contrato !== '1000-01-01' ? $account->fecha_terminacion_contrato : ''}}
+                        </td>
                         <td class="px-4 py-2 border-b" style="text-transform: capitalize;">{{ $account->estado }}</td>
                         <td class="px-4 py-2 border-b "> <button class=" bg-blue-500 p-2 rounded-md text-white"
                                 onclick="toggleModalState({{ $account->id }},{{ CreateAccount::CREATE_ACCOUNT }})"><i
@@ -69,23 +71,23 @@
                 icon: 'success',
                 title: 'Éxito',
                 text: '{{ session('success') }}',
-                confirmButtonColor:'#00334f'
+                confirmButtonColor: '#00334f'
             });
-            });
+
         @elseif(session('error'))
             Swal.fire({
-                icon: 'error',
-                title: 'Error',
+                icon: 'warning',
+                title: 'Alerta',
                 text: '{{ session('error') }}',
-                confirmButtonColor:'#00334f'
+                confirmButtonColor: '#00334f'
             });
         @elseif(session('error-modal'))
             toggleModal();
             Swal.fire({
-                icon: 'error',
-                title: 'Error',
+                icon: 'warniing',
+                title: 'Alerta',
                 text: '{{ session('error-modal') }}',
-                confirmButtonColor:'#00334f'
+                confirmButtonColor: '#00334f'
             });
 
         @endif

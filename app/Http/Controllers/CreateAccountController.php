@@ -46,7 +46,7 @@ class CreateAccountController extends Controller
             }
             $userId = Auth::id();
             $request->merge(['user_id' => $userId]);
-            
+
 
             // Validación base
             $rules = [
@@ -57,20 +57,20 @@ class CreateAccountController extends Controller
                 'segundo_apellido' => 'nullable|string|max:255',
                 'documento_proveedor' => 'required|string|max:255',
                 'tipo_documento' => 'required|string|max:50',
-                'correo_personal' => 'required|email|unique:create_account,correo_personal',
+                'correo_personal' => 'required|email|',
                 'rol_asignado' => 'required|string|in:Funcionario,Contratista',
                 'user_id' => 'required|exists:users,id',
                 'numero_contrato' => 'required|string|max:255',
                 'fecha_inicio_contrato' => 'required|date',
                 'fecha_terminacion_contrato' => 'date',
             ];
-            
+
             $request->validate($rules);
             $requestData = $request->except('operation');
             //dd($requestData);
             // Crear cuenta
             $createAccount = CreateAccount::create($requestData);
-            
+
 
             if ($request->rol_asignado === 'Contratista') {
                 $documentoProveedor = $request->input('documento_proveedor');
@@ -82,18 +82,9 @@ class CreateAccountController extends Controller
                     return redirect()->back()->with('error', 'Nos encontramos validando su solicitud')->withInput();
                 }
             }
-
-            
-
-            // Enviar validación de estado
-            $sendValidationStatusService = new SendValidationStatusService($createAccount, SendValidationStatusService::SECOP_ERROR);
-            $sendValidationStatusService->sendTicket();
-            
-
-            return redirect()->back()->with('success', 'Solicitud creada correctamente.');
+            return redirect()->back()->with('success', 'Solicitud de activación creada correctamente.');
         } catch (\Throwable $th) {
-            \Log::error('Error al crear cuenta: ' . $th->getMessage());
-            return redirect()->back()->with('error-modal', 'Ocurrió un error. Inténtelo de nuevo.' . $th->getMessage())->withInput();
+            return redirect()->back()->with('error-modal', $th->getMessage())->withInput();
         }
     }
 }

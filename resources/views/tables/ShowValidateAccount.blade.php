@@ -86,16 +86,16 @@
             });
         @elseif(session('error'))
             Swal.fire({
-                icon: 'error',
-                title: 'Error',
+                icon: 'Warning',
+                title: 'Alerta',
                 text: '{{ session('error') }}',
                 confirmButtonColor: '#00334f'
             });
         @elseif(session('error-modal'))
             toggleActivationModal();
             Swal.fire({
-                icon: 'error',
-                title: 'Error',
+                icon: 'Warning',
+                title: 'Alerta',
                 text: '{{ session('error-modal') }}',
                 confirmButtonColor: '#00334f'
             });
