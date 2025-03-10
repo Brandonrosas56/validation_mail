@@ -9,7 +9,7 @@
 
         @php
             $permissionsImport = auth()->user()->hasRole('Super_admin') || auth()->user()->hasRole('Admin');
-            $permissionsAcces = auth()->user()->hasRole('Super_admin') || auth()->user()->hasRole('Admin');
+            $permissionsAcces = auth()->user()->hasRole('Super_admin');
         @endphp
 
         <!-- Menú principal -->
