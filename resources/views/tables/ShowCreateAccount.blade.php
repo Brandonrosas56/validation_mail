@@ -8,14 +8,15 @@
         Lista de Solicitudes
     </x-slot>
 
-    <!-- Redondeamos solo el contenedor -->
+    <!-- Contenedor principal -->
     <div class="overflow-x-auto max-w-7xl mx-auto mt-10 rounded-lg">
         @include('forms.CreateAccount')
         <div class="mt-4 mb-4">
             <button onclick="toggleModal()" class="color text-white py-2 px-4 rounded-lg">Crear Cuenta</button>
         </div>
 
-        <table class="min-w-full bg-white  shadow-md">
+        <!-- Tabla de solicitudes -->
+        <table class="min-w-full bg-white shadow-md">
             <thead>
                 <tr class="bg-gray-100 text-gray-700 text-sm">
                     <th class="px-4 py-2 border-b">#</th>
@@ -47,17 +48,32 @@
                         <td class="px-4 py-2 border-b">{{ $account->numero_contrato }}</td>
                         <td class="px-4 py-2 border-b">{{ $account->fecha_inicio_contrato }}</td>
                         <td class="px-4 py-2 border-b">
-                            {{ $account->fecha_terminacion_contrato !== '1000-01-01' ? $account->fecha_terminacion_contrato : ''}}
+                            {{ $account->fecha_terminacion_contrato !== '1000-01-01' ? $account->fecha_terminacion_contrato : '' }}
                         </td>
-                        <td class="px-4 py-2 border-b" style="text-transform: capitalize;">{{ $account->estado }}</td>
-                        <td class="px-4 py-2 border-b "> <button class=" bg-blue-500 p-2 rounded-md text-white"
-                                onclick="toggleModalState({{ $account->id }},{{ CreateAccount::CREATE_ACCOUNT }})"><i
-                                    class="fa fa-edit "></i></button></td>
+                        <td class="px-4 py-2 border-b">
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-3 rounded-full 
+                                    @if ($account->estado === 'pendiente') bg-yellow-500 
+                                    @elseif ($account->estado === 'fallido' || $account->estado === 'rechazado') bg-red-500 
+                                    @elseif ($account->estado === 'exitoso') bg-green-500 
+                                    @else bg-gray-400 @endif">
+                                </span>
+                                <span class="text-gray-700 text-sm">{{ $account->estado }}</span>
+                            </div>
+                        </td>
+                        <td class="px-4 py-2 border-b">
+                            <button class="bg-blue-500 p-2 rounded-md text-white"
+                                onclick="toggleModalState({{ $account->id }}, {{ CreateAccount::CREATE_ACCOUNT }})">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
-        <div class="mt-4 flex juntify-center w-full">
+
+        <!-- Paginación -->
+        <div class="mt-4 flex justify-center w-full">
             {{ $accounts->links() }}
         </div>
     </div>
@@ -73,7 +89,6 @@
                 text: '{{ session('success') }}',
                 confirmButtonColor: '#00334f'
             });
-
         @elseif(session('error'))
             Swal.fire({
                 icon: 'warning',
@@ -89,9 +104,6 @@
                 text: '{{ session('error-modal') }}',
                 confirmButtonColor: '#00334f'
             });
-
         @endif
     </script>
-
-
 </x-app-layout>
