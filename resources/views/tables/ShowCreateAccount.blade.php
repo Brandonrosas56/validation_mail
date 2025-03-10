@@ -84,7 +84,7 @@
         @elseif(session('error-modal'))
             toggleModal();
             Swal.fire({
-                icon: 'warniing',
+                icon: 'warning',
                 title: 'Alerta',
                 text: '{{ session('error-modal') }}',
                 confirmButtonColor: '#00334f'

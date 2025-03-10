@@ -55,7 +55,7 @@ class CreateAccountController extends Controller
                 'segundo_nombre' => 'nullable|string|max:255',
                 'primer_apellido' => 'required|string|max:255',
                 'segundo_apellido' => 'nullable|string|max:255',
-                'documento_proveedor' => 'required|string|max:255',
+                'documento_proveedor' => 'required|string|max:255|unique:create_account,documento_proveedor',
                 'tipo_documento' => 'required|string|max:50',
                 'correo_personal' => 'required|email|',
                 'rol_asignado' => 'required|string|in:Funcionario,Contratista',

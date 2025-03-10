@@ -49,7 +49,7 @@ class ValidateController extends Controller
             $request->merge(['user_id' => Auth::id()]);
             $request->validate([
                 'rgn_id' => 'required|exists:regional,rgn_id',
-                'documento_proveedor' => 'required|string',
+                'documento_proveedor' => 'required|string|unique:validate_account,documento_proveedor',
                 'tipo_documento' => 'required|string',
                 'primer_nombre' => 'required|string|max:255',
                 'segundo_nombre' => 'nullable|string|max:255',
