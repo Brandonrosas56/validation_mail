@@ -20,11 +20,10 @@
                 </x-nav-link>
 
                 @if($permissionsAcces)
-                @if ($permissionsImport)
-                <x-nav-link href="{{ route('show-import') }}" :active="request()->routeIs('show-import')" class="no-underline">
+                <x-nav-link href="{{ route('show-import') }}" :active="request()->routeIs('show-import')" class="no-underline" @if ($permissionsImport) style="display:none" @endif>
                     {{ __('show-import') }}
                 </x-nav-link>
-                @endif
+                
                 <x-nav-link href="{{ route('show_role_functionary') }}" :active="request()->routeIs('show_role_functionary')" class="no-underline">
                     {{ __('show_role_functionary') }}
                 </x-nav-link>

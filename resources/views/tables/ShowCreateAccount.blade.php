@@ -1,6 +1,6 @@
 @php
 use App\Models\CreateAccount;
-$permissionSuperAdmin = auth()->user()->hasRoles('Super_admin');
+$permissionSuperAdmin = auth()->user()->hasRole('Super_admin');
 @endphp
 
 <x-app-layout>
