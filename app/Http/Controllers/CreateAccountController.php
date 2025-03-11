@@ -49,7 +49,6 @@ class CreateAccountController extends Controller
         $userId = Auth::id();
         $request->merge(['user_id' => $userId]);
 
-        // ✅ Comprobar si el documento ya existe en estado Rechazado o Exitoso
         $existingRequest = CreateAccount::where('documento_proveedor', $request->documento_proveedor)
             ->whereIn('estado', ['rechazado', 'exitoso'])
             ->exists();
@@ -58,14 +57,13 @@ class CreateAccountController extends Controller
             return redirect()->back()->withErrors(['error' => 'Ya existe una solicitud con este documento en estado Rechazado o Exitoso. No puedes crear otra.'])->withInput();
         }
 
-        // ✅ Validación del formulario
         $request->validate([
             'rgn_id' => 'required|exists:regional,rgn_id',
             'primer_nombre' => 'required|string|max:255',
             'segundo_nombre' => 'nullable|string|max:255',
             'primer_apellido' => 'required|string|max:255',
             'segundo_apellido' => 'nullable|string|max:255',
-            'documento_proveedor' => 'required|string|max:255', // Eliminamos Rule::unique porque ya validamos arriba
+            'documento_proveedor' => 'required|string|max:255', 
             'tipo_documento' => 'required|string|max:50',
             'correo_personal' => 'required|email',
             'rol_asignado' => 'required|string|in:Funcionario,Contratista',

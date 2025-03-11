@@ -1,4 +1,3 @@
-<!-- Modal -->
 <div class="modal-overlay fixed inset-0 bg-gray-800 bg-opacity-50 hidden" id="userModal">
     <div class="ModalColor rounded-lg w-full max-w-2xl p-6 shadow-lg max-h-[75vh] overflow-y-auto">
         <div class="flex justify-between items-center mb-4">
@@ -9,8 +8,8 @@
         </div>
         <form method="POST" action="{{ route('create-account.store') }}" id="formUser">
             @csrf
-            <x-validation-errors class="mb-4" />
-            <input type="hidden" id="operation" name="operation" value="add">
+
+            <input type="hidden" id="operation" name="operation" value="add"></input>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="mb-2">
@@ -105,7 +104,6 @@
     </div>
 </div>
 
-<!-- Modal toggle logic -->
 <script>
     function toggleModal() {
         const modal = document.getElementById('userModal');
@@ -125,25 +123,23 @@
             divTermination.style.display = 'none'
         }
     }
-    document.addEventListener('DOMContentLoaded', function() {
-        // Capturar errores de validación de Laravel
-        const errors = @json($errors->all());
 
-        // Capturar mensaje flash de error general
+    document.addEventListener('DOMContentLoaded', function() {
+        const errors = @json($errors->all());
         const errorMessage = "{{ session('error') }}";
 
         if (errors.length > 0) {
             Swal.fire({
                 icon: "warning",
                 title: "Aviso",
-                html: errors.map(error => `• ${error}`).join("<br>"), // Mostrar errores en lista
+                html: errors.map(error => `• ${error}`).join("<br>"), 
                 confirmButtonColor: "#04324D"
             });
         } else if (errorMessage) {
             Swal.fire({
                 icon: "warning",
                 title: "Aviso",
-                text: errorMessage, // Mostrar mensaje flash
+                text: errorMessage, 
                 confirmButtonColor: "#04324D"
             });
         }

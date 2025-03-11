@@ -149,7 +149,7 @@
 </div>
 
 <script>
-    // Función para alternar la visibilidad del modal
+
     function toggleActivationModal() {
         const modal = document.getElementById('activationModal');
         modal.classList.toggle('active'); // Alterna la clase 'active' para mostrar/ocultar el modal
@@ -174,20 +174,25 @@
             divTermination.style.display = 'none'
         }
         document.addEventListener('DOMContentLoaded', function() {
-        // Capturar errores de validación de Laravel
-        const errors = @json($errors->all());
+        const errors = @json(value: $errors->all());
 
-        // Capturar mensaje flash de error general
         const errorMessage = "{{ session('error') }}";
 
+        if (errors.length > 0) {
+            Swal.fire({
+                icon: "warning",
+                title: "Aviso",
+                html: errors.map(error => `• ${error}`).join("<br>"), 
+                confirmButtonColor: "#04324D"
+            });
         } else if (errorMessage) {
             Swal.fire({
                 icon: "warning",
                 title: "Aviso",
-                text: errorMessage, // Mostrar mensaje flash
+                text: errorMessage, 
                 confirmButtonColor: "#04324D"
             });
         }
     });
-    
+    }
 </script>
