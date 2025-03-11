@@ -20,55 +20,50 @@ class LoginController extends Controller
         ]);
 
         try {
-            $LdapService = new LdapService();
-            if ($LdapService->autenticarUsuario($request->get('email'), $request->get('password'))) {
-                // Encuentra o crea un usuario en la BD
-                $user = User::where(
-                        'email',
-						$request->get('email'),
-                )->first();
-				
-				if (empty($user)){
-					$user = User::create([ 'email'=>$request->get('email'),
-                        'name' => explode('@', $request->get('email'))[0],
-                        'password' => bcrypt($request->get('password')),]
-						);
-				 }
-				 
-				$user->load('roles');
-                Auth::login($user);
-            } else {
-                throw new Exception("No se logro autenticar en el Directorio Activo", 1);
-            }
-
-            return redirect()->intended('dashboard');
-        } catch (Exception $e) {
-            if (trim($e->getMessage()) === "Can't contact LDAP server") {
-                $user = User::where(
-                    'email',
-                    $request->get('email'),
-
-                )->first();
-
-
-                if ($user) {
-                    if (!Hash::check($request->get('password'), $user->password)) {
-                        return back()->withErrors(['error' => 'Invalid Credentials']);
-                    }
-                } else {
-                    $user = User::create([
-                        'name' => explode('@', $request->get('email'))[0],
-                        'password' => bcrypt($request->get('password')),
-                        'email' => $request->get('email')
-                    ]);
-                }
+            $ldapService = new LdapService();
             
-                $user->load('roles');
-                Auth::login($user);
+            // Intentar autenticar con LDAP
+            if ($ldapService->autenticarUsuario($request->get('email'), $request->get('password'))) {
+                // Buscar usuario en la base de datos
+                $user = User::where('email', $request->get('email'))->first();
 
+                if (!$user) {
+                    return back()->withErrors(['error' => 'No tienes permisos para acceder']);
+                }
+
+                // Si el usuario existe pero no tiene roles asignados, bloquear el acceso
+                if ($user->roles->isEmpty()) {
+                    return back()->withErrors(['error' => 'No tienes permisos para acceder']);
+                }
+
+                // Si pasa todas las validaciones, iniciar sesión
+                Auth::login($user);
+                return redirect()->intended('dashboard');
+            } else {
+                throw new Exception("No se logró autenticar en el Directorio Activo");
+            }
+        } catch (Exception $e) {
+            // Manejo de error si LDAP no responde
+            if (trim($e->getMessage()) === "Can't contact LDAP server") {
+                $user = User::where('email', $request->get('email'))->first();
+
+                if (!$user) {
+                    return back()->withErrors(['error' => 'No tienes permisos para acceder']);
+                }
+
+                if ($user->roles->isEmpty()) {
+                    return back()->withErrors(['error' => 'No tienes permisos para acceder']);
+                }
+
+                if (!Hash::check($request->get('password'), $user->password)) {
+                    return back()->withErrors(['error' => 'Credenciales inválidas']);
+                }
+
+                Auth::login($user);
                 return redirect()->intended('dashboard');
             }
             return back()->withErrors(['error' => $e->getMessage()]);
         }
     }
 }
+

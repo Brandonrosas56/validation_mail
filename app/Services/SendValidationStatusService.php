@@ -14,9 +14,6 @@ class SendValidationStatusService
 {
     private const TEMPLATE_SUCCESS = 'success';
     const SECOP_ERROR = 'SECOP_ERROR';
-    const NEMOTECNIA_ERROR = 'ERRRO_NEMOTECNIA';
-
-    const NEMOTECNIA_ERROR_FUN = 'NEMOTECNIA_ERROR_FUN';
     const RECJECTED_ERROR = 'RECJECTED_ERROR';
     const VALIDATION_SUCCESS = 'VALIDATION_OK';
     private Createaccount|ValidateAccount $account;
@@ -44,16 +41,6 @@ class SendValidationStatusService
                 Log::error(json_encode($response));
                 $ticketInfo = $this->GLPIService->getTicketInfo($response['id']);
                 AccountTicketService::create($this->account, $ticketInfo);
-                break;
-            case self::NEMOTECNIA_ERROR:
-                $template = $this->contractor ? $this->nemotecniaTemplateContractor() : $this->nemotecniaTemplaFun();
-                $response = $this->GLPIService->createTicket($template);
-                $ticketInfo = $this->GLPIService->getTicketInfo($response['id']);
-                AccountTicketService::create($this->account, $ticketInfo);
-                break;
-            case self::NEMOTECNIA_ERROR_FUN:
-                // Usar la plantilla nemotecniaTemplateContractor
-                $this->GLPIService->createTicket($this->nemotecniaTemplaFun());
                 break;
         }
     }
