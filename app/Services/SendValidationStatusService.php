@@ -60,115 +60,69 @@ class SendValidationStatusService
 
     private function successTemplate(): array
     {
+        $user = auth()->user(); // Obtiene el usuario logueado
+        $userEmail = $user->email; // Correo del usuario
+        $userDocumentNumber = $user->supplier_document; // Número de documento del usuario
+        
         return [
             'input' => [
-                'name' => "Caso por Nemotecnia - Contratista (Fallido)",
+                'name' => "Caso pendiente validacion SECOP",
                 'content' => "
-                        *Datos del Usuario:*
-                        * *Regional:* {$this->account->rgn_id}
-                        * *Primer Nombre:* {$this->account->primer_nombre}
-                        * *Segundo Nombre:* {$this->account->segundo_nombre}
-                        * *Primer Apellido:* {$this->account->primer_apellido}
-                        * *Segundo Apellido:* {$this->account->segundo_apellido}
-                        * *Usuario:* {$this->account->usuario}
-                    ",
-                'type' => 1,
-                'status' => 1,
-                'urgency' => 4,
-                'impact' => 3,
-                'requesttypes_id' => 1,
-                'groups_id' => 5, // ID del grupo asignado
-                'users_id_assign' => 10, // ID del técnico asignado
-
+                    *Datos del Usuario:*
+                    * *Regional:* {$this->account->rgn_id}
+                    * *Primer Nombre:* {$this->account->primer_nombre}
+                    * *Segundo Nombre:* {$this->account->segundo_nombre}
+                    * *Primer Apellido:* {$this->account->primer_apellido}
+                    * *Segundo Apellido:* {$this->account->segundo_apellido}
+                    * *Usuario:* {$this->account->usuario}
+        
+                    *Datos del Solicitante:*
+                    * *Correo del Solicitante:* {$userEmail}
+                    * *Número de Documento:* {$userDocumentNumber}
+                ",
+                'type' => 1, // Tipo de ticket (1 = Incidente, 2 = Requerimiento, etc.)
+                'status' => 1, // Estado del ticket (1 = Nuevo)
+                'urgency' => 4, // Urgencia (4 = Media)
+                'impact' => 3, // Impacto (3 = Medio)
+                'requesttypes_id' => 1, // Tipo de solicitud (1 = Manual/API)
+                'groups_id' => $user->glpi_group_id, // Asignar dinámicamente el grupo
+                'users_id_assign' => $user->glpi_user_id, // Asignar dinámicamente el usuario en GLPI
+       
             ]
         ];
-    }
-
-    private function nemotecniaTemplateContractor(): array
-    {
-        return [
-            'input' => [
-                'name' => "Caso por Nemotecnia - Contratista (Fallido)",
-                'content' => "
-                        *Datos del Usuario:*
-                        * *Regional:* {$this->account->rgn_id}
-                        * *Primer Nombre:* {$this->account->primer_nombre}
-                        * *Segundo Nombre:* {$this->account->segundo_nombre}
-                        * *Primer Apellido:* {$this->account->primer_apellido}
-                        * *Segundo Apellido:* {$this->account->segundo_apellido}
-                        * *Correo Personal:* {$this->account->correo_personal}
-                        * *Correo Electrónico Institucional:* {$this->account->correo_institucional}
-                        * *Número de Contrato SECOP II:* {$this->account->numero_contrato}
-                        * *Fecha de Inicio del Contrato:* {$this->account->fecha_inicio_contrato}
-                        * *Fecha de Terminación del Contrato:* {$this->account->fecha_terminacion_contrato}
-                        * *Usuario:* {$this->account->usuario}
-                    ",
-                'type' => 1,
-                'status' => 1,
-                'urgency' => 4,
-                'impact' => 3,
-                'requesttypes_id' => 1,
-                'groups_id' => 5, // ID del grupo asignado
-                'users_id_assign' => 10, // ID del técnico asignado
-
-            ]
-        ];
-
-    }
-    private function nemotecniaTemplaFun(): array
-    {
-        return [
-            'input' => [
-                'name' => "Caso por Nemotecnia - Funcionario (Fallido)",
-                'content' => "
-                        *Datos del Usuario:*
-                        * *Regional:* {$this->account->rgn_id}
-                        * *Primer Nombre:* {$this->account->primer_nombre}
-                        * *Segundo Nombre:* {$this->account->segundo_nombre}
-                        * *Primer Apellido:* {$this->account->primer_apellido}
-                        * *Segundo Apellido:* {$this->account->segundo_apellido}
-                        * *Correo Personal:* {$this->account->correo_personal}
-                        * *Correo Electrónico Institucional:* {$this->account->correo_institucional}
-                        * *Número de Contrato SECOP II:* {$this->account->numero_contrato}
-                        * *Fecha de Inicio del Contrato:* {$this->account->fecha_inicio_contrato}
-                        * *Fecha de Terminación del Contrato:* {$this->account->fecha_terminacion_contrato}
-                        * *Usuario:* {$this->account->usuario}
-                    ",
-                'type' => 1,
-                'status' => 1,
-                'urgency' => 4,
-                'impact' => 3,
-                'requesttypes_id' => 1,
-                'groups_id' => 5, // ID del grupo asignado
-                'users_id_assign' => 10, // ID del técnico asignado
-
-            ]
-        ];
-    }
+}
+    
     private function secopTemplate(): array
     {
+        $user = auth()->user(); // Obtiene el usuario logueado
+        $userEmail = $user->email; // Correo del usuario
+        $userDocumentNumber = $user->supplier_document; // Número de documento del usuario
+        
         return [
             'input' => [
-                'name' => "Caso por SECOP RECHAZADO",
+                'name' => "Caso por rechazo SECOP",
                 'content' => "
-                            *Datos del Usuario:*
-                            * *Regional:* {$this->account->rgn_id}
-                            * *Primer Nombre:* {$this->account->primer_nombre}
-                            * *Segundo Nombre:* {$this->account->segundo_nombre}
-                            * *Primer Apellido:* {$this->account->primer_apellido}
-                            * *Segundo Apellido:* {$this->account->segundo_apellido}
-                            * *Usuario:* {$this->account->usuario}
-                        ",
-                'type' => 1,
-                'status' => 1,
-                'urgency' => 4,
-                'impact' => 3,
-                'requesttypes_id' => 1,
-                'groups_id' => 5, // ID del grupo asignado
-                'users_id_assign' => 10, // ID del técnico asignado
-
+                    *Datos del Usuario:*
+                    * *Regional:* {$this->account->rgn_id}
+                    * *Primer Nombre:* {$this->account->primer_nombre}
+                    * *Segundo Nombre:* {$this->account->segundo_nombre}
+                    * *Primer Apellido:* {$this->account->primer_apellido}
+                    * *Segundo Apellido:* {$this->account->segundo_apellido}
+                    * *Usuario:* {$this->account->usuario}
+        
+                    *Datos del Solicitante:*
+                    * *Correo del Solicitante:* {$userEmail}
+                    * *Número de Documento:* {$userDocumentNumber}
+                ",
+                'type' => 1, // Tipo de ticket (1 = Incidente, 2 = Requerimiento, etc.)
+                'status' => 1, // Estado del ticket (1 = Nuevo)
+                'urgency' => 4, // Urgencia (4 = Media)
+                'impact' => 3, // Impacto (3 = Medio)
+                'requesttypes_id' => 1, // Tipo de solicitud (1 = Manual/API)
+                'groups_id' => $user->glpi_group_id, // Asignar dinámicamente el grupo
+                'users_id_assign' => $user->glpi_user_id, // Asignar dinámicamente el usuario en GLPI
+       
             ]
         ];
-
-    }
+}
 }

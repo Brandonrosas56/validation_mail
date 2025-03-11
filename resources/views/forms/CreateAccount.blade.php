@@ -43,13 +43,17 @@
                         <option value="NIT">Número de Identificación Tributaria</option>
                     </select>
                 </div>
-
-
-                <div class="mb-2">
-                    <label for="documento_proveedor" class="block mb-1 TextColor font-bold">Documento de identidad*</label>
-                    <input type="text" name="documento_proveedor" id="documento_proveedor" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('documento_proveedor') }}">
+                <div>
+                    <label for="documento_proveedor" class="block mb-1 TextColor font-bold">Documento de
+                        identidad*</label>
+                    <input type="text" name="documento_proveedor" id="documento_proveedor"
+                        class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none">
+                    @if ($errors->has('documento_proveedor'))
+                        <div class="text-red-500 text-sm mt-1">
+                            {{ $errors->first('documento_proveedor') }}
+                        </div>
+                    @endif
                 </div>
-
             
                 <div class="mb-2">
                     <label for="primer_nombre" class="block mb-1 TextColor font-bold">Primer Nombre*</label>
@@ -121,4 +125,27 @@
             divTermination.style.display = 'none'
         }
     }
+    document.addEventListener('DOMContentLoaded', function() {
+        // Capturar errores de validación de Laravel
+        const errors = @json($errors->all());
+
+        // Capturar mensaje flash de error general
+        const errorMessage = "{{ session('error') }}";
+
+        if (errors.length > 0) {
+            Swal.fire({
+                icon: "warning",
+                title: "Aviso",
+                html: errors.map(error => `• ${error}`).join("<br>"), // Mostrar errores en lista
+                confirmButtonColor: "#04324D"
+            });
+        } else if (errorMessage) {
+            Swal.fire({
+                icon: "warning",
+                title: "Aviso",
+                text: errorMessage, // Mostrar mensaje flash
+                confirmButtonColor: "#04324D"
+            });
+        }
+    });
 </script>
