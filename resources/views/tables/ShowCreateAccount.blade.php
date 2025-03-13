@@ -85,33 +85,33 @@ $permissionSuperAdmin = auth()->user()->hasRole('Super_admin');
 
     @include('forms.ChangeState')
 
+    {{ session('error')}}
+
     <script>
         // Verificar si hay mensajes de éxito o error
+        console.log('{{ session('error') }}');
         @if(session('success'))
-        Swal.fire({
-            icon: 'success',
-            title: 'Éxito',
-            text: '{{ session('
-            success ') }}',
-            confirmButtonColor: '#00334f'
-        });
+            Swal.fire({
+                icon: 'success',
+                title: 'Éxito',
+                text: '{{ session('success') }}',
+                confirmButtonColor: '#00334f'
+            });
         @elseif(session('error'))
-        Swal.fire({
-            icon: 'warning',
-            title: 'Alerta',
-            text: '{{ session('
-            error ') }}',
-            confirmButtonColor: '#00334f'
-        });
+            Swal.fire({
+                icon: 'warning',
+                title: 'Alerta',
+                text: '{{ session('error') }}',
+                confirmButtonColor: '#00334f'
+            });
         @elseif(session('error-modal'))
-        toggleModal();
-        Swal.fire({
-            icon: 'warning',
-            title: 'Alerta',
-            text: '{{ session('
-            error - modal ') }}',
-            confirmButtonColor: '#00334f'
-        });
+            toggleActivationModal();
+            Swal.fire({
+                icon: 'warning',
+                title: 'Alerta',
+                text: '{{ session('error-modal') }}',
+                confirmButtonColor: '#00334f'
+            });
         @endif
     </script>
 </x-app-layout>
