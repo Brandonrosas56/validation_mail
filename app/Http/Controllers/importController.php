@@ -101,7 +101,7 @@ class importController extends Controller
             $regionals = Regional::all('rgn_id', 'rgn_nombre');
 
             if ($regionals->isEmpty()) {
-                return redirect()->back()->withErrors(['error' => 'Por favor importe primero las reginales'])->withInput()->send();
+                return redirect()->back()->withErrors(['error' => 'Por favor importe primero las regionales'])->withInput()->send();
             } else {
                 $now = Carbon::now();
                 $userId = Auth::id();

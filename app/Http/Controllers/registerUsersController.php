@@ -51,7 +51,7 @@ class registerUsersController extends Controller
         ]);
 
         $user->assignRole($request->rol);
-        return redirect()->route('show_user_authorization')->with('success', '¡Datos guardados correctamente!');
+        return redirect()->route('show_user_authorization')->with('success', 'El nuevo usuario ha sido creado con éxito.');
     }
 
 

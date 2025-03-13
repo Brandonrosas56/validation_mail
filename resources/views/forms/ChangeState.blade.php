@@ -13,7 +13,6 @@
         </div>
         <form method="POST" action="{{ route('change.store') }}" id="formState">
             @csrf
-            <x-validation-errors class="mb-4" />
             <input type="hidden" id="operation" name="operation" value="add">
 
             <div class="grid grid-cols-1 md:grid-cols-1 gap-4 text-center">
@@ -31,7 +30,6 @@
                     <input type="hidden" name="account_id" id="account_id" class="hidden" value="" required>
                     <input type="hidden" name="type" id="type" class="hidden" value="" required>
                 </div>
-
             </div>
             <div class="mt-4 flex justify-center w-full mb-3">
                 <button type="button" class="ButtonColor text-white font-bold py-2 px-4 rounded w-40"
@@ -43,25 +41,20 @@
     </div>
 </div>
 
-<!-- Modal toggle logic -->
+<!-- SweetAlert exclusivo para este modal -->
 <script>
-    function toggleModalState(id,type) {
+    function toggleModalState(id, type) {
         const modal = document.getElementById('stateModal');
         modal.classList.toggle('active');
         if (id) {
-            const field_id = document.getElementById('account_id');
-            const field_type = document.getElementById('type');
-            field_id.value = id;
-            field_type.value = type;
+            document.getElementById('account_id').value = id;
+            document.getElementById('type').value = type;
         }
     }
-    
 
-    const changeButton = document.getElementById('change_button');
-    const select = document.getElementById('state');
-
-    changeButton.addEventListener('click', function (event) {
+    document.getElementById('change_button').addEventListener('click', function (event) {
         event.preventDefault();
+        const select = document.getElementById('state');
 
         Swal.fire({
             title: `¿Está seguro de que desea cambiar el estado a <strong>${select.options[select.selectedIndex].text}</strong>?`,
@@ -76,5 +69,26 @@
                 document.getElementById('formState').submit();
             }
         });
+    });
+
+    // Mostrar alertas solo en este modal
+    document.addEventListener('DOMContentLoaded', function () {
+        @if(session('state_success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Éxito',
+                text: '{{ session('state_success') }}',
+                confirmButtonText: 'Aceptar'
+            });
+        @endif
+
+        @if(session('state_error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: '{{ session('state_error') }}',
+                confirmButtonText: 'Aceptar'
+            });
+        @endif
     });
 </script>

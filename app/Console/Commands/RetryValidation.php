@@ -2,14 +2,13 @@
 
 namespace App\Console\Commands;
 
-use App\Models\User;
-use Faker\Factory as Faker;
 use App\Models\CreateAccount;
-use App\Services\SecopService;
 use App\Models\ValidateAccount;
-use Illuminate\Console\Command;
+use App\Services\SecopService;
 use App\Services\SendValidationStatusService;
-
+use Illuminate\Console\Command;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 class RetryValidation extends Command
 {
     /**
@@ -24,41 +23,30 @@ class RetryValidation extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+     protected $description = 'Reintenta la validación de contratos en SECOP dentro de las 48 horas';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        $this->verifyCreatedAccounts();
-        $this->verifyValidatedAccounts();
+        $this->verifyAccounts(CreateAccount::class);
+        $this->verifyAccounts(ValidateAccount::class);
     }
 
-    private function verifyCreatedAccounts(): bool
+    private function verifyAccounts(string $modelClass): void
     {
-        $CreateAccounts = CreateAccount::where('intentos_validacion', '>', 0)->get();
-        foreach ($CreateAccounts as $CreateAccount) {
-            if (!SecopService::isValidSecopContract($CreateAccount->documento_proveedor, $CreateAccount->numero_contrato)) {
-                $CreateAccount->getService()->failureValidation();
-                if ($CreateAccount->intentos_validacion == 0) {
-                    $CreateAccount->getService()->changeStatus(CreateAccount::REVISION);
+        $accounts = $modelClass::where('intentos_validacion', '>', 0)->get();
+        foreach ($accounts as $account) {
+            if (!SecopService::isValidSecopContract($account->documento_proveedor, $account->numero_contrato)) {
+                $account->intentos_validacion -= 1;
+                $account->save();
+                
+                if ($account->intentos_validacion == 0 || ($account->pending_sent_at && Carbon::parse($account->pending_sent_at)->diffInHours(now()) >= 48)) {
+                    (new SendValidationStatusService($account, SendValidationStatusService::TEMPLATE_REJECTED))->sendTicket();
+                    Log::info("Plantilla de rechazo enviada después de 48 horas para la cuenta ID: {$account->id}");
                 }
             }
         }
-        return true;
-    }
-    private function verifyValidatedAccounts(): bool
-    {
-        $ValidateAccounts = ValidateAccount::where('intentos_validacion', '>', 0)->get();
-        foreach ($ValidateAccounts as $ValidateAccount) {
-            if (!SecopService::isValidSecopContract($ValidateAccount->documento_proveedor, $ValidateAccount->numero_contrato)) {
-                $ValidateAccount->getService()->failureValidation();
-                if ($ValidateAccount->intentos_validacion == 0) {
-                    $ValidateAccount->getService()->changeStatus(CreateAccount::REVISION);
-                }
-            }
-        }
-        return true;
     }
 }

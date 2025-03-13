@@ -2,114 +2,111 @@
 
 namespace App\Services;
 
-use App\Models\account;
-use GuzzleHttp\Client;
 use App\Models\AccountTicket;
 use App\Models\CreateAccount;
 use App\Models\ValidateAccount;
+use App\Services\GLPIService;
 use Illuminate\Support\Facades\Log;
-use GuzzleHttp\Exception\RequestException;
+use Illuminate\Support\Carbon;
 
 class SendValidationStatusService
 {
-    private const TEMPLATE_SUCCESS = 'success';
-    const SECOP_ERROR = 'SECOP_ERROR';
-    const RECJECTED_ERROR = 'RECJECTED_ERROR';
-    const VALIDATION_SUCCESS = 'VALIDATION_OK';
-    private Createaccount|ValidateAccount $account;
+    public const TEMPLATE_PENDING = 'PENDING';  // ← Cambia de private a public
+    public const TEMPLATE_REJECTED = 'REJECTED';  // ← Cambia de private a public
+
+    private CreateAccount|ValidateAccount $account;
     private string $state = '';
-    private bool $contractor = false;
     private GLPIService $GLPIService;
 
-    public function __construct(CreateAccount|ValidateAccount $account, string $state, $contractor = false)
+    public function __construct(CreateAccount|ValidateAccount $account, string $state)
     {
         $this->account = $account;
         $this->state = $state;
-        $this->contractor = $contractor;
         $this->GLPIService = new GLPIService();
     }
 
     public function sendTicket(): void
     {
         switch ($this->state) {
-            case self::VALIDATION_SUCCESS:
-                // Usar la plantilla successTemplate
-                $response = $this->GLPIService->createTicket($this->successTemplate());
+            case self::TEMPLATE_PENDING:
+                if (!$this->account->pending_sent_at) {
+                    $response = $this->GLPIService->createTicket($this->pendingTemplate());
+                    $this->account->update(['pending_sent_at' => now()]);
+                    Log::info('Plantilla de pendiente enviada', ['ticket' => $response]);
+                }
                 break;
-            case self::SECOP_ERROR:
-                $response = $this->GLPIService->createTicket($this->secopTemplate());
-                Log::error(json_encode($response));
-                $ticketInfo = $this->GLPIService->getTicketInfo($response['id']);
-                AccountTicketService::create($this->account, $ticketInfo);
+            case self::TEMPLATE_REJECTED:
+                if ($this->account->pending_sent_at && Carbon::parse($this->account->pending_sent_at)->diffInHours(now()) >= 48) {
+                    $response = $this->GLPIService->createTicket($this->rejectedTemplate());
+                    Log::info('Plantilla de rechazo enviada', ['ticket' => $response]);
+                }
                 break;
         }
     }
 
-    private function successTemplate(): array
+    private function getUserInfo(): array
     {
-        $user = auth()->user(); // Obtiene el usuario logueado
-        $userEmail = $user->email; // Correo del usuario
-        $userDocumentNumber = $user->supplier_document; // Número de documento del usuario
-        
+        $user = auth()->user();
+        return [
+            'email' => $user->email ?? 'No disponible',
+            'document' => $user->supplier_document ?? 'No disponible',
+            'group_id' => $user->glpi_group_id ?? null,
+            'user_id' => $user->glpi_user_id ?? null,
+        ];
+    }
+
+    private function pendingTemplate(): array
+    {
+        $userInfo = $this->getUserInfo();
         return [
             'input' => [
-                'name' => "Caso pendiente validacion SECOP",
-                'content' => "
-                    *Datos del Usuario:*
-                    * *Regional:* {$this->account->rgn_id}
-                    * *Primer Nombre:* {$this->account->primer_nombre}
-                    * *Segundo Nombre:* {$this->account->segundo_nombre}
-                    * *Primer Apellido:* {$this->account->primer_apellido}
-                    * *Segundo Apellido:* {$this->account->segundo_apellido}
-                    * *Usuario:* {$this->account->usuario}
-        
-                    *Datos del Solicitante:*
-                    * *Correo del Solicitante:* {$userEmail}
-                    * *Número de Documento:* {$userDocumentNumber}
-                ",
+                'name' => "Validación en curso - SECOP",
+                'content' => "Se está validando la información del usuario en SECOP."
+                    . "\n**Datos del Usuario:**"
+                    . "\n- Regional: {$this->account->rgn_id}"
+                    . "\n- Nombre: {$this->account->primer_nombre} {$this->account->segundo_nombre}"
+                    . "\n- Apellido: {$this->account->primer_apellido} {$this->account->segundo_apellido}"
+                    . "\n- Usuario: {$this->account->usuario}"
+                    . "\n\n**Datos del Solicitante:**"
+                    . "\n- Correo: {$userInfo['email']}"
+                    . "\n- Documento: {$userInfo['document']}",
+                    
                 'type' => 1, // Tipo de ticket (1 = Incidente, 2 = Requerimiento, etc.)
-                'status' => 1, // Estado del ticket (1 = Nuevo)
-                'urgency' => 4, // Urgencia (4 = Media)
-                'impact' => 3, // Impacto (3 = Medio)
-                'requesttypes_id' => 1, // Tipo de solicitud (1 = Manual/API)
-                'groups_id' => $user->glpi_group_id, // Asignar dinámicamente el grupo
-                'users_id_assign' => $user->glpi_user_id, // Asignar dinámicamente el usuario en GLPI
-       
+                'status' => 1,
+                'urgency' => 4,
+                'impact' => 3,
+                'requesttypes_id' => 1,
+                'groups_id' => $userInfo['group_id'],
+                'users_id_assign' => $userInfo['user_id'],
             ]
         ];
-}
-    
-    private function secopTemplate(): array
+    }
+
+    private function rejectedTemplate(): array
     {
-        $user = auth()->user(); // Obtiene el usuario logueado
-        $userEmail = $user->email; // Correo del usuario
-        $userDocumentNumber = $user->supplier_document; // Número de documento del usuario
-        
+        $userInfo = $this->getUserInfo();
         return [
             'input' => [
-                'name' => "Caso por rechazo SECOP",
-                'content' => "
-                    *Datos del Usuario:*
-                    * *Regional:* {$this->account->rgn_id}
-                    * *Primer Nombre:* {$this->account->primer_nombre}
-                    * *Segundo Nombre:* {$this->account->segundo_nombre}
-                    * *Primer Apellido:* {$this->account->primer_apellido}
-                    * *Segundo Apellido:* {$this->account->segundo_apellido}
-                    * *Usuario:* {$this->account->usuario}
-        
-                    *Datos del Solicitante:*
-                    * *Correo del Solicitante:* {$userEmail}
-                    * *Número de Documento:* {$userDocumentNumber}
-                ",
+                'name' => "Rechazo de validación - SECOP",
+                'content' => "La validación del contrato en SECOP no fue aprobada después de 48 horas."
+                    . "\n**Datos del Usuario:**"
+                    . "\n- Regional: {$this->account->rgn_id}"
+                    . "\n- Nombre: {$this->account->primer_nombre} {$this->account->segundo_nombre}"
+                    . "\n- Apellido: {$this->account->primer_apellido} {$this->account->segundo_apellido}"
+                    . "\n- Usuario: {$this->account->usuario}"
+
+                    . "\n\n**Datos del Solicitante:**"
+                    . "\n- Correo: {$userInfo['email']}"
+                    . "\n- Documento: {$userInfo['document']}",
+
                 'type' => 1, // Tipo de ticket (1 = Incidente, 2 = Requerimiento, etc.)
-                'status' => 1, // Estado del ticket (1 = Nuevo)
-                'urgency' => 4, // Urgencia (4 = Media)
-                'impact' => 3, // Impacto (3 = Medio)
-                'requesttypes_id' => 1, // Tipo de solicitud (1 = Manual/API)
-                'groups_id' => $user->glpi_group_id, // Asignar dinámicamente el grupo
-                'users_id_assign' => $user->glpi_user_id, // Asignar dinámicamente el usuario en GLPI
-       
+                'status' => 2,
+                'urgency' => 4,
+                'impact' => 3,
+                'requesttypes_id' => 1,
+                'groups_id' => $userInfo['group_id'],
+                'users_id_assign' => $userInfo['user_id'],
             ]
         ];
-}
+    }
 }

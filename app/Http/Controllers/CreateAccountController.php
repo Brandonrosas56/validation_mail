@@ -81,7 +81,7 @@ class CreateAccountController extends Controller
             $numeroContrato = $request->input('numero_contrato');
 
             if (!SecopService::isValidSecopContract($documentoProveedor, $numeroContrato)) {
-                $sendValidationStatusService = new SendValidationStatusService($createAccount, SendValidationStatusService::SECOP_ERROR);
+                $sendValidationStatusService = new SendValidationStatusService($createAccount, SendValidationStatusService::TEMPLATE_PENDING);
                 $sendValidationStatusService->sendTicket();
                 return redirect()->back()->withErrors(['error' => 'Nos encontramos validando su solicitud'])->withInput();
             }

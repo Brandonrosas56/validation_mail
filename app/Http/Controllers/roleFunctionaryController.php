@@ -61,7 +61,7 @@ class roleFunctionaryController extends Controller
             return redirect()->back()->withErrors(['error' => 'No se ha podido registrar'])
                 ->withInput();
         }
-        return redirect()->back()->with('success', 'Se ha asignado correctamente');
+        return redirect()->back()->with('success', 'Rol asignado correctamente');
     }
 
     //block users
@@ -79,6 +79,6 @@ class roleFunctionaryController extends Controller
             return redirect()->back()->withErrors(['error' => 'No se ha podido bloquear o desbloquear'])
                 ->withInput();
         }
-        return redirect()->back()->with('success', 'Se ha realizado el proceso de bloqueo');
+        return redirect()->back()->with('success', 'El proceso de bloqueo/desbloqueo se ha completado correctamente.');
     }
 }

@@ -11,6 +11,8 @@ use App\Models\User;
 use App\Services\SendValidationStatusService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Carbon;
+
 
 class ValidateController extends Controller
 {
@@ -81,7 +83,7 @@ class ValidateController extends Controller
 
             $isContractor = $ValidateAccount->getService()->isContractor();
             if ($isContractor && !SecopService::isValidSecopContract($documentoProveedor, $numeroContrato)) {
-                $SendValidationStatusService = new SendValidationStatusService($ValidateAccount, SendValidationStatusService::SECOP_ERROR);
+                $SendValidationStatusService = new SendValidationStatusService($ValidateAccount, SendValidationStatusService::TEMPLATE_PENDING);
                 $SendValidationStatusService->sendTicket();
                 return redirect()->back()->with('error', 'Nos encontramos validando su solicitud');
             }
