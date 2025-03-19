@@ -1,4 +1,4 @@
-# Sistema de Gestión de Cuentas 
+# Sistema de Gestión de Cuentas Creactiva
 
 Este proyecto es una aplicación de gestión de cuentas de usuario, roles y permisos, donde los super administradores, administradores, asistentes pueden gestionar el estado de las cuentas, asignar roles, y gestionar la autenticación de los usuarios.
 
