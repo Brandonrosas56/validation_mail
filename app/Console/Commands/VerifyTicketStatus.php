@@ -1,89 +1,100 @@
 <?php
 
-namespace App\Services;
+namespace App\Console\Commands;
 
 use App\Models\AccountTicket;
 use App\Models\CreateAccount;
-use App\Models\ValidateAccount;
 use App\Services\GLPIService;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Carbon;
+use Illuminate\Console\Command;
 
-class VerifyTicketStatus
+class VerifyTicketStatus extends Command
 {
-    private GLPIService $GLPIService;
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'app:verify-ticket-status';
 
-    public function __construct()
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Command description';
+
+    private GLPIService|null $GLPIService = null;
+
+    /**
+     * Execute the console command.
+     */
+    public function handle()
     {
         $this->GLPIService = new GLPIService();
-    }
-
-    public function checkAndProcessTicket(CreateAccount|ValidateAccount $account): void
-    {
-        if (!$account->pending_sent_at) {
-            $this->sendPendingTicket($account);
-            return;
-        }
-
-        if (Carbon::parse($account->pending_sent_at)->diffInHours(now()) >= 48) {
-            $this->sendRejectedTicket($account);
+        $AccountTickets = AccountTicket::whereNotIn('ticket_state', [AccountTicket::CERRADO, AccountTicket::RESUELTO])->get();
+        foreach ($AccountTickets as $AccountTicket) {
+            $ticketInfo = $this->GLPIService->getTicketInfo($AccountTicket->ticket_id);
+            $this->validateTicketStatus($ticketInfo, $AccountTicket);
         }
     }
 
-    private function sendPendingTicket(CreateAccount|ValidateAccount $account): void
+    private function validateTicketStatus(array $ticketInfo, AccountTicket $AccountTicket): bool
     {
-        $response = $this->GLPIService->createTicket($this->pendingTemplate($account));
-        $account->update(['pending_sent_at' => now()]);
-        Log::info('Plantilla de pendiente enviada', ['ticket' => $response]);
-    }
-
-    private function sendRejectedTicket(CreateAccount|ValidateAccount $account): void
-    {
-        $existingRejection = AccountTicket::where('account_id', $account->id)
-            ->where('ticket_state', 'REJECTED')
-            ->exists();
-
-        if (!$existingRejection) {
-            $response = $this->GLPIService->createTicket($this->rejectedTemplate($account));
-            Log::info('Plantilla de rechazo enviada', ['ticket' => $response]);
+        $AccountTicket->getService()->updateTicketInfo($ticketInfo);
+        if ($ticketInfo['status'] != $AccountTicket->ticket_status && in_array($ticketInfo['status'], AccountTicket::CLOSE_STATES)) {
+            $this->updateAccountStatus($AccountTicket);
         }
+        return true;
     }
 
-    private function pendingTemplate(CreateAccount|ValidateAccount $account): array
+    private function updateAccountStatus(AccountTicket $AccountTicket): bool
     {
+        $lastFollow = $this->GLPIService->getTicketFollowByLastResponse($AccountTicket->ticket_id);
+        if (!empty($lastFollow)) {
+            $state = $this->getState(strtolower($lastFollow['content']));
+            if ($state != CreateAccount::INDETERMINADO) {
+                $Account = $AccountTicket->getService()->getAccount();
+                $Account->getService()->changeStatus($state);
+            } else {
+                $AccountTicket->update(['ticket_state' => AccountTicket::CERRADO_SIN_COMENTARIO]);
+            }
+        } else {
+            $AccountTicket->update(['ticket_state' => AccountTicket::CERRADO_SIN_SOLUCION]);
+        }
+        return true;
+    }
+
+    private function getState(string $content): string
+    {
+        if (str_contains($content, 'exitoso')) {
+            return CreateAccount::EXITO;
+        } elseif (str_contains($content, 'rechazado')) {
+            return CreateAccount::RECHAZO;
+        }
+        return CreateAccount::INDETERMINADO;
+    }
+
+
+    /**
+     * Obtener información del usuario conectado.
+     *
+     * @return array
+     */
+    private function getUserInfo(): array
+    {
+        $user = auth()->user();
+        $glpiID = $this->GLPIService->getGlpiID();
+        
+        if (!$glpiID) {
+            throw new \Exception('No se pudo obtener el glpiID del usuario.');
+        }
+
         return [
-            'input' => [
-                'name' => "Validación en curso - SECOP",
-                'content' => "Se está validando la información del usuario en SECOP.\n\n"
-                    . "**Datos del Usuario:**\n"
-                    . "- Regional: {$account->rgn_id}\n"
-                    . "- Nombre: {$account->primer_nombre} {$account->segundo_nombre}\n"
-                    . "- Apellido: {$account->primer_apellido} {$account->segundo_apellido}\n"
-                    . "- Usuario: {$account->usuario}",
-                'status' => 1,
-                'urgency' => 4,
-                'impact' => 3,
-                'requesttypes_id' => 1,
-            ]
-        ];
-    }
-
-    private function rejectedTemplate(CreateAccount|ValidateAccount $account): array
-    {
-        return [
-            'input' => [
-                'name' => "Rechazo de validación - SECOP",
-                'content' => "La validación del contrato en SECOP no fue aprobada después de 48 horas.\n\n"
-                    . "**Datos del Usuario:**\n"
-                    . "- Regional: {$account->rgn_id}\n"
-                    . "- Nombre: {$account->primer_nombre} {$account->segundo_nombre}\n"
-                    . "- Apellido: {$account->primer_apellido} {$account->segundo_apellido}\n"
-                    . "- Usuario: {$account->usuario}",
-                'status' => 2,
-                'urgency' => 4,
-                'impact' => 3,
-                'requesttypes_id' => 1,
-            ]
+            'email' => $user->email ?? 'No disponible',
+            'document' => $user->supplier_document ?? 'No disponible',
+            'group_id' => $user->glpi_group_id ?? null,
+            'user_id' => $user->glpi_user_id ?? null,
+            'glpiID' => $glpiID,
         ];
     }
 }

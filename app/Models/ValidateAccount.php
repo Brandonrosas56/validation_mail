@@ -28,8 +28,7 @@ class ValidateAccount extends Model
         'rol_asignado',
         'usuario',
         'user_id',
-        'estado',
-        'pending_sent_at'
+        'estado'
     ];
 
     public function regional()

@@ -27,7 +27,6 @@ return new class extends Migration {
             $table->string('usuario');
             $table->string('rol_asignado');
             $table->string('estado')->nullable()->default('pendiente');
-            $table->timestamp('pending_sent_at')->nullable(); 
             $table->integer('intentos_validacion')->default(4)->nullable();
             $table->foreignId('user_id');
             $table->timestamps();

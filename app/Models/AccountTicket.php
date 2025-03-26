@@ -10,6 +10,9 @@ class AccountTicket extends Model
 {
     use HasFactory;
 
+    /**
+     * Estados posibles de un ticket.
+     */
     const NUEVO = 1;
     const EN_CURSO = 2;
     const PLANIFICADA = 3;
@@ -19,6 +22,9 @@ class AccountTicket extends Model
     const CERRADO_SIN_SOLUCION = 7;
     const CERRADO_SIN_COMENTARIO = 8;
 
+    /**
+     * Estados abiertos de un ticket.
+     */
     const OPEN_STATES = [
         self::NUEVO,
         self::EN_CURSO,
@@ -28,11 +34,19 @@ class AccountTicket extends Model
         self::CERRADO_SIN_COMENTARIO
     ];
 
+    /**
+     * Estados cerrados de un ticket.
+     */
     const CLOSE_STATES = [
         self::RESUELTO,
         self::CERRADO
     ];
 
+    /**
+     * Atributos que pueden asignarse masivamente.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'account_id',
         'type_account',
@@ -41,10 +55,13 @@ class AccountTicket extends Model
         'ticket_info'
     ];
 
-
+    /**
+     * Obtiene el servicio asociado al ticket de cuenta.
+     *
+     * @return AccountTicketService
+     */
     public function getService(): AccountTicketService
     {
         return new AccountTicketService($this);
     }
-
 }

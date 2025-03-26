@@ -5,48 +5,98 @@ namespace App\Console\Commands;
 use App\Models\CreateAccount;
 use App\Models\ValidateAccount;
 use App\Services\SecopService;
-use App\Services\SendValidationStatusService;
 use Illuminate\Console\Command;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Log;
+use App\Services\SendValidationStatusService;
+use App\Services\GLPIService;
+use Log;
+
 class RetryValidation extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'app:retry-validation';
+    protected $description = 'Command description';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-     protected $description = 'Reintenta la validación de contratos en SECOP dentro de las 48 horas';
-
-    /**
-     * Execute the console command.
-     */
     public function handle()
     {
-        $this->verifyAccounts(CreateAccount::class);
-        $this->verifyAccounts(ValidateAccount::class);
+        $this->verifyCreatedAccounts();
+        $this->verifyValidatedAccounts();
     }
-
-    private function verifyAccounts(string $modelClass): void
+    private function verifyCreatedAccounts(): bool
     {
-        $accounts = $modelClass::where('intentos_validacion', '>', 0)->get();
-        foreach ($accounts as $account) {
-            if (!SecopService::isValidSecopContract($account->documento_proveedor, $account->numero_contrato)) {
-                $account->intentos_validacion -= 1;
-                $account->save();
-                
-                if ($account->intentos_validacion == 0 || ($account->pending_sent_at && Carbon::parse($account->pending_sent_at)->diffInHours(now()) >= 48)) {
-                    (new SendValidationStatusService($account, SendValidationStatusService::TEMPLATE_REJECTED))->sendTicket();
-                    Log::info("Plantilla de rechazo enviada después de 48 horas para la cuenta ID: {$account->id}");
+        $CreateAccounts = CreateAccount::all();
+
+        foreach ($CreateAccounts as $CreateAccount) {
+            if (in_array($CreateAccount->estado, ['exitoso', 'rechazado'])) {
+                if ($CreateAccount->estado == 'exitoso') {
+                    $this->sendSuccessTemplate($CreateAccount);
+                } elseif ($CreateAccount->estado == 'rechazado') {
+                    $this->sendRejectTemplate($CreateAccount);
+                }
+
+                // Verificar que id no sea null antes de cerrar el ticket
+                if ($CreateAccount->id !== null) {
+                    $glpiService = new GLPIService();
+                    $glpiService->closeTicket($CreateAccount->id);
+                    Log::info('Ticket cerrado en GLPI para la cuenta', ['account_id' => $CreateAccount->id]);
+                } else {
+                    Log::warning('El id es null para la cuenta', ['account_id' => $CreateAccount->id]);
                 }
             }
         }
+        return true;
+    }
+
+    private function verifyValidatedAccounts(): bool
+    {
+        $ValidateAccounts = ValidateAccount::all();
+
+        foreach ($ValidateAccounts as $ValidateAccount) {
+            var_dump($ValidateAccount);
+            if (in_array($ValidateAccount->estado, ['exitoso', 'rechazado'])) {
+                if ($ValidateAccount->estado == 'exitoso') {
+                    $this->sendSuccessTemplate($ValidateAccount);
+                } elseif ($ValidateAccount->estado == 'rechazado') {
+                    $this->sendRejectTemplate($ValidateAccount);
+                }
+
+                // Verificar que id no sea null antes de cerrar el ticket
+
+                if ($ValidateAccount->id !== null) {
+                    $glpiService = new GLPIService();
+                    $glpiService->closeTicket($ValidateAccount->id); 
+                    Log::info('Ticket cerrado en GLPI para la cuenta validada', ['account_id' => $ValidateAccount->id]);
+                } else {
+                    Log::warning('El id es null para la cuenta validada', ['account_id' => $ValidateAccount->id]);
+                }
+            }
+        }
+        return true;
+    }
+
+
+    private function sendSuccessTemplate($Account): void
+    {
+       
+        $sendValidationStatusService = new SendValidationStatusService($Account, SendValidationStatusService::TEMPLATE_SUCCESS_CONTRACTOR_CREACION_CLOSE);
+        $sendValidationStatusService->sendTicket(); 
+    
+        $glpiService = new GLPIService();
+        $glpiService->closeTicket($Account->ticket_id);
+
+        Log::info('Plantilla de éxito para creación de contratista enviada', ['ticket_id' => $Account->ticket_id]);
+        Log::info('Ticket cerrado en GLPI para la cuenta', ['ticket_id' => $Account->ticket_id]);
+    }
+
+    private function sendRejectTemplate($Account): void
+    {
+        
+        $sendValidationStatusService = new SendValidationStatusService($Account, SendValidationStatusService::TEMPLATE_REJECTED_CONTRACTOR_CREACION);
+        $sendValidationStatusService->sendTicket(); 
+
+
+        $glpiService = new GLPIService();
+        $glpiService->closeTicket($Account->ticket_id);
+
+        Log::info('Plantilla de rechazo para creación de contratista enviada', ['ticket_id' => $Account->ticket_id]);
+        Log::info('Ticket cerrado en GLPI para la cuenta', ['ticket_id' => $Account->ticket_id]);
     }
 }

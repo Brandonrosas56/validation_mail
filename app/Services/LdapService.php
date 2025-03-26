@@ -10,6 +10,10 @@ class LdapService
 {
     private $ldap;
 
+    /**
+     * Constructor de la clase.
+     * Inicializa la conexión con el servidor LDAP utilizando las variables de entorno.
+     */
     public function __construct()
     {
         $this->ldap = Ldap::create('ext_ldap', [
@@ -18,6 +22,13 @@ class LdapService
         ]);
     }
 
+    /**
+     * Autentica a un usuario en el servidor LDAP.
+     *
+     * @param string $usuario - Nombre de usuario para autenticación
+     * @param string $password - Contraseña del usuario
+     * @return bool - Retorna true si la autenticación es exitosa, false en caso contrario
+     */
     public function autenticarUsuario(string $usuario, string $password): bool
     {
         try {

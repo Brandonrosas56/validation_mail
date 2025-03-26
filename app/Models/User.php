@@ -7,35 +7,30 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 
-
 class User extends Authenticatable
 {
-    use HasApiTokens;
-    use HasFactory;
-    use HasProfilePhoto;
-    use Notifiable;
-    use TwoFactorAuthenticatable;
-    use HasRoles;
+    use HasApiTokens, HasFactory, HasProfilePhoto, Notifiable, TwoFactorAuthenticatable, HasRoles;
     
-    protected $with = ['roles']; // Esto carga siempre los roles
-
-    // Si ya tienes el guard especificado en config/permission.php, esto no es necesario:
-    protected $guard_name = 'web';
+    protected $with = ['roles']; // Carga siempre los roles asociados al usuario
+    protected $guard_name = 'web'; // Especifica el guard para la autenticación con Spatie
+    
     /**
-     * The attributes that are mass assignable.
+     * Define la tabla asociada al modelo.
      *
-     * @var array<int, string>
+     * @var string
      */
     protected $table = 'users';
 
+    /**
+     * Atributos que pueden asignarse masivamente.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
-
         'id',
         'name',
         'supplier_document',
@@ -47,9 +42,8 @@ class User extends Authenticatable
         'lock',
     ];
 
-
     /**
-     * The attributes that should be hidden for serialization.
+     * Atributos que deben ocultarse en la serialización.
      *
      * @var array<int, string>
      */
@@ -61,16 +55,14 @@ class User extends Authenticatable
     ];
 
     /**
-     * The accessors to append to the model's array form.
+     * Atributos adicionales agregados al modelo.
      *
      * @var array<int, string>
      */
-    protected $appends = [
-        'profile_photo_url',
-    ];
+    protected $appends = ['profile_photo_url'];
 
     /**
-     * Get the attributes that should be cast.
+     * Define los atributos que deben ser convertidos a un tipo de dato específico.
      *
      * @return array<string, string>
      */
@@ -81,60 +73,24 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Relación con la tabla de regionales.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function regional()
     {
         return $this->belongsTo(Regional::class, 'rgn_id', 'rgn_id');
     }
 
-    function getService() : UserService {
+    /**
+     * Obtiene el servicio de usuario asociado.
+     *
+     * @return UserService
+     */
+    function getService(): UserService
+    {
         return new UserService($this);
     }
-
-    /**
-     * Define eventos de modelo para registrar auditorías en la tabla 'audits' cuando se crean o actualizan usuarios.
-     */
-    // protected static function booted()
-    // {
-    //     static::created(function (User $user) {
-            
-    //         Audit::create([
-    //             'user_id' => $user->id, 
-    //             'author' =>  Auth::user()->name ?? 'System',
-    //             'event' => 'Creado',
-    //             'previous_state' => 'Se creó le usuario con id '. $user->id ,
-    //             'new_state' => '',
-    //             'table'=> 'users',
-                
-    //         ]);
-    //     });
-
-    //     static::updated(function (User $user) {
-        
-    //         $changes = $user->getChanges();
-    //         $original = $user->getOriginal();
-
-    //         foreach ($changes as $attribute => $newValue) {
-    //             if ($attribute == 'updated_at' || !isset($original[$attribute])) {
-    //                 continue;
-    //             }
-
-    //             $oldValue = $original[$attribute];
-
-    //             Audit::create([
-    //                 'user_id' => $user->id,
-    //                 'author' => Auth::user()->name ?? 'System',
-    //                 'event' => 'Actualizado',
-    //                 'previous_state' => "{$attribute}: {$oldValue}",
-    //                 'new_state' => "{$attribute}: {$newValue}",
-    //                 'table' => 'users',
-    //                 'created_at' => $user->created_at,
-    //                 'updated_at' => now(),
-    //             ]);
-    //         }
-    //     });
-    //}
-
-
-
-
 }

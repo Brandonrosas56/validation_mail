@@ -28,7 +28,6 @@ return new class extends Migration
             $table->date('fecha_terminacion_contrato')->nullable();
             $table->string('rol_asignado');
             $table->string('estado')->nullable()->default('pendiente');
-            $table->timestamp('pending_sent_at')->nullable();
             $table->foreignId('user_id');
             $table->integer('intentos_validacion')->default(4)->nullable();
             $table->timestamps();
