@@ -80,21 +80,4 @@ class VerifyTicketStatus extends Command
      *
      * @return array
      */
-    private function getUserInfo(): array
-    {
-        $user = auth()->user();
-        $glpiID = $this->GLPIService->getGlpiID();
-        
-        if (!$glpiID) {
-            throw new \Exception('No se pudo obtener el glpiID del usuario.');
-        }
-
-        return [
-            'email' => $user->email ?? 'No disponible',
-            'document' => $user->supplier_document ?? 'No disponible',
-            'group_id' => $user->glpi_group_id ?? null,
-            'user_id' => $user->glpi_user_id ?? null,
-            'glpiID' => $glpiID,
-        ];
-    }
 }

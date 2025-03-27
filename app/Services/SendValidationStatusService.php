@@ -8,6 +8,8 @@ use App\Services\GLPIService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Carbon;
 
+
+
 class SendValidationStatusService
 {
     // Plantillas de Creación
@@ -55,27 +57,27 @@ class SendValidationStatusService
                     break;
                 case self::TEMPLATE_SUCCESS_FUNCTIONARY_CREACION:
                     $response = $this->GLPIService->createTicket($this->successFunctionaryCreationTemplate());
-                    $this->closeTicketIfExists();
+                    
                     Log::info('Plantilla de éxito para creación de funcionario enviada', ['ticket' => $response]);
                     break;
                 case self::TEMPLATE_SUCCESS_CONTRACTOR_CREACION:
                     $response = $this->GLPIService->createTicket($this->successContractorCreationTemplate());
-                    $this->closeTicketIfExists();
+                
                     Log::info('Plantilla de éxito para creación de contratista enviada', ['ticket' => $response]);
                     break;
                 case self::TEMPLATE_SUCCESS_CONTRACTOR_CREACION_CLOSE:
                         $response = $this->GLPIService->createTicket($this->successContractorCreationTemplate_close());
-                        $this->closeTicketIfExists();
+                
                         Log::info('Plantilla de éxito para creación de contratista enviada', ['ticket' => $response]);
                         break;
                 case self::TEMPLATE_REJECTED_CONTRACTOR_CREACION:
                     $response = $this->GLPIService->createTicket($this->rejectedContractorCreationTemplate());
-                    $this->closeTicketIfExists();
+                    
                     Log::info('Plantilla de rechazo para creación de contratista enviada', ['ticket' => $response]);
                     break;
                     case self::TEMPLATE_REJECTED_FUNCTIONARY_CREACION:
                         $response = $this->GLPIService->createTicket($this->rejectedFuncionaryCreationTemplate());
-                        $this->closeTicketIfExists();
+                     
                         Log::info('Plantilla de rechazo para creación de contratista enviada', ['ticket' => $response]);
                         break;
                 case self::TEMPLATE_PENDING_FUNCTIONARY_ACTIVACION:
@@ -88,27 +90,27 @@ class SendValidationStatusService
                     break;
                 case self::TEMPLATE_SUCCESS_FUNCTIONARY_ACTIVACION:
                     $response = $this->GLPIService->createTicket($this->successFunctionaryActivationTemplate());
-                    $this->closeTicketIfExists();
+                   
                     Log::info('Plantilla de éxito para activación de funcionario enviada', ['ticket' => $response]);
                     break;
                 case self::TEMPLATE_SUCCESS_CONTRACTOR_ACTIVACION:
                     $response = $this->GLPIService->createTicket($this->successContractorActivationTemplate());
-                    $this->closeTicketIfExists();
+                 
                     Log::info('Plantilla de éxito para activación de contratista enviada', ['ticket' => $response]);
                     break;
                 case self::TEMPLATE_SUCCESS_CONTRACTOR_ACTIVACION_CLOSE:
                         $response = $this->GLPIService->createTicket($this->successContractorActivationTemplate_close());
-                        $this->closeTicketIfExists();
+                 
                         Log::info('Plantilla de éxito para activación de contratista enviada', ['ticket' => $response]);
                         break;
                 case self::TEMPLATE_REJECTED_FUNCTIONARY_ACTIVACION:
                     $response = $this->GLPIService->createTicket($this->rejectedFunctionaryActivationTemplate());
-                    $this->closeTicketIfExists();
+                
                     Log::info('Plantilla de rechazo para activación de funcionario enviada', ['ticket' => $response]);
                     break;
                 case self::TEMPLATE_REJECTED_CONTRACTOR_ACTIVACION:
                     $response = $this->GLPIService->createTicket($this->rejectedContractorActivationTemplate());
-                    $this->closeTicketIfExists();
+                  
                     Log::info('Plantilla de rechazo para activación de contratista enviada', ['ticket' => $response]);
                     break;
                 default:
@@ -119,32 +121,18 @@ class SendValidationStatusService
         }
     }
 
-    private function closeTicketIfExists(): void
-    {
-        try {
-            $ticket = AccountTicket::where('account_id', $this->account->id)
-                ->where('account_type', get_class($this->account))
-                ->where('status', '!=', 'closed')
-                ->first();
-
-            if ($ticket) {
-                $this->GLPIService->closeTicket($ticket->ticket_id);
-                $ticket->update(['status' => 'closed']);
-                Log::info('Ticket cerrado exitosamente', ['ticket_id' => $ticket->ticket_id]);
-            }
-        } catch (\Exception $e) {
-            Log::error('Error al cerrar el ticket: ' . $e->getMessage());
-        }
-    }
 
     private function getUserInfo(): array
     {
         $user = auth()->user();
-        $glpiID = $this->GLPIService->getGlpiID();
-
+        
+        // Asegúrate que este método realmente devuelve el ID correcto de GLPI
+        $glpiID = $this->GLPIService->getGlpiID(); 
+        
         if (!$glpiID) {
             throw new \Exception('No se pudo obtener el glpiID del usuario.');
         }
+        
         return [
             'email' => $user->email ?? 'No disponible',
             'document' => $user->supplier_document ?? 'No disponible',
@@ -153,6 +141,7 @@ class SendValidationStatusService
             'glpiID' => $glpiID,
         ];
     }
+      
 
     // Métodos para Plantillas de Creación
     private function pendingFunctionaryCreationTemplate(): array
@@ -177,14 +166,17 @@ class SendValidationStatusService
                     . "\n\n**Datos del Solicitante:**"
                     . "\n- Correo: {$userInfo['email']}"
                     . "\n- Documento: {$userInfo['document']}",
-                'type' => 1,
-                'status' => 1,
-                'urgency' => 4,
-                'impact' => 3,
-                'requesttypes_id' => 1,
-                'groups_id' => $userInfo['group_id'],
-                'requester_id' => $userInfo['glpiID'],
-                'users_id_assign' => $userInfo['user_id'],
+                    'type' => 1,
+                    'status' => 2, // "En curso"
+                    'urgency' => 4,
+                    'impact' => 3,
+                    'requesttypes_id' => 1,
+                    'groups_id' => 1,
+                    '_groups_id_assign' => 2,
+                    '_users_id_assign' => 2,
+                    'itilcategories_id' => 1,
+                    '_users_id_requester' => $userInfo['glpiID'], 
+                     'users_id_assign' => $userInfo['user_id'],
             ]
         ];
     }
@@ -214,13 +206,16 @@ class SendValidationStatusService
                 . "\n- Correo: {$userInfo['email']}"
                 . "\n- Documento: {$userInfo['document']}",
                 'type' => 1,
-                'status' => 1,
+                'status' => 2, // "En curso"
                 'urgency' => 4,
                 'impact' => 3,
                 'requesttypes_id' => 1,
-                'groups_id' => $userInfo['group_id'],
-                'requester_id' => $userInfo['glpiID'],
-                'users_id_assign' => $userInfo['user_id'],
+                'groups_id' => 1,
+                '_groups_id_assign' => 2,
+                '_users_id_assign' => 2,
+                'itilcategories_id' => 1,
+                '_users_id_requester' => $userInfo['glpiID'], 
+                 'users_id_assign' => $userInfo['user_id'],
             ]
         ];
     }
@@ -248,14 +243,17 @@ class SendValidationStatusService
                     . "\n\nDatos del Solicitante:"
                     . "\n- Correo: {$userInfo['email']}"
                     . "\n- Documento: {$userInfo['document']}",
-                'type' => 1,
-                'status' => 1,
-                'urgency' => 4,
-                'impact' => 3,
-                'requesttypes_id' => 1,
-                'groups_id' => $userInfo['group_id'],
-                'requester_id' => $userInfo['glpiID'],
-                'users_id_assign' => $userInfo['user_id'],
+                    'type' => 1,
+                    'status' => 2, // "En curso"
+                    'urgency' => 4,
+                    'impact' => 3,
+                    'requesttypes_id' => 1,
+                    'groups_id' => 1,
+                    '_groups_id_assign' => 2,
+                    '_users_id_assign' => 2,
+                    'itilcategories_id' => 1,
+                    '_users_id_requester' => $userInfo['glpiID'], 
+                     'users_id_assign' => $userInfo['user_id'],
             ]
         ];
     }
@@ -285,14 +283,17 @@ class SendValidationStatusService
                     . "\n\nDatos del Solicitante:"
                     . "\n- Correo: {$userInfo['email']}"
                     . "\n- Documento: {$userInfo['document']}",
-                'type' => 1,
-                'status' => 1,
-                'urgency' => 4,
-                'impact' => 3,
-                'requesttypes_id' => 1,
-                'groups_id' => $userInfo['group_id'],
-                'requester_id' => $userInfo['glpiID'],
-                'users_id_assign' => $userInfo['user_id'],
+                    'type' => 1,
+                    'status' => 2, // "En curso"
+                    'urgency' => 4,
+                    'impact' => 3,
+                    'requesttypes_id' => 1,
+                    'groups_id' => 1,
+                    '_groups_id_assign' => 2,
+                    '_users_id_assign' => 2,
+                    'itilcategories_id' => 1,
+                    '_users_id_requester' => $userInfo['glpiID'], 
+                     'users_id_assign' => $userInfo['user_id'],
             ]
         ];
     }
@@ -303,8 +304,8 @@ class SendValidationStatusService
 
         return [
             'input' => [
-                'name' => "Cierre de Caso - Validación y Creación Exitosa",
-                'content' => "La validación de los datos fue exitosa y se completó la creación del correo de CONTRATISTA"
+                'name' => "Cierre de Caso - Creacion-Validación y Creación Exitosa",
+                'content' => "La validación de los datos fue exitosa y se completó la creación del correo "
                     . "\nDatos del Usuario:"
                     . "\n- Regional: {$this->account->rgn_id}"
                     . "\n- Tipo de documento: {$this->account->tipo_documento}"
@@ -320,14 +321,17 @@ class SendValidationStatusService
                     . "\n\nDatos del Solicitante:"
                     . "\n- Correo: {$userInfo['email']}"
                     . "\n- Documento: {$userInfo['document']}",
-                'type' => 1,
-                'status' => 1,
-                'urgency' => 4,
-                'impact' => 3,
-                'requesttypes_id' => 1,
-                'groups_id' => $userInfo['group_id'],
-                'requester_id' => $userInfo['glpiID'],
-                'users_id_assign' => $userInfo['user_id'],
+                    'type' => 1,
+                    'status' => 2, // "En curso"
+                    'urgency' => 4,
+                    'impact' => 3,
+                    'requesttypes_id' => 1,
+                    'groups_id' => 1,
+                    '_groups_id_assign' => 2,
+                    '_users_id_assign' => 2,
+                    'itilcategories_id' => 1,
+                    '_users_id_requester' => $userInfo['glpiID'], 
+                     'users_id_assign' => $userInfo['user_id'],
             ]
         ];
     }
@@ -357,13 +361,16 @@ class SendValidationStatusService
                 . "\n- Correo: {$userInfo['email']}"
                 . "\n- Documento: {$userInfo['document']}",
                 'type' => 1,
-                'status' => 1,
+                'status' => 2, // "En curso"
                 'urgency' => 4,
                 'impact' => 3,
                 'requesttypes_id' => 1,
-                'groups_id' => $userInfo['group_id'],
-                'requester_id' => $userInfo['glpiID'],
-                'users_id_assign' => $userInfo['user_id'],
+                'groups_id' => 1,
+                '_groups_id_assign' => 2,
+                '_users_id_assign' => 2,
+                'itilcategories_id' => 1,
+                '_users_id_requester' => $userInfo['glpiID'], 
+                 'users_id_assign' => $userInfo['user_id'],
             ]
         ];
     }
@@ -392,13 +399,16 @@ class SendValidationStatusService
                 . "\n- Correo: {$userInfo['email']}"
                 . "\n- Documento: {$userInfo['document']}",
                 'type' => 1,
-                'status' => 1,
+                'status' => 2, // "En curso"
                 'urgency' => 4,
                 'impact' => 3,
                 'requesttypes_id' => 1,
-                'groups_id' => $userInfo['group_id'],
-                'requester_id' => $userInfo['glpiID'],
-                'users_id_assign' => $userInfo['user_id'],
+                'groups_id' => 1,
+                '_groups_id_assign' => 2,
+                '_users_id_assign' => 2,
+                'itilcategories_id' => 1,
+                '_users_id_requester' => $userInfo['glpiID'], 
+                 'users_id_assign' => $userInfo['user_id'],
             ]
         ];
     }
@@ -430,13 +440,16 @@ class SendValidationStatusService
                 . "\n- Correo: {$userInfo['email']}"
                 . "\n- Documento: {$userInfo['document']}",
                 'type' => 1,
-                'status' => 1,
+                'status' => 2, // "En curso"
                 'urgency' => 4,
                 'impact' => 3,
                 'requesttypes_id' => 1,
-                'groups_id' => $userInfo['group_id'],
-                'requester_id' => $userInfo['glpiID'],
-                'users_id_assign' => $userInfo['user_id'],
+                'groups_id' => 1,
+                '_groups_id_assign' => 2,
+                '_users_id_assign' => 2,
+                'itilcategories_id' => 1,
+                '_users_id_requester' => $userInfo['glpiID'], 
+                 'users_id_assign' => $userInfo['user_id'],
             ]
         ];
     }
@@ -467,13 +480,17 @@ class SendValidationStatusService
                 . "\n\nDatos del Solicitante:"
                 . "\n- Correo: {$userInfo['email']}"
                 . "\n- Documento: {$userInfo['document']}",   
-                'status' => 1,
+                'type' => 1,
+                'status' => 2, // "En curso"
                 'urgency' => 4,
                 'impact' => 3,
                 'requesttypes_id' => 1,
-                'groups_id' => $userInfo['group_id'],
-                'requester_id' => $userInfo['glpiID'],
-                'users_id_assign' => $userInfo['user_id'],
+                'groups_id' => 1,
+                '_groups_id_assign' => 2,
+                '_users_id_assign' => 2,
+                'itilcategories_id' => 1,
+                '_users_id_requester' => $userInfo['glpiID'], 
+                 'users_id_assign' => $userInfo['user_id'],
             ]
         ];
     }
@@ -503,14 +520,17 @@ class SendValidationStatusService
                     . "\n\nDatos del Solicitante:"
                     . "\n- Correo: {$userInfo['email']}"
                     . "\n- Documento: {$userInfo['document']}",    
-                'type' => 1,
-                'status' => 1,
-                'urgency' => 4,
-                'impact' => 3,
-                'requesttypes_id' => 1,
-                'groups_id' => $userInfo['group_id'],
-                'requester_id' => $userInfo['glpiID'],
-                'users_id_assign' => $userInfo['user_id'],
+                    'type' => 1,
+                    'status' => 2, // "En curso"
+                    'urgency' => 4,
+                    'impact' => 3,
+                    'requesttypes_id' => 1,
+                    'groups_id' => 1,
+                    '_groups_id_assign' => 2,
+                    '_users_id_assign' => 2,
+                    'itilcategories_id' => 1,
+                    '_users_id_requester' => $userInfo['glpiID'], 
+                     'users_id_assign' => $userInfo['user_id'],
             ]
         ];
     }
@@ -542,13 +562,16 @@ class SendValidationStatusService
                 . "\n- Correo: {$userInfo['email']}"
                 . "\n- Documento: {$userInfo['document']}",  
                 'type' => 1,
-                'status' => 1,
+                'status' => 2, // "En curso"
                 'urgency' => 4,
                 'impact' => 3,
                 'requesttypes_id' => 1,
-                'groups_id' => $userInfo['group_id'],
-                'requester_id' => $userInfo['glpiID'],
-                'users_id_assign' => $userInfo['user_id'],
+                'groups_id' => 1,
+                '_groups_id_assign' => 2,
+                '_users_id_assign' => 2,
+                'itilcategories_id' => 1,
+                '_users_id_requester' => $userInfo['glpiID'], 
+                 'users_id_assign' => $userInfo['user_id'],
             ]
         ];
     }
@@ -579,13 +602,16 @@ class SendValidationStatusService
                 . "\n- Correo: {$userInfo['email']}"
                 . "\n- Documento: {$userInfo['document']}",  
                 'type' => 1,
-                'status' => 1,
+                'status' => 2, // "En curso"
                 'urgency' => 4,
                 'impact' => 3,
                 'requesttypes_id' => 1,
-                'groups_id' => $userInfo['group_id'],
-                'requester_id' => $userInfo['glpiID'],
-                'users_id_assign' => $userInfo['user_id'],
+                'groups_id' => 1,
+                '_groups_id_assign' => 2,
+                '_users_id_assign' => 2,
+                'itilcategories_id' => 1,
+                '_users_id_requester' => $userInfo['glpiID'], 
+                 'users_id_assign' => $userInfo['user_id'],
             ]
         ];
     }
@@ -595,11 +621,11 @@ class SendValidationStatusService
     private function rejectedFunctionaryActivationTemplate(): array
     {
         $userInfo = $this->getUserInfo();
-        Log::info('Información plantilla de rechazo para activación de funcionario', $userInfo);
+        Log::info('Información plantilla de rechazo para creacion-activación ', $userInfo);
 
         return [
             'input' => [
-                'name' => "Cierre de Caso - Fallo en la Validación de Datos para activación de correo FUNCIONARIO",
+                'name' => "Cierre de Caso - Fallo en la Validación de Datos para activación de correo ",
                 'content' => "No se logró validar la nemotecnia del usuario tras los intentos correspondientes."
                 . "\nDatos del Usuario:"
                 . "\n- Regional: {$this->account->rgn_id}"
@@ -619,13 +645,16 @@ class SendValidationStatusService
                 . "\n- Correo: {$userInfo['email']}"
                 . "\n- Documento: {$userInfo['document']}",    
                 'type' => 1,
-                'status' => 1,
+                'status' => 2, // "En curso"
                 'urgency' => 4,
                 'impact' => 3,
                 'requesttypes_id' => 1,
-                'groups_id' => $userInfo['group_id'],
-                'requester_id' => $userInfo['glpiID'],
-                'users_id_assign' => $userInfo['user_id'],
+                'groups_id' => 1,
+                '_groups_id_assign' => 2,
+                '_users_id_assign' => 2,
+                'itilcategories_id' => 1,
+                '_users_id_requester' => $userInfo['glpiID'], 
+                 'users_id_assign' => $userInfo['user_id'],
             ]
         ];
     }
@@ -637,7 +666,7 @@ class SendValidationStatusService
 
         return [
             'input' => [
-                'name' => "Cierre de Caso - Fallo en la Validación de Datos para activación de correo FUNCIONARIO",
+                'name' => "Hola estoy entrando al cierre rechazado correctamente Cierre de Caso - Fallo en la Validación de Datos para activación de correo FUNCIONARIO",
                 'content' => "No se logró validar la nemotecnia del usuario tras los intentos correspondientes."
                 . "\nDatos del Usuario:"
                 . "\n- Regional: {$this->account->rgn_id}"
@@ -657,13 +686,17 @@ class SendValidationStatusService
                 . "\n- Correo: {$userInfo['email']}"
                 . "\n- Documento: {$userInfo['document']}",    
                 'type' => 1,
-                'status' => 1,
+                'status' => 2, // "En curso"
                 'urgency' => 4,
                 'impact' => 3,
                 'requesttypes_id' => 1,
-                'groups_id' => $userInfo['group_id'],
-                'requester_id' => $userInfo['glpiID'],
-                'users_id_assign' => $userInfo['user_id'],
+                'groups_id' => 1,
+                '_groups_id_assign' => 2,
+                '_users_id_assign' => 2,
+                'itilcategories_id' => 1,
+                '_users_id_requester' => $userInfo['glpiID'], 
+                 'users_id_assign' => $userInfo['user_id'],
+                
             ]
         ];
     }

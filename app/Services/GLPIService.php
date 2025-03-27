@@ -214,72 +214,71 @@ class GLPIService
      * @param int $ticketId ID del ticket
      * @return array Último seguimiento o array vacío si no hay seguimientos
      */
-    public function getTicketFollowByLastResponse(int $ticketId): array
-    {
-        try {
-            $response = $this->client->get("/apirest.php/Ticket/{$ticketId}/ITILFollowup", [
-                'headers' => [
-                    'Session-Token' => $this->sessionToken, // Token de sesión
-                ],
-            ]);
+    public function getDefaultGroupId(): int
+{
+    // Buscar grupo por nombre (ajusta según tu GLPI)
+    $response = $this->glpiApi->search('Group', [
+        'name' => 'Soporte Técnico' // Nombre exacto del grupo
+    ]);
+    
+    return $response[0]['id'] ?? throw new \Exception('Grupo por defecto no encontrado');
+}
 
-            $followups = json_decode($response->getBody()->getContents(), true);
-
-            if (!empty($followups)) {
-                // Ordenar por fecha descendente y obtener el último seguimiento
-                usort($followups, fn($a, $b) => strtotime($b['date_creation']) - strtotime($a['date_creation']));
-                return reset($followups);
-            }
-
-            return [];
-        } catch (\Exception $e) {
-            Log::error("Error al procesar ticket {$ticketId}: " . $e->getMessage());
-            return ['error' => $e->getMessage()];
-        }
-    }
-    public function closeTicket(int $id): array
-    {
-        try {
-            if ($id <= 0) {
-                Log::error("Error: El id proporcionado no es válido", ['id' => $id]);
-                return ['error' => 'El id proporcionado no es válido.'];
-            }
+public function getDefaultTechnicianId(): int
+{
+    // Buscar usuario técnico por email (ajusta según tu GLPI)
+    $response = $this->glpiApi->search('User', [
+        'email' => 'soporte@empresa.com' // Email del técnico
+    ]);
     
-            $data = [
-                'status' => 6, 
-            ];
+    return $response[0]['id'] ?? throw new \Exception('Técnico por defecto no encontrado');
+}
     
-        
-            $response = $this->client->put(self::TICKET_ENDPOINT . "/{$id}", [
-                'headers' => [
-                    'Session-Token' => $this->sessionToken,
-                ],
-                'json' => $data, 
-            ]);
     
-            // Verificar que la respuesta de la API sea exitosa
-            if ($response->getStatusCode() !== 200) {
-                Log::error("Error al cerrar el ticket {$id}: Respuesta no exitosa", [
-                    'id' => $id,
-                    'status_code' => $response->getStatusCode(),
-                    'response' => $response->getBody()->getContents(),
-                ]);
-                return ['error' => 'Error al cerrar el ticket: Respuesta no exitosa.'];
-            }
-    
-            $body = $response->getBody()->getContents();
-            $decoded = json_decode($body, true);
-    
-            Log::info("Ticket {$id} cerrado con éxito", ['ticket_id' => $id, 'response' => $decoded]);
-    
-            return $decoded;
-        } catch (\Exception $e) {
-            // Manejar cualquier excepción que ocurra
-            Log::error("Error al cerrar el ticket {$id}: " . $e->getMessage(), [
-                'ticket_id' => $id,
-                'error' => $e->getMessage(),
-            ]);
-            return ['error' => 'Error al procesar el ticket: ' . $e->getMessage()];
-        }
-    }
-}    
+     public function closeTicket(int $id): array
+     {
+         Log::info("id tike", [$id]);
+     
+         try {
+             if ($id <= 0) {
+                 Log::error("Error: El id proporcionado no es válido", ['id' => $id]);
+                 return ['error' => 'El id proporcionado no es válido.'];
+             }
+     
+             $response = $this->client->put(self::TICKET_ENDPOINT . "/{$id}", [
+                 'headers' => [
+                     'Session-Token' => $this->sessionToken,
+                     'Content-Type' => 'application/json',
+                 ],
+                 'json' => [
+                     'input' => [
+                         'id' => $id,  // Es importante incluir el ID del ticket
+                         'status' => 5  // Estado 6 = Cerrado
+                     ]
+                 ]
+             ]);
+     
+             if ($response->getStatusCode() !== 200) {
+                 Log::error("Error al cerrar el ticket {$id}: Respuesta no exitosa", [
+                     'id' => $id,
+                     'status_code' => $response->getStatusCode(),
+                     'response' => $response->getBody()->getContents(),
+                 ]);
+                 return ['error' => 'Error al cerrar el ticket: Respuesta no exitosa.'];
+             }
+     
+             $body = $response->getBody()->getContents();
+             $decoded = json_decode($body, true);
+     
+             Log::info("Ticket {$id} cerrado con éxito", ['ticket_id' => $id, 'response' => $decoded]);
+     
+             return $decoded;
+         } catch (\Exception $e) {
+             Log::error("Error al cerrar el ticket {$id}: " . $e->getMessage(), [
+                 'ticket_id' => $id,
+                 'error' => $e->getMessage(),
+             ]);
+             return ['error' => 'Error al procesar el ticket: ' . $e->getMessage()];
+         }
+     }
+    }     

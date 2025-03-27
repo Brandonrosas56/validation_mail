@@ -22,9 +22,15 @@ class RetryValidation extends Command
     }
     private function verifyCreatedAccounts(): bool
     {
+        Log::info("aca estamos");
         $CreateAccounts = CreateAccount::all();
 
         foreach ($CreateAccounts as $CreateAccount) {
+            Log::info('Validación:', [
+                'id' => $CreateAccount->id,
+                'estado' => $CreateAccount->estado,
+                'ticket_id' => $CreateAccount->ticket_id,
+            ]);
             if (in_array($CreateAccount->estado, ['exitoso', 'rechazado'])) {
                 if ($CreateAccount->estado == 'exitoso') {
                     $this->sendSuccessTemplate($CreateAccount);
@@ -33,7 +39,7 @@ class RetryValidation extends Command
                 }
 
                 // Verificar que id no sea null antes de cerrar el ticket
-                if ($CreateAccount->id !== null) {
+                if ($CreateAccount->id) {
                     $glpiService = new GLPIService();
                     $glpiService->closeTicket($CreateAccount->id);
                     Log::info('Ticket cerrado en GLPI para la cuenta', ['account_id' => $CreateAccount->id]);
@@ -46,31 +52,37 @@ class RetryValidation extends Command
     }
 
     private function verifyValidatedAccounts(): bool
-    {
-        $ValidateAccounts = ValidateAccount::all();
+{
+    
+    
+    $ValidateAccounts = ValidateAccount::all();
 
-        foreach ($ValidateAccounts as $ValidateAccount) {
-            var_dump($ValidateAccount);
-            if (in_array($ValidateAccount->estado, ['exitoso', 'rechazado'])) {
-                if ($ValidateAccount->estado == 'exitoso') {
-                    $this->sendSuccessTemplate($ValidateAccount);
-                } elseif ($ValidateAccount->estado == 'rechazado') {
-                    $this->sendRejectTemplate($ValidateAccount);
-                }
+    foreach ($ValidateAccounts as $ValidateAccount) {
+        Log::info('Validación:', [
+            'id' => $ValidateAccount->id,
+            'estado' => $ValidateAccount->estado,
+            'ticket_id' => $ValidateAccount->id,
+        ]);
+       
+        // Ahora sí puedes acceder a $ValidateAccount aquí
+        if (in_array($ValidateAccount->estado, ['exitoso', 'rechazado'])) {
+            if ($ValidateAccount->estado == 'exitoso') {
+                $this->sendSuccessTemplate($ValidateAccount);
+            } elseif ($ValidateAccount->estado == 'rechazado') {
+                $this->sendRejectTemplate($ValidateAccount);
+            }
 
-                // Verificar que id no sea null antes de cerrar el ticket
-
-                if ($ValidateAccount->id !== null) {
-                    $glpiService = new GLPIService();
-                    $glpiService->closeTicket($ValidateAccount->id); 
-                    Log::info('Ticket cerrado en GLPI para la cuenta validada', ['account_id' => $ValidateAccount->id]);
-                } else {
-                    Log::warning('El id es null para la cuenta validada', ['account_id' => $ValidateAccount->id]);
-                }
+            if ($ValidateAccount->id !== null) {
+                $glpiService = new GLPIService();
+                $glpiService->closeTicket($ValidateAccount->id); 
+                Log::info('Ticket cerrado en GLPI para la cuenta validada', ['account_id' => $ValidateAccount->id]);
+            } else {
+                Log::warning('El id es null para la cuenta validada', ['account_id' => $ValidateAccount->id]);
             }
         }
-        return true;
     }
+    return true;
+}
 
 
     private function sendSuccessTemplate($Account): void
@@ -80,7 +92,7 @@ class RetryValidation extends Command
         $sendValidationStatusService->sendTicket(); 
     
         $glpiService = new GLPIService();
-        $glpiService->closeTicket($Account->ticket_id);
+        $glpiService->closeTicket($Account->id);
 
         Log::info('Plantilla de éxito para creación de contratista enviada', ['ticket_id' => $Account->ticket_id]);
         Log::info('Ticket cerrado en GLPI para la cuenta', ['ticket_id' => $Account->ticket_id]);
@@ -89,12 +101,12 @@ class RetryValidation extends Command
     private function sendRejectTemplate($Account): void
     {
         
-        $sendValidationStatusService = new SendValidationStatusService($Account, SendValidationStatusService::TEMPLATE_REJECTED_CONTRACTOR_CREACION);
+        $sendValidationStatusService = new SendValidationStatusService($Account, SendValidationStatusService::TEMPLATE_REJECTED_FUNCTIONARY_ACTIVACION);
         $sendValidationStatusService->sendTicket(); 
 
 
         $glpiService = new GLPIService();
-        $glpiService->closeTicket($Account->ticket_id);
+        $glpiService->closeTicket($Account->id);
 
         Log::info('Plantilla de rechazo para creación de contratista enviada', ['ticket_id' => $Account->ticket_id]);
         Log::info('Ticket cerrado en GLPI para la cuenta', ['ticket_id' => $Account->ticket_id]);
