@@ -152,8 +152,7 @@
 
     function toggleActivationModal() {
         const modal = document.getElementById('activationModal');
-        modal.classList.toggle('active'); // Alterna la clase 'active' para mostrar/ocultar el modal
-    }
+        modal.classList.toggle('active'); 
 
     function updateMinDate() {
         const fechaInicio = document.getElementById("fecha_inicio_contrato").value;
