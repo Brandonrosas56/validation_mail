@@ -62,7 +62,7 @@ class roleFunctionaryController extends Controller
                 // Asignación de tipo de funcionario si fue seleccionado
                 if ($request->Select_functionary !== 'Select_functionary') {
                     $functionaryValue = $request->Select_functionary;
-                    User::whereIn('id', $usersSelect)->update(['functionary' => $functionaryValue]);
+                    User::whereIn('id', $usersSelect)->update(['position' => $functionaryValue]);
                 }
             }
         } catch (Exception $e) {
