@@ -31,10 +31,10 @@ class RetryValidation extends Command
                 'estado' => $CreateAccount->estado,
                 'ticket_id' => $CreateAccount->ticket_id,
             ]);
-            if (in_array($CreateAccount->estado, ['exitoso', 'rechazado'])) {
-                if ($CreateAccount->estado == 'exitoso') {
+            if (in_array($CreateAccount->estado, ['exito', 'rechazo'])) {
+                if ($CreateAccount->estado == 'exito') {
                     $this->sendSuccessTemplate($CreateAccount);
-                } elseif ($CreateAccount->estado == 'rechazado') {
+                } elseif ($CreateAccount->estado == 'rechazo') {
                     $this->sendRejectTemplate($CreateAccount);
                 }
 
@@ -65,10 +65,10 @@ class RetryValidation extends Command
         ]);
        
         // Ahora sí puedes acceder a $ValidateAccount aquí
-        if (in_array($ValidateAccount->estado, ['exitoso', 'rechazado'])) {
-            if ($ValidateAccount->estado == 'exitoso') {
+        if (in_array($ValidateAccount->estado, ['exito', 'rechazo'])) {
+            if ($ValidateAccount->estado == 'exito') {
                 $this->sendSuccessTemplate($ValidateAccount);
-            } elseif ($ValidateAccount->estado == 'rechazado') {
+            } elseif ($ValidateAccount->estado == 'rechazo') {
                 $this->sendRejectTemplate($ValidateAccount);
             }
 
