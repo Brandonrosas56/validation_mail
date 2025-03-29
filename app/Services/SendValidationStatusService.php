@@ -29,7 +29,7 @@ class SendValidationStatusService
     public const TEMPLATE_SUCCESS_FUNCTIONARY_ACTIVACION = 'SUCCESS_FUNCTIONARY_ACTIVACION';
     public const TEMPLATE_REJECTED_FUNCTIONARY_ACTIVACION = 'REJECTED_FUNCTIONARY_ACTIVACION';
     public const TEMPLATE_REJECTED_CONTRACTOR_ACTIVACION = 'REJECTED_CONTRACTOR_ACTIVACION';
-
+    public const TEMPLATE_REVIEW_ACTIVACION_CREATION = 'REVIEW_CONTRACTOR_ACTIVACION_CREATION';
 
 
     private CreateAccount|ValidateAccount $account;
@@ -110,9 +110,12 @@ class SendValidationStatusService
                     break;
                 case self::TEMPLATE_REJECTED_CONTRACTOR_ACTIVACION:
                     $response = $this->GLPIService->createTicket($this->rejectedContractorActivationTemplate());
-                  
                     Log::info('Plantilla de rechazo para activación de contratista enviada', ['ticket' => $response]);
                     break;
+                    case self::TEMPLATE_REVIEW_ACTIVACION_CREATION:
+                        $response = $this->GLPIService->createTicket($this->reviewcasemanual());
+                        Log::info('Plantilla de rechazo para activación de contratista enviada', ['ticket' => $response]);
+                        break;
                 default:
                     Log::warning('Estado de plantilla no reconocido: ' . $this->state);
             }
@@ -666,7 +669,7 @@ class SendValidationStatusService
 
         return [
             'input' => [
-                'name' => "Hola estoy entrando al cierre rechazado correctamente Cierre de Caso - Fallo en la Validación de Datos para activación de correo FUNCIONARIO",
+                'name' => "Cierre de Caso - Fallo en la Validación de Datos para activación de correo FUNCIONARIO",
                 'content' => "No se logró validar la nemotecnia del usuario tras los intentos correspondientes."
                 . "\nDatos del Usuario:"
                 . "\n- Regional: {$this->account->rgn_id}"
@@ -700,6 +703,48 @@ class SendValidationStatusService
             ]
         ];
     }
-    
+    private function reviewcasemanual(): array
+    {
+        $userInfo = $this->getUserInfo();
+        Log::info('Información plantilla de rechazo para activación de contratista', $userInfo);
 
+        return [
+            'input' => [
+                'name' => "Actualización de Caso – Validación Manual Requerida",
+                'content' => "El proceso automatizado no pudo ejecutarse correctamente,
+                 por lo que es necesario proceder con la validación manual del caso. 
+                 Favor realizar las verificaciones correspondientes y actualizar el estado según corresponda"
+                . "\nDatos del Usuario:"
+                . "\n- Regional: {$this->account->rgn_id}"
+                . "\n- Tipo de documento: {$this->account->tipo_documento}"
+                . "\n- Documento de identidad: {$this->account->documento_proveedor}"
+                . "\n- Nombre: {$this->account->primer_nombre} {$this->account->segundo_nombre}"
+                . "\n- Apellido: {$this->account->primer_apellido} {$this->account->segundo_apellido}"
+                . "\n- Relación Contractual: {$this->account->rol_asignado}"
+                . "\n- Correo Electronico Personal: {$this->account->correo_personal}"
+                . "\n- Correo Electronico Institucional: {$this->account->correo_institucional}"
+                . "\n- Fecha de Inicio del Contrato: {$this->account->fecha_inicio_contrato}"
+                . "\n- Número de Contrato: {$this->account->numero_contrato}"
+                . "\n- Usuario: {$this->account->usuario}"
+
+                . "\n\nDatos del Solicitante:"
+                . "\n- Correo: {$userInfo['email']}"
+                . "\n- Documento: {$userInfo['document']}",    
+                
+                'type' => 1,
+                'status' => 2, // "En curso"
+                'urgency' => 4,
+                'impact' => 3,
+                'requesttypes_id' => 1,
+                'groups_id' => 1,
+                '_groups_id_assign' => 2,
+                '_users_id_assign' => 2,
+                'itilcategories_id' => 1,
+                '_users_id_requester' => $userInfo['glpiID'], 
+                 'users_id_assign' => $userInfo['user_id'],
+                
+            ]
+        ];
+    }
+    
 }

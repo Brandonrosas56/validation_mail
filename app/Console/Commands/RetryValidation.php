@@ -20,6 +20,7 @@ class RetryValidation extends Command
         $this->verifyCreatedAccounts();
         $this->verifyValidatedAccounts();
     }
+
     private function verifyCreatedAccounts(): bool
     {
         Log::info("aca estamos");
@@ -31,12 +32,28 @@ class RetryValidation extends Command
                 'estado' => $CreateAccount->estado,
                 'ticket_id' => $CreateAccount->ticket_id,
             ]);
-            if (in_array($CreateAccount->estado, ['exito', 'rechazo'])) {
+            
+            if (in_array($CreateAccount->estado, ['exito', 'rechazo', 'revision'])) {
+                // Primero enviar las plantillas correspondientes
                 if ($CreateAccount->estado == 'exito') {
                     $this->sendSuccessTemplate($CreateAccount);
                 } elseif ($CreateAccount->estado == 'rechazo') {
                     $this->sendRejectTemplate($CreateAccount);
+                } elseif ($CreateAccount->estado == 'revision') {
+                    $this->sendReviewTemplate($CreateAccount);
                 }
+
+                // Luego actualizar el estado en la base de datos
+                if ($CreateAccount->estado == 'exito') {
+                    $CreateAccount->estado = 'exitoso';
+                } elseif ($CreateAccount->estado == 'rechazo') {
+                    $CreateAccount->estado = 'rechazado';
+                } elseif ($CreateAccount->estado == 'revision') {
+                    $CreateAccount->estado = 'en_revision';
+                }
+                
+                // Guardar los cambios en la base de datos
+                $CreateAccount->save();
 
                 // Verificar que id no sea null antes de cerrar el ticket
                 if ($CreateAccount->id) {
@@ -52,42 +69,53 @@ class RetryValidation extends Command
     }
 
     private function verifyValidatedAccounts(): bool
-{
-    
-    
-    $ValidateAccounts = ValidateAccount::all();
+    {
+        $ValidateAccounts = ValidateAccount::all();
 
-    foreach ($ValidateAccounts as $ValidateAccount) {
-        Log::info('Validación:', [
-            'id' => $ValidateAccount->id,
-            'estado' => $ValidateAccount->estado,
-            'ticket_id' => $ValidateAccount->id,
-        ]);
-       
-        // Ahora sí puedes acceder a $ValidateAccount aquí
-        if (in_array($ValidateAccount->estado, ['exito', 'rechazo'])) {
-            if ($ValidateAccount->estado == 'exito') {
-                $this->sendSuccessTemplate($ValidateAccount);
-            } elseif ($ValidateAccount->estado == 'rechazo') {
-                $this->sendRejectTemplate($ValidateAccount);
-            }
+        foreach ($ValidateAccounts as $ValidateAccount) {
+            Log::info('Validación:', [
+                'id' => $ValidateAccount->id,
+                'estado' => $ValidateAccount->estado,
+                'ticket_id' => $ValidateAccount->id,
+            ]);
+           
+            if (in_array($ValidateAccount->estado, ['exito', 'rechazo', 'revision'])) {
+                // Primero enviar las plantillas correspondientes
+                if ($ValidateAccount->estado == 'exito') {
+                    $this->sendSuccessTemplate($ValidateAccount);
+                } elseif ($ValidateAccount->estado == 'rechazo') {
+                    $this->sendRejectTemplate($ValidateAccount);
+                } elseif ($ValidateAccount->estado == 'revision') {
+                    $this->sendReviewTemplate($ValidateAccount);
+                }
 
-            if ($ValidateAccount->id !== null) {
-                $glpiService = new GLPIService();
-                $glpiService->closeTicket($ValidateAccount->id); 
-                Log::info('Ticket cerrado en GLPI para la cuenta validada', ['account_id' => $ValidateAccount->id]);
-            } else {
-                Log::warning('El id es null para la cuenta validada', ['account_id' => $ValidateAccount->id]);
+                // Luego actualizar el estado en la base de datos
+                if ($ValidateAccount->estado == 'exito') {
+                    $ValidateAccount->estado = 'exitoso';
+                } elseif ($ValidateAccount->estado == 'rechazo') {
+                    $ValidateAccount->estado = 'rechazado';
+                } elseif ($ValidateAccount->estado == 'revision') {
+                    $ValidateAccount->estado = 'en_revision';
+                }
+        
+                
+                // Guardar los cambios en la base de datos
+                $ValidateAccount->save();
+
+                if ($ValidateAccount->id !== null) {
+                    $glpiService = new GLPIService();
+                    $glpiService->closeTicket($ValidateAccount->id); 
+                    Log::info('Ticket cerrado en GLPI para la cuenta validada', ['account_id' => $ValidateAccount->id]);
+                } else {
+                    Log::warning('El id es null para la cuenta validada', ['account_id' => $ValidateAccount->id]);
+                }
             }
         }
+        return true;
     }
-    return true;
-}
-
 
     private function sendSuccessTemplate($Account): void
     {
-       
         $sendValidationStatusService = new SendValidationStatusService($Account, SendValidationStatusService::TEMPLATE_SUCCESS_CONTRACTOR_CREACION_CLOSE);
         $sendValidationStatusService->sendTicket(); 
     
@@ -100,15 +128,25 @@ class RetryValidation extends Command
 
     private function sendRejectTemplate($Account): void
     {
-        
         $sendValidationStatusService = new SendValidationStatusService($Account, SendValidationStatusService::TEMPLATE_REJECTED_FUNCTIONARY_ACTIVACION);
         $sendValidationStatusService->sendTicket(); 
-
 
         $glpiService = new GLPIService();
         $glpiService->closeTicket($Account->id);
 
         Log::info('Plantilla de rechazo para creación de contratista enviada', ['ticket_id' => $Account->ticket_id]);
+        Log::info('Ticket cerrado en GLPI para la cuenta', ['ticket_id' => $Account->ticket_id]);
+    }
+
+    private function sendReviewTemplate($Account): void
+    {
+        $sendValidationStatusService = new SendValidationStatusService($Account, SendValidationStatusService::TEMPLATE_REVIEW_ACTIVACION_CREATION);
+        $sendValidationStatusService->sendTicket(); 
+
+        $glpiService = new GLPIService();
+        $glpiService->closeTicket($Account->id);
+
+        Log::info('Plantilla de revisión para activación/creación enviada', ['ticket_id' => $Account->ticket_id]);
         Log::info('Ticket cerrado en GLPI para la cuenta', ['ticket_id' => $Account->ticket_id]);
     }
 }

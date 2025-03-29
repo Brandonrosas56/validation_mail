@@ -224,16 +224,7 @@ class GLPIService
     return $response[0]['id'] ?? throw new \Exception('Grupo por defecto no encontrado');
 }
 
-public function getDefaultTechnicianId(): int
-{
-    // Buscar usuario técnico por email (ajusta según tu GLPI)
-    $response = $this->glpiApi->search('User', [
-        'email' => 'soporte@empresa.com' // Email del técnico
-    ]);
-    
-    return $response[0]['id'] ?? throw new \Exception('Técnico por defecto no encontrado');
-}
-    
+
     
      public function closeTicket(int $id): array
      {
@@ -253,7 +244,7 @@ public function getDefaultTechnicianId(): int
                  'json' => [
                      'input' => [
                          'id' => $id,  // Es importante incluir el ID del ticket
-                         'status' => 5  // Estado 6 = Cerrado
+                         'status' => 5  
                      ]
                  ]
              ]);
