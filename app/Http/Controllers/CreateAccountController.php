@@ -10,9 +10,20 @@ use App\Models\Regional;
 use App\Models\User;
 use App\Services\SendValidationStatusService;
 use Illuminate\Validation\Rule;
+use App\Services\AccountTicketService;
+use App\Services\GLPIService;
 
 class CreateAccountController extends Controller
 {
+    protected $sendValidationStatusService;
+    protected $accountTicketService;
+
+    public function __construct(SendValidationStatusService $sendValidationStatusService, AccountTicketService $accountTicketService)
+    {
+        $this->sendValidationStatusService = $sendValidationStatusService;
+        $this->accountTicketService = $accountTicketService;
+    }
+
     /**
      * Muestra las cuentas creadas por el usuario autenticado o sus registrados.
      *
@@ -122,24 +133,32 @@ class CreateAccountController extends Controller
     
                 // Si el contrato no es válido, envía un ticket de validación y redirige con un mensaje
                 if (!SecopService::isValidSecopContract($documentoProveedor, $numeroContrato)) {
-                    $sendValidationStatusService = new SendValidationStatusService($createAccount, SendValidationStatusService::TEMPLATE_PENDING_CONTRACTOR_CREACION);
-                    $sendValidationStatusService->sendTicket();
+                    $this->sendTicket($createAccount, SendValidationStatusService::TEMPLATE_PENDING_CONTRACTOR_CREACION);
                     return redirect()->back()->withErrors(['error' => 'Nos encontramos validando su solicitud'])->withInput();
                 } else {
                     // Si el contrato es válido, envía la plantilla de éxito
-                    $sendValidationStatusService = new SendValidationStatusService($createAccount, SendValidationStatusService::TEMPLATE_SUCCESS_CONTRACTOR_CREACION);
-                    $sendValidationStatusService->sendTicket();
+                    $this->sendTicket($createAccount, SendValidationStatusService::TEMPLATE_SUCCESS_CONTRACTOR_CREACION);
                     return redirect()->back()->with('success', 'Solicitud de contratista creada y validada correctamente.');
                 }
             } elseif ($request->rol_asignado === 'Funcionario') {
                 // Si el rol es 'Funcionario', enviamos la plantilla de pendiente de funcionario
-                $sendValidationStatusService = new SendValidationStatusService($createAccount, SendValidationStatusService::TEMPLATE_PENDING_FUNCTIONARY_CREACION);
-                $sendValidationStatusService->sendTicket();
+                $this->sendTicket($createAccount, SendValidationStatusService::TEMPLATE_PENDING_FUNCTIONARY_CREACION);
                 return redirect()->back()->with('success', 'Solicitud de funcionario creada correctamente.');
             }
         } catch (\Throwable $th) {
             // Si ocurre un error, redirige con un mensaje de error
             return redirect()->back()->withErrors(['error' => $th->getMessage()])->withInput();
         }
+    }
+
+    private function sendTicket(CreateAccount $createAccount, string $state)
+    {
+        $this->sendValidationStatusService = new SendValidationStatusService(
+            $createAccount,
+            $state,
+            app(GLPIService::class),
+            $this->accountTicketService
+        );
+        $this->sendValidationStatusService->sendTicket();
     }
 }

@@ -225,51 +225,25 @@ class GLPIService
 }
 
 
-    
-     public function closeTicket(int $id): array
-     {
-         Log::info("id tike", [$id]);
-     
-         try {
-             if ($id <= 0) {
-                 Log::error("Error: El id proporcionado no es válido", ['id' => $id]);
-                 return ['error' => 'El id proporcionado no es válido.'];
-             }
-     
-             $response = $this->client->put(self::TICKET_ENDPOINT . "/{$id}", [
-                 'headers' => [
-                     'Session-Token' => $this->sessionToken,
-                     'Content-Type' => 'application/json',
-                 ],
-                 'json' => [
-                     'input' => [
-                         'id' => $id,  // Es importante incluir el ID del ticket
-                         'status' => 5  
-                     ]
-                 ]
-             ]);
-     
-             if ($response->getStatusCode() !== 200) {
-                 Log::error("Error al cerrar el ticket {$id}: Respuesta no exitosa", [
-                     'id' => $id,
-                     'status_code' => $response->getStatusCode(),
-                     'response' => $response->getBody()->getContents(),
-                 ]);
-                 return ['error' => 'Error al cerrar el ticket: Respuesta no exitosa.'];
-             }
-     
-             $body = $response->getBody()->getContents();
-             $decoded = json_decode($body, true);
-     
-             Log::info("Ticket {$id} cerrado con éxito", ['ticket_id' => $id, 'response' => $decoded]);
-     
-             return $decoded;
-         } catch (\Exception $e) {
-             Log::error("Error al cerrar el ticket {$id}: " . $e->getMessage(), [
-                 'ticket_id' => $id,
-                 'error' => $e->getMessage(),
-             ]);
-             return ['error' => 'Error al procesar el ticket: ' . $e->getMessage()];
-         }
-     }
-    }     
+public function markTicketAsSolved(int $ticketId): void
+{
+   try {
+       $response = $this->client->put(self::TICKET_ENDPOINT . "/{$ticketId}", [
+           'headers' => [
+               'Session-Token' => $this->sessionToken,
+               'Content-Type'  => 'application/json'
+           ],
+           'json' => [
+               'input' => [
+                   'status' => 6 // RESUELTO
+               ]
+           ]
+       ]);
+
+       $decoded = json_decode($response->getBody()->getContents(), true);
+       Log::info("Ticket {$ticketId} marcado como RESUELTO en GLPI.", $decoded);
+   } catch (RequestException $e) {
+       Log::error("Error al marcar el ticket {$ticketId} como resuelto: " . $e->getMessage());
+   }
+}
+}

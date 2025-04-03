@@ -50,9 +50,21 @@ class AccountTicket extends Model
     protected $fillable = [
         'account_id',
         'type_account',
+        'type_ticket',
         'ticket_id',
-        'ticket_state',
-        'ticket_info'
+        'ticket_info',
+        'ticket_state'
+    ];
+
+    /**
+     * Los atributos que deben ser convertidos.
+     *
+     * @var array<int, string>
+     */
+    protected $casts = [
+        'ticket_info' => 'array',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
     ];
 
     /**
@@ -62,6 +74,6 @@ class AccountTicket extends Model
      */
     public function getService(): AccountTicketService
     {
-        return new AccountTicketService($this);
+        return app(AccountTicketService::class);
     }
 }

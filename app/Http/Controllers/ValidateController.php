@@ -10,9 +10,21 @@ use App\Models\User;
 use App\Services\SendValidationStatusService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use App\Services\AccountTicketService;
+use App\Services\GLPIService;
+use Illuminate\Support\Facades\Log;
 
 class ValidateController extends Controller
 {
+    protected $sendValidationStatusService;
+    protected $accountTicketService;
+
+    public function __construct(SendValidationStatusService $sendValidationStatusService, AccountTicketService $accountTicketService)
+    {
+        $this->sendValidationStatusService = $sendValidationStatusService;
+        $this->accountTicketService = $accountTicketService;
+    }
+
     //! Muestra la lista de cuentas a validar
     public function show()
     {
@@ -97,19 +109,16 @@ class ValidateController extends Controller
                 // Verifica si el contrato es válido en SECOP
                 if (!SecopService::isValidSecopContract($documentoProveedor, $numeroContrato)) {
                     // Si el contrato no es válido, envía la plantilla de pendiente
-                    $sendValidationStatusService = new SendValidationStatusService($validateAccount, SendValidationStatusService::TEMPLATE_PENDING_CONTRACTOR_ACTIVACION);
-                    $sendValidationStatusService->sendTicket();
+                    $this->sendTicket($validateAccount, SendValidationStatusService::TEMPLATE_PENDING_CONTRACTOR_ACTIVACION);
                     return redirect()->back()->with('error', 'Nos encontramos validando su solicitud');
                 } else {
                     // Si el contrato es válido, envía la plantilla de éxito
-                    $sendValidationStatusService = new SendValidationStatusService($validateAccount, SendValidationStatusService::TEMPLATE_SUCCESS_CONTRACTOR_ACTIVACION);
-                    $sendValidationStatusService->sendTicket();
+                    $this->sendTicket($validateAccount, SendValidationStatusService::TEMPLATE_SUCCESS_CONTRACTOR_ACTIVACION);
                     return redirect()->back()->with('success', 'Solicitud de contratista validada correctamente.');
                 }
             } elseif ($request->rol_asignado === 'Funcionario') {
                 // Si el rol es 'Funcionario', envía la plantilla de pendiente de funcionario
-                $sendValidationStatusService = new SendValidationStatusService($validateAccount, SendValidationStatusService::TEMPLATE_PENDING_FUNCTIONARY_ACTIVACION);
-                $sendValidationStatusService->sendTicket();
+                $this->sendTicket($validateAccount, SendValidationStatusService::TEMPLATE_PENDING_FUNCTIONARY_ACTIVACION);
                 return redirect()->back()->with('success', 'Solicitud de funcionario creada correctamente.');
             }
         } catch (\Throwable $th) {
@@ -117,4 +126,16 @@ class ValidateController extends Controller
             return redirect()->back()->withErrors(['error' => $th->getMessage()])->withInput();
         }
     }
+
+    private function sendTicket(ValidateAccount $validateAccount, string $state)
+    {
+        $this->sendValidationStatusService = new SendValidationStatusService(
+            $validateAccount,
+            $state,
+            app(GLPIService::class),
+            $this->accountTicketService
+        );
+        $this->sendValidationStatusService->sendTicket();
+    }
+
 }

@@ -13,16 +13,15 @@ return new class extends Migration
     {
         Schema::create('account_tickets', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('account_id');
-            $table->foreignId('type_account');
-            $table->integer('ticket_id');
-            $table->text('ticket_info')->nullable();
-            $table->string('ticket_state')->nullable();
+            $table->unsignedBigInteger('account_id');
+            $table->string('type_account');
+            $table->string('type_ticket');
+            $table->string('ticket_id');
+            $table->json('ticket_info');
+            $table->string('ticket_state')->default('Pendiente');
             $table->timestamps();
             $table->index('account_id');
         });
-
-
     }
 
     /**

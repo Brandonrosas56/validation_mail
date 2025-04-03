@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\ValidateAccount;
 use App\Services\trait\TAccount;
+use Illuminate\Support\Facades\Log;
+use App\Models\AccountTicket;
 
 class ValidateAccountService
 {
@@ -15,13 +17,16 @@ class ValidateAccountService
         $this->Model = $Model;
     }
 
-    public function isContractor(): bool
-    {
-        return $this->getModel()->rol_asignado === ValidateAccount::CONTRACTOR;
-    }
-
+   
     public function getModel(): ValidateAccount
     {
         return $this->Model;
     }
+
+    /**
+     * Obtiene el tipo de ticket para una cuenta de validación.
+     *
+     * @return string
+     */
+    
 }

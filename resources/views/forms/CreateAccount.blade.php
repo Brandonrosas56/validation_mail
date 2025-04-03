@@ -56,42 +56,42 @@
             
                 <div class="mb-2">
                     <label for="primer_nombre" class="block mb-1 TextColor font-bold">Primer Nombre*</label>
-                    <input type="text" name="primer_nombre" id="primer_nombre" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('primer_nombre') }}" required>
+                    <input type="text" name="primer_nombre" id="primer_nombre" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none"  required>
                 </div>
 
                 <div class="mb-2">
                     <label for="segundo_nombre" class="block mb-1 TextColor font-bold">Segundo Nombre</label>
-                    <input type="text" name="segundo_nombre" id="segundo_nombre" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('segundo_nombre') }}">
+                    <input type="text" name="segundo_nombre" id="segundo_nombre" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" >
                 </div>
 
                 <div class="mb-2">
                     <label for="primer_apellido" class="block mb-1 TextColor font-bold">Primer Apellido*</label>
-                    <input type="text" name="primer_apellido" id="primer_apellido" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('primer_apellido') }}" required>
+                    <input type="text" name="primer_apellido" id="primer_apellido" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" required>
                 </div>
 
                 <div class="mb-2">
                     <label for="segundo_apellido" class="block mb-1 TextColor font-bold">Segundo Apellido*</label>
-                    <input type="text" name="segundo_apellido" id="segundo_apellido" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('segundo_apellido') }}">
+                    <input type="text" name="segundo_apellido" id="segundo_apellido" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" >
                 </div>
 
                 <div class="mb-2">
                     <label for="correo_personal" class="block mb-1 TextColor font-bold">Correo Personal*</label>
-                    <input type="email" name="correo_personal" id="correo_personal" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('correo_personal') }}" required>
+                    <input type="email" name="correo_personal" id="correo_personal" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none"  required>
                 </div>
 
                 <div class="mb-2">
                     <label for="fecha_inicio_contrato" class="block mb-1 TextColor font-bold">Fecha de Inicio del Contrato*</label>
-                    <input type="date" name="fecha_inicio_contrato" id="fecha_inicio_contrato" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('fecha_inicio_contrato') }}" required onchange="updateMinDate()">
+                    <input type="date" name="fecha_inicio_contrato" id="fecha_inicio_contrato" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none"  required onchange="updateMinDate()">
                 </div>
 
                 <div class="mb-2" id="divTermination">
                     <label for="fecha_terminacion_contrato" class="block mb-1 TextColor font-bold">Fecha de Terminación del Contrato*</label>
-                    <input type="date" name="fecha_terminacion_contrato" id="fecha_terminacion_contrato" class="custom-border rounded-lg w-full p-2 bg-white" value="{{ old('fecha_terminacion_contrato') }}">
+                    <input type="date" name="fecha_terminacion_contrato" id="fecha_terminacion_contrato" class="custom-border rounded-lg w-full p-2 bg-white" >
                 </div>
 
                 <div class="mb-2">
                     <label for="numero_contrato" id="labelNum" class="block mb-1 TextColor font-bold">Número de Contrato*</label>
-                    <input type="text" name="numero_contrato" id="numero_contrato" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" value="{{ old('numero_contrato') }}" required>
+                    <input type="text" name="numero_contrato" id="numero_contrato" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none"  required>
                 </div>
             </div>
 

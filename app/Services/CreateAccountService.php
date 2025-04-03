@@ -19,4 +19,11 @@ class CreateAccountService
     {
         return $this->Model;
     }
+
+    /**
+     * Obtiene el tipo de ticket para una cuenta de creación.
+     *
+     * @return string
+     */
+
 }
