@@ -1,12 +1,64 @@
 <x-guest-layout>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    @if (session('error'))
+    
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            alertBlocked();
-        });
+        // Función que se ejecutará cuando el DOM esté listo
+        function checkSessionExpiration() {
+            // Verificar si hay error en la sesión o en la URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const sessionExpired = urlParams.get('session_expired');
+            const errorMessage = "{{ session('error') }}" || 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.';
+            
+            if (sessionExpired === 'true') {
+                alertSessionExpired(errorMessage);
+            } else if ("{{ session('error') }}") {
+                if (errorMessage.includes('bloqueada')) {
+                    alertBlocked();
+                } else if (errorMessage.includes('expirado') || errorMessage.includes('expirada')) {
+                    alertSessionExpired(errorMessage);
+                }
+            }
+        }
+
+        // Detectar página de error 419 y redirigir
+        if (window.location.href.includes('/create-account') || window.location.href.includes('/validate-account')) {
+            if (document.title.includes('419') || document.body.textContent.includes('PAGE EXPIRED')) {
+                window.location.href = '/login?session_expired=true';
+            }
+        }
+
+        // Ejecutar cuando el DOM esté completamente cargado
+        document.addEventListener('DOMContentLoaded', checkSessionExpiration);
+
+        function alertBlocked() {
+            Swal.fire({
+                icon: "warning",
+                title: "Bloqueo",
+                text: "Tu cuenta de usuario esta bloqueada, por favor comuniquese con el administrador",
+                confirmButtonText: "OK",
+                confirmButtonColor: "#3085d6",
+                allowOutsideClick: false
+            });
+        }
+
+        function alertSessionExpired(message) {
+            Swal.fire({
+                icon: "warning",
+                title: "Sesión Expirada",
+                text: message,
+                confirmButtonText: "OK",
+                confirmButtonColor: "#3085d6",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                allowEnterKey: false,
+                timer: 5000,
+                timerProgressBar: true,
+                didOpen: () => {
+                    Swal.getPopup().style.zIndex = 9999;
+                }
+            });
+        }
     </script>
-    @endif
 
     <head>
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">   
@@ -66,19 +118,7 @@
     </div>
 </x-guest-layout>
 
-<script>
-    function alertBlocked() {
-        Swal.fire({
-            icon: "warning",
-            title: "Bloqueo",
-            text: "Tu cuenta de usuario esta bloqueada, por favor comuniquese con el administrador",
-            button: "OK"
-        });
-    }
-</script>
-
 <style>
- 
     .max-w-full {
         max-width: 100%;
         box-sizing: border-box;

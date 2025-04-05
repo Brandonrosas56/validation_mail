@@ -25,7 +25,7 @@
 
         <!-- Styles -->
         @livewireStyles
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
         <link href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" rel="stylesheet">
 
@@ -34,6 +34,55 @@
 
         <!-- Script de DataTables -->
         <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+
+        <script>
+            // Función para refrescar el token CSRF
+            function refreshCsrfToken() {
+                fetch('/refresh-csrf', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Actualizar el token en todos los formularios y meta tags
+                    document.querySelector('meta[name="csrf-token"]').content = data.token;
+                    document.querySelectorAll('input[name="_token"]').forEach(input => {
+                        input.value = data.token;
+                    });
+                })
+                .catch(error => {
+                    console.error('Error refreshing CSRF token:', error);
+                    // Si hay un error, redirigir al login
+                    window.location.href = '/login?session_expired=true';
+                });
+            }
+
+            // Refrescar el token cada 30 minutos (1800000 ms)
+            setInterval(refreshCsrfToken, 1800000);
+
+            // También refrescar cuando la ventana recupera el foco
+            document.addEventListener('visibilitychange', function() {
+                if (document.visibilityState === 'visible') {
+                    refreshCsrfToken();
+                }
+            });
+
+            // Manejar errores de sesión expirada
+            document.addEventListener('ajax:error', function(event) {
+                if (event.detail && event.detail.status === 419) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Sesión Expirada',
+                        text: 'Tu sesión ha expirado. Se intentará actualizar automáticamente.',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
+                    refreshCsrfToken();
+                }
+            });
+        </script>
     </head>
     <body class="font-sans antialiased">
         <x-banner />

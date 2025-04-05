@@ -33,10 +33,12 @@ class VerifyCsrfToken extends Middleware
             // Limpiar la sesión
             auth()->logout();
             session()->flush();
+            session()->regenerate();
             
             // Redirigir al login con un mensaje
             return redirect()->route('login')
-                ->with('error', 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.');
+                ->with('error', 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.')
+                ->with('session_expired', true);
         }
     }
 } 

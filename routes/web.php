@@ -14,6 +14,7 @@ use App\Http\Controllers\{
     registerUsersController,
     rolesController
 };
+use Illuminate\Support\Facades\Session;
 
 // Establecer el idioma en español
 App::setLocale('es');
@@ -74,3 +75,7 @@ Route::middleware(['auth', 'checkIfBlocked'])->group(function () {
     });
 
 });
+
+Route::post('/refresh-csrf', function () {
+    return response()->json(['token' => csrf_token()]);
+})->middleware('web');
