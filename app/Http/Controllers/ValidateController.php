@@ -59,7 +59,7 @@ class ValidateController extends Controller
         try {
             // Si el usuario es un funcionario, se establece una fecha de terminación fija
             if ($request->rol_asignado === 'Funcionario') {
-                $date_termination = '1000-01-01';
+                $date_termination = 'null';
                 $request->merge(['fecha_terminacion_contrato' => $date_termination]);
             }
 

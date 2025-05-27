@@ -131,13 +131,15 @@
         const selectRol = document.getElementById('rol_asignado');
         const labelNum = document.getElementById('labelNum');
         const divTermination = document.getElementById('divTermination')
-
+        const terminationInput = document.getElementById('fecha_terminacion_contrato');
         if (selectRol.value === 'Contratista') {
             labelNum.textContent = 'Número de Contrato*';
             divTermination.style.display = 'block';
+            terminationInput.setAttribute('required', 'required');
         } else if (selectRol.value === 'Funcionario') {
             labelNum.textContent = 'Acta de resolución*';
             divTermination.style.display = 'none'
+            terminationInput.removeAttribute('required');
         }
     }
 </script>

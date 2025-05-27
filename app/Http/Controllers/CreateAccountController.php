@@ -87,7 +87,7 @@ class CreateAccountController extends Controller
         try {
             // Si el rol asignado es 'Funcionario', asigna una fecha de terminación predeterminada
             if ($request->rol_asignado === 'Funcionario') {
-                $date_termination = '1000-01-01';
+                $date_termination = null;
                 $request->merge(['fecha_terminacion_contrato' => $date_termination]);
             }
     

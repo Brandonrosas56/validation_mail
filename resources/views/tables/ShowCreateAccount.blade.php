@@ -51,7 +51,7 @@ $permissionSuperAdmin = auth()->user()->hasRole('Super_admin');
                     <td class="px-4 py-2 border-b">{{ $account->numero_contrato }}</td>
                     <td class="px-4 py-2 border-b">{{ $account->fecha_inicio_contrato }}</td>
                     <td class="px-4 py-2 border-b">
-                        {{ $account->fecha_terminacion_contrato !== '1000-01-01' ? $account->fecha_terminacion_contrato : '' }}
+                        {{ $account->fecha_terminacion_contrato !== null ? $account->fecha_terminacion_contrato : '' }}
                     </td>
                     <td class="px-4 py-2 border-b">
                         <div class="flex items-center gap-2">

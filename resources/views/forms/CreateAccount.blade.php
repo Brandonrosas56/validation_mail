@@ -25,7 +25,7 @@
                 <div class="mb-2">
                     <label for="rol_asignado" class="block mb-1 TextColor font-bold">Relación Contractual*</label>
                     <select name="rol_asignado" id="rol_asignado" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" onclick="changeRolAssing()" required>
-                    <option value="" selected disabled>Seleccione ...</option>
+                        <option value="" selected disabled>Seleccione ...</option>
                         <option value="Contratista">Contratista</option>
                         <option value="Funcionario">Funcionario</option>
                     </select>
@@ -34,8 +34,8 @@
                 <div class="mb-3">
                     <label for="tipo_documento" class="block mb-1 TextColor font-bold">Tipo de documento*</label>
                     <select name="tipo_documento" id="tipo_documento" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none">
-                    <option value="" selected disabled>Selecciona el tipo de documento</option>
-                    <option value="CC">Cédula de Ciudadanía</option>
+                        <option value="" selected disabled>Selecciona el tipo de documento</option>
+                        <option value="CC">Cédula de Ciudadanía</option>
                         <option value="CE">Cédula de Extranjería</option>
                         <option value="Pasaporte">Pasaporte</option>
                         <option value="TI">Tarjeta de Identidad</option>
@@ -48,20 +48,20 @@
                     <input type="text" name="documento_proveedor" id="documento_proveedor"
                         class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none">
                     @if ($errors->has('documento_proveedor'))
-                        <div class="text-red-500 text-sm mt-1">
-                            {{ $errors->first('documento_proveedor') }}
-                        </div>
+                    <div class="text-red-500 text-sm mt-1">
+                        {{ $errors->first('documento_proveedor') }}
+                    </div>
                     @endif
                 </div>
-            
+
                 <div class="mb-2">
                     <label for="primer_nombre" class="block mb-1 TextColor font-bold">Primer Nombre*</label>
-                    <input type="text" name="primer_nombre" id="primer_nombre" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none"  required>
+                    <input type="text" name="primer_nombre" id="primer_nombre" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" required>
                 </div>
 
                 <div class="mb-2">
                     <label for="segundo_nombre" class="block mb-1 TextColor font-bold">Segundo Nombre</label>
-                    <input type="text" name="segundo_nombre" id="segundo_nombre" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" >
+                    <input type="text" name="segundo_nombre" id="segundo_nombre" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none">
                 </div>
 
                 <div class="mb-2">
@@ -71,27 +71,27 @@
 
                 <div class="mb-2">
                     <label for="segundo_apellido" class="block mb-1 TextColor font-bold">Segundo Apellido*</label>
-                    <input type="text" name="segundo_apellido" id="segundo_apellido" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" >
+                    <input type="text" name="segundo_apellido" id="segundo_apellido" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none">
                 </div>
 
                 <div class="mb-2">
                     <label for="correo_personal" class="block mb-1 TextColor font-bold">Correo Personal*</label>
-                    <input type="email" name="correo_personal" id="correo_personal" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none"  required>
+                    <input type="email" name="correo_personal" id="correo_personal" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" required>
                 </div>
 
                 <div class="mb-2">
                     <label for="fecha_inicio_contrato" class="block mb-1 TextColor font-bold">Fecha de Inicio del Contrato*</label>
-                    <input type="date" name="fecha_inicio_contrato" id="fecha_inicio_contrato" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none"  required onchange="updateMinDate()">
+                    <input type="date" name="fecha_inicio_contrato" id="fecha_inicio_contrato" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" required onchange="updateMinDate()">
                 </div>
 
                 <div class="mb-2" id="divTermination">
                     <label for="fecha_terminacion_contrato" class="block mb-1 TextColor font-bold">Fecha de Terminación del Contrato*</label>
-                    <input type="date" name="fecha_terminacion_contrato" id="fecha_terminacion_contrato" class="custom-border rounded-lg w-full p-2 bg-white" >
+                    <input type="date" name="fecha_terminacion_contrato" id="fecha_terminacion_contrato" class="custom-border rounded-lg w-full p-2 bg-white">
                 </div>
 
                 <div class="mb-2">
                     <label for="numero_contrato" id="labelNum" class="block mb-1 TextColor font-bold">Número de Contrato*</label>
-                    <input type="text" name="numero_contrato" id="numero_contrato" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none"  required>
+                    <input type="text" name="numero_contrato" id="numero_contrato" class="custom-border rounded-lg w-full p-2 bg-white focus:outline-none" required>
                 </div>
             </div>
 
@@ -114,32 +114,34 @@
         const selectRol = document.getElementById('rol_asignado');
         const labelNum = document.getElementById('labelNum');
         const divTermination = document.getElementById('divTermination')
-
+        const terminationInput = document.getElementById('fecha_terminacion_contrato');
         if (selectRol.value === 'Contratista') {
             labelNum.textContent = 'Número de Contrato*';
             divTermination.style.display = 'block';
+            terminationInput.setAttribute('required', 'required');
         } else if (selectRol.value === 'Funcionario') {
             labelNum.textContent = 'Acta de resolución*';
             divTermination.style.display = 'none'
+            terminationInput.removeAttribute('required');
         }
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        const errors = @json($errors->all());
+        const errors = @json($errors - > all());
         const errorMessage = "{{ session('error') }}";
 
         if (errors.length > 0) {
             Swal.fire({
                 icon: "warning",
                 title: "Aviso",
-                html: errors.map(error => `• ${error}`).join("<br>"), 
+                html: errors.map(error => `• ${error}`).join("<br>"),
                 confirmButtonColor: "#04324D"
             });
         } else if (errorMessage) {
             Swal.fire({
                 icon: "warning",
                 title: "Aviso",
-                text: errorMessage, 
+                text: errorMessage,
                 confirmButtonColor: "#04324D"
             });
         }
